@@ -1,0 +1,97 @@
+body {
+	font-size: 1.5rem;
+	font-family: 'Jua', sans-serif;
+}
+ 
+.navbar-inverse {
+	font-size: 2.5rem;
+	color: white;
+	margin: 10px auto;
+	line-height: 2
+}
+
+section.explain {
+	font-size: 2.5rem;
+}
+
+table.assetTable {
+	/* display: inline-block; */
+	width: 100%;
+	/* border-collapse: collapse; */
+	text-align: center;
+	line-height: 1.5;
+	font-size: 2.5rem;
+	/* border-top: 1px solid #ccc; */
+	/* border-bottom: 1px solid #ccc; */
+	/* margin: 10px auto; */
+	margin-bottom: 5px;
+}
+table.assetTable thead th {
+	/* width: 150px; */
+	padding: 5px;
+	/* font-weight: bold; */
+	font-size: 2.5rem;
+	text-align: center;
+	vertical-align: middle;
+	color: #fff;
+	background: #e7708d;
+	margin: 20px 10px;
+}
+table.assetTable tbody th {
+	/* width: 150px; */
+	padding: 10px;
+}
+table.assetTable td {
+	/* width: 350px; */
+	padding: 5px;
+	vertical-align: top;
+}
+table.assetTable #even {
+	background: #fdf3f5;
+}
+
+table.assetTable td.stocks {
+	font-weight: bold;
+}
+
+input[type=text] {
+	font-size: 1.8rem;
+	width: 20%;
+	height: 20%;
+	text-align: right;
+	padding-right: 10px;
+}
+
+input[type=text]:focus {
+	background-color: #C3E5AE;
+	border: 2px solid black
+}
+
+.input-value {
+	font-size: 2rem;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+.input-container {
+	font-size: 2rem;
+	margin: 4%;
+	margin-bottom: 2%;
+}
+
+.content-container {
+	margin: 1%;
+}
+
+.table-footnote {
+	display: block;
+}
+
+.remark {
+	color: 'grey';
+	font-size: 1.6rem;
+}
+
+#hidden-footer {
+	font-size: 0rem;
+}

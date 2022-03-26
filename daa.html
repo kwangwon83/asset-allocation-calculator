@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>[자산배분 계산기]</title>
+		<div id="hidden-footer">DAA</div>
+		
+		<link
+			rel="stylesheet"
+			href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
+		/>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+		
+		<script type="text/javascript" src="GShRead.js"></script>
+		<link rel="stylesheet" href="style.css" />
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet" />
+	</head>
+	<body>
+		<nav class="navbar navbar-inverse">
+			<p class="navbar-text"></p>
+			<ul class="nav navbar-nav">
+				<li><a href="./index.html">영구포트</a></li>
+				<li><a href="./laa.html">LAA</a></li>
+				<li><a href="./vaa.html">VAA</a></li>
+				<li><a href="./daa.html">DAA</a></li>
+			</ul>
+		</nav>
+		<section class="explain">
+			<h1 align="center">DAA 자산배분(Defensive Asset Allocation)</h1>
+		</section>
+		<div class="input-container">
+			<section class="controlPanel">
+				<p class="input-value">
+					수 수 료(%) :
+					<input
+						type="text"
+						class="feeInput"
+						id="buysellfee"
+						style="text-align: right; padding-right: 10px;"
+						value="0.25"
+					/>
+				</p>
+				<p class="input-value">
+					금 액(USD) :
+					<input
+						type="text"
+						class="budgetInput"
+						id="totalBudget"
+						style="text-align: right; padding-right: 10px;"
+						onkeyup="if(window.event.keyCode==13){allocation_calc()}"
+					/>
+				</p>
+			</section>
+		</div>
+
+		<div class="content-container">
+			<section class="dataTable">
+				<table class="mt-1 assetTable">
+					<thead>
+						<tr>
+							<th scope="cols">구 분</th>
+							<th scope="cols">티 커</th>
+							<th scope="cols">주 가<br />(USD)</th>
+							<th scope="cols">비 중<br />(%)</th>
+							<th scope="cols">배분수량<br />(주)</th>
+							<!-- <th scope="cols">비고</th> -->
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td scope="row" class="category"></td>
+							<td scope="row" class="ticker"></td>
+							<td class="price"></td>
+							<td class="allocation"></td>
+							<td class="stocks">0</td>
+							<!-- <td class="remark"></td> -->
+						</tr>
+						<tr>
+							<td scope="row" class="category" id="even"></td>
+							<td scope="row" class="ticker" id="even"></td>
+							<td class="price" id="even"></td>
+							<td class="allocation" id="even"></td>
+							<td class="stocks" id="even">0</td>
+							<!-- <td class="remark" id="even"></td> -->
+						</tr>
+						<tr>
+							<td scope="row" class="category"></td>
+							<td scope="row" class="ticker"></td>
+							<td class="price"></td>
+							<td class="allocation"></td>
+							<td class="stocks">0</td>
+							<!-- <td class="remark"></td> -->
+						</tr>
+						<tr>
+							<td scope="row" class="category" id="even"></td>
+							<td scope="row" class="ticker" id="even"></td>
+							<td class="price" id="even"></td>
+							<td class="allocation" id="even"></td>
+							<td class="stocks" id="even">0</td>
+							<!-- <td class="remark" id="even"></td> -->
+						</tr>
+						<tr>
+							<td scope="row" class="category"></td>
+							<td scope="row" class="ticker"></td>
+							<td class="price"></td>
+							<td class="allocation"></td>
+							<td class="stocks">0</td>
+							<!-- <td class="remark"></td> -->
+						</tr>
+						<tr>
+							<td scope="row" class="category"></td>
+							<td scope="row" class="ticker"></td>
+							<td class="price"></td>
+							<td class="allocation"></td>
+							<td class="stocks">0</td>
+							<!-- <td class="remark"></td> -->
+						</tr>
+						<tr>
+							<td scope="row" class="category" id="even"></td>
+							<td scope="row" class="ticker" id="even"></td>
+							<td class="price" id="even"></td>
+							<td class="allocation" id="even"></td>
+							<td class="stocks" id="even">0</td>
+							<!-- <td class="remark" id="even"></td> -->
+						</tr>
+						<tr>
+							<td scope="row" class="category"></td>
+							<td scope="row" class="ticker"></td>
+							<td class="price"></td>
+							<td class="allocation"></td>
+							<td class="stocks">0</td>
+							<!-- <td class="remark"></td> -->
+						</tr>
+						<tr>
+							<td scope="row" class="category" id="even"></td>
+							<td scope="row" class="ticker" id="even"></td>
+							<td class="price" id="even"></td>
+							<td class="allocation" id="even"></td>
+							<td class="stocks" id="even">0</td>
+							<!-- <td class="remark" id="even"></td> -->
+						</tr>
+						<tr>
+							<td scope="row" class="category"></td>
+							<td scope="row" class="ticker"></td>
+							<td class="price"></td>
+							<td class="allocation"></td>
+							<td class="stocks">0</td>
+							<!-- <td class="remark"></td> -->
+						</tr>
+						<tr>
+							<td scope="row" class="category" id="even"></td>
+							<td scope="row" class="ticker" id="even"></td>
+							<td class="price" id="even"></td>
+							<td class="allocation" id="even"></td>
+							<td class="stocks" id="even">0</td>
+							<!-- <td class="remark" id="even"></td> -->
+						</tr>
+						<tr>
+							<td scope="row" class="category"></td>
+							<td scope="row" class="ticker"></td>
+							<td class="price"></td>
+							<td class="allocation"></td>
+							<td class="stocks">0</td>
+							<!-- <td class="remark"></td> -->
+						</tr>
+						<tr>
+							<td scope="row" class="category" id="even"></td>
+							<td scope="row" class="ticker" id="even"></td>
+							<td class="price" id="even"></td>
+							<td class="allocation" id="even"></td>
+							<td class="stocks" id="even">0</td>
+							<!-- <td class="remark" id="even"></td> -->
+						</tr>
+						<tr>
+							<td scope="row" class="category"></td>
+							<td scope="row" class="ticker"></td>
+							<td class="price"></td>
+							<td class="allocation"></td>
+							<td class="stocks">0</td>
+							<!-- <td class="remark"></td> -->
+						</tr>
+						<tr>
+							<td scope="row" class="category" id="even"></td>
+							<td scope="row" class="ticker" id="even"></td>
+							<td class="price" id="even"></td>
+							<td class="allocation" id="even"></td>
+							<td class="stocks" id="even">0</td>
+							<!-- <td class="remark" id="even"></td> -->
+						</tr>
+						<tr>
+							<td scope="row" class="category"></td>
+							<td scope="row" class="ticker"></td>
+							<td class="price"></td>
+							<td class="allocation"></td>
+							<td class="stocks">0</td>
+							<!-- <td class="remark"></td> -->
+						</tr>
+						<tr>
+							<td scope="row" class="category" id="even"></td>
+							<td scope="row" class="ticker" id="even"></td>
+							<td class="price" id="even"></td>
+							<td class="allocation" id="even"></td>
+							<td class="stocks" id="even">0</td>
+							<!-- <td class="remark" id="even"></td> -->
+						</tr>
+					</tbody>
+				</table>
+			</section>
+
+			<section class="table-footnote">
+				<div class="remark"></div>
+				<div class="remark"></div>
+				<div class="remark"></div>
+				<div class="remark"></div>
+				<div class="remark"></div>
+				<div class="remark"></div>
+				<div class="remark"></div>
+				<div class="remark"></div>
+				<div class="remark"></div>
+				<div class="remark"></div>
+				<div class="remark"></div>
+				<div class="remark"></div>
+				<div class="remark"></div>
+				<div class="remark"></div>
+				<div class="remark"></div>
+				<div class="remark"></div>
+				<div class="remark"></div>
+			</section>
+		</div>
+
+		<script>
+			function allocation_calc() {
+				var budget = document.getElementById('totalBudget');
+				var stockfee = document.getElementById('buysellfee');
+				var ticker = document.getElementsByClassName('ticker');
+				var price = document.getElementsByClassName('price');
+				var allocation = document.getElementsByClassName('allocation');
+				console.log(isNum(Number(budget.value)));
+				if (isNum(Number(budget.value))) {
+					let _TICKER = [];
+					let _DATA = [];
+					let _PRICE = [];
+					let _ALLO = [];
+					for (var i = 0; i < price.length; i++) {
+						if (String(ticker[i].innerHTML) == 'USD') {
+							_ALLO[i] = Number(allocation[i].innerHTML.replace('%', ''));
+							_ALLO[i] = _ALLO[i] / 100;
+							_DATA[i] = Number(budget.value) * _ALLO[i];
+							_DATA[i] = Math.floor(_DATA[i]);
+						} else {
+							_PRICE[i] = Number(price[i].innerHTML);
+							// _ALLO[i] = Number(allocation[i].innerHTML.replace("/%/g", ""));
+							_ALLO[i] = Number(allocation[i].innerHTML.replace('%', ''));
+							_ALLO[i] = _ALLO[i] / 100;
+							_DATA[i] = (Number(budget.value) * _ALLO[i]) / (_PRICE[i] * (1 + stockfee.value / 100));
+							_DATA[i] = Math.floor(_DATA[i]);
+						}
+					}
+
+					const TARGET = {
+						stocks: document.getElementsByClassName('stocks'),
+					};
+
+					for (let i = 0; i < _DATA.length; i++) {
+						if (isNaN(_DATA[i])) {
+							TARGET['stocks'][i].textContent = '-';
+						} else {
+							TARGET['stocks'][i].textContent = _DATA[i].toLocaleString();
+						}
+					}
+				} else {
+					console.log('숫자를 입력하시오');
+				}
+			}
+
+			function isNum(s) {
+				s += ''; // 문자열로 변환
+				s = s.replace(/^\s*|\s*$/g, ''); // 좌우 공백 제거
+				if (s == '' || isNaN(s)) return false;
+				return true;
+			}
+		</script>
+	</body>
+</html>
