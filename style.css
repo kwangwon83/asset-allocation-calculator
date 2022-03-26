@@ -2,7 +2,14 @@ body {
 	font-size: 1.5rem;
 	font-family: 'Jua', sans-serif;
 }
- 
+
+.explain-header {
+	font-size: 1.7rem;
+	text-indent: -25px;
+	margin-left: 50px;
+	margin-right: 50px;
+}
+
 .navbar-inverse {
 	font-size: 2.5rem;
 	color: white;
