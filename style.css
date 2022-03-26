@@ -26,6 +26,7 @@ table.assetTable {
 	/* margin: 10px auto; */
 	margin-bottom: 5px;
 }
+
 table.assetTable thead th {
 	/* width: 150px; */
 	padding: 5px;
@@ -37,6 +38,7 @@ table.assetTable thead th {
 	background: #e7708d;
 	margin: 20px 10px;
 }
+
 table.assetTable tbody th {
 	/* width: 150px; */
 	padding: 10px;
@@ -94,4 +96,8 @@ input[type=text]:focus {
 
 #hidden-footer {
 	font-size: 0rem;
+}
+
+.visit-counter {
+	font-size: 1em;
 }

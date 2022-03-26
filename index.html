@@ -124,6 +124,7 @@
 				</table>
 			</section>
 
+			
 			<section class="table-footnote">
 				<div class="remark"></div>
 				<div class="remark"></div>
@@ -132,24 +133,21 @@
 				<div class="remark"></div>
 			</section>
 		</div>
-		<div>
-			<p>This page was viewed</p>
-			<h1 id="count">0</h1>
-			<p>times</p>
+		<div align=center>
+			<div>Visitor Count</div>
+			<div id="visit-counter" class="visit-counter">0</div>
 		</div>
 		
 		<script>
-			const countEl = document.getElementById('count');
+			const compteur = document.getElementById('visit-counter');
 
-			updateVisitCount();
-
-			function updateVisitCount() {
-				fetch('https://api.countapi.xyz/update/florin-popcom/codepen/?amount=1')
-				.then(res => res.json())
-				.then(res => {
-					countEl.innerHTML = res.value;
-				})
-			}
+			fetch('https://api.countapi.xyz/hit/jasan-calc.netlify.app/visits')
+			  .then(data => data.json())
+			  .then(data => {
+			  const valeur = data.value;
+			  console.log(data.value);
+			  compteur.textContent = valeur;
+			});
 		</script>
 		<script>
 			function allocation_calc() {

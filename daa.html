@@ -229,7 +229,22 @@
 				<div class="remark"></div>
 			</section>
 		</div>
+		<div align=center>
+			<div>Visitor Count</div>
+			<div id="visit-counter" class="visit-counter">0</div>
+		</div>
+		
+		<script>
+			const compteur = document.getElementById('visit-counter');
 
+			fetch('https://api.countapi.xyz/hit/jasan-calc.netlify.app/visits')
+			  .then(data => data.json())
+			  .then(data => {
+			  const valeur = data.value;
+			  console.log(data.value);
+			  compteur.textContent = valeur;
+			});
+		</script>
 		<script>
 			function allocation_calc() {
 				var budget = document.getElementById('totalBudget');
