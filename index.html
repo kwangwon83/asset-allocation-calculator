@@ -16,6 +16,8 @@
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 		<link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet" />
+		
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 	</head>
 	<body>
 		<nav class="navbar navbar-inverse">
@@ -52,7 +54,7 @@
 				<p class="input-value">
 					수 수 료(%) :
 					<input
-						type="text"
+						type="number"
 						class="feeInput"
 						id="buysellfee"
 						style="text-align: right; padding-right: 10px;"
@@ -62,12 +64,13 @@
 				<p class="input-value">
 					금 액(USD) :
 					<input
-						type="text"
+						type="number"
 						class="budgetInput"
 						id="totalBudget"
 						style="text-align: right; padding-right: 10px;"
-						onkeyup="if(window.event.keyCode==13){allocation_calc()}"
+						oninput="allocation_calc()"
 					/>
+						<!-- onkeyup="if(window.event.keyCode==13){allocation_calc()}" -->
 				</p>
 			</section>
 		</div>
@@ -140,8 +143,9 @@
 			</section>
 		</div>
 		<div align=center>
-			<div>Visitor Count</div>
+			<div><br><br>Visitor Count</div>
 			<div id="visit-counter" class="visit-counter">0</div>
+			<br>
 		</div>
 		
 		<script>
