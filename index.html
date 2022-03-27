@@ -3,21 +3,24 @@
 	<head>
 		<title>[자산배분 계산기]</title>
 		<div id="hidden-footer">Permenant</div>
-		
+
 		<link
 			rel="stylesheet"
 			href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
 		/>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-		
+
 		<script type="text/javascript" src="GShRead.js"></script>
 		<link rel="stylesheet" href="style.css" />
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 		<link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet" />
-		
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+		/>
 	</head>
 	<body>
 		<nav class="navbar navbar-inverse">
@@ -45,7 +48,9 @@
 			<div>
 				<p></p>
 				<li class="explain-header">
-					영구 포트폴리오란, 주식(25%), 장기채권(25%), 원자재(25%), 현금/단기채권(25%)에 투자하고 주기적(월, 분기, 반기, 연)으로 리밸런싱하여 비율을 맞추는 자산배분 전략이다.	
+					영구 포트폴리오란, 주식(25%), 장기채권(25%), 원자재(25%), 현금/단기채권(25%)에
+					투자하고 주기적(월, 분기, 반기, 연)으로 리밸런싱하여 비율을 맞추는 자산배분
+					전략이다.
 				</li>
 			</div>
 		</section>
@@ -70,7 +75,7 @@
 						style="text-align: right; padding-right: 10px;"
 						oninput="allocation_calc()"
 					/>
-						<!-- onkeyup="if(window.event.keyCode==13){allocation_calc()}" -->
+					<!-- onkeyup="if(window.event.keyCode==13){allocation_calc()}" -->
 				</p>
 			</section>
 		</div>
@@ -133,7 +138,6 @@
 				</table>
 			</section>
 
-			
 			<section class="table-footnote">
 				<div class="remark"></div>
 				<div class="remark"></div>
@@ -142,22 +146,29 @@
 				<div class="remark"></div>
 			</section>
 		</div>
-		<div align=center>
-			<div><br><br>Visitor Count</div>
+
+		<script
+			async
+			src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8909533120303262"
+			crossorigin="anonymous"
+		></script>
+
+		<div align="center">
+			<div><br /><br />Visitor Count</div>
 			<div id="visit-counter" class="visit-counter">0</div>
-			<br>
+			<br />
 		</div>
-		
+
 		<script>
 			const compteur = document.getElementById('visit-counter');
 
 			fetch('https://api.countapi.xyz/hit/jasan-calc.netlify.app/visits')
-			  .then(data => data.json())
-			  .then(data => {
-			  const valeur = data.value;
-			  console.log(data.value);
-			  compteur.textContent = valeur;
-			});
+				.then((data) => data.json())
+				.then((data) => {
+					const valeur = data.value;
+					console.log(data.value);
+					compteur.textContent = valeur;
+				});
 		</script>
 		<script>
 			function allocation_calc() {
@@ -183,7 +194,9 @@
 							// _ALLO[i] = Number(allocation[i].innerHTML.replace("/%/g", ""));
 							_ALLO[i] = Number(allocation[i].innerHTML.replace('%', ''));
 							_ALLO[i] = _ALLO[i] / 100;
-							_DATA[i] = (Number(budget.value) * _ALLO[i]) / (_PRICE[i] * (1 + stockfee.value / 100));
+							_DATA[i] =
+								(Number(budget.value) * _ALLO[i]) /
+								(_PRICE[i] * (1 + stockfee.value / 100));
 							_DATA[i] = Math.floor(_DATA[i]);
 						}
 					}
