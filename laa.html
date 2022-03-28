@@ -3,15 +3,15 @@
 	<head>
 		<title>[자산배분 계산기]</title>
 		<div id="hidden-footer">LAA</div>
-
+		
 		<link
 			rel="stylesheet"
 			href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
 		/>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-
-		<script type="text/javascript" src="GShRead.js"></script>
+		
+		<script type="text/javascript" src="GShReadAuto.js"></script>
 		<link rel="stylesheet" href="style.css" />
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -25,6 +25,7 @@
 		></script>
 		
 	</head>
+	
 	<body>
 		<nav class="navbar navbar-inverse">
 			<p class="navbar-text"></p>
@@ -35,17 +36,6 @@
 				<li><a href="./daa.html">DAA</a></li>
 			</ul>
 		</nav>
-		<!-- <table style="border: 1px;" id="dynamicTable">
-			<thead>
-				<tr>
-					<th>이름</th>
-					<th>직업</th>
-					<th>나이</th>
-					<th>취미</th>
-				</tr>
-			</thead>
-			<tbody id="dynamicTbody">....</tbody>
-		</table> -->
 		<section class="explain">
 			<h1 align="center">LAA 자산배분(Lethargic Asset Allocation)</h1>
 			<div>
@@ -65,7 +55,7 @@
 				<p class="input-value">
 					수 수 료(%) :
 					<input
-						type="number"
+						type="text"
 						class="feeInput"
 						id="buysellfee"
 						style="text-align: right; padding-right: 10px;"
@@ -75,11 +65,11 @@
 				<p class="input-value">
 					금 액(USD) :
 					<input
-						type="number"
+						type="text"
 						class="budgetInput"
 						id="totalBudget"
 						style="text-align: right; padding-right: 10px;"
-						oninput="allocation_calc()"
+				    	oninput="allocation_calc()"
 					/>
 						<!-- onkeyup="if(window.event.keyCode==13){allocation_calc()}" -->
 				</p>
@@ -88,81 +78,25 @@
 
 		<div class="content-container">
 			<section class="dataTable">
-				※ 주가는 실시간이 아니며, 15분 이상 지연 정보임
-				<table class="mt-1 assetTable">
-					<thead>
-						<tr>
-							<th scope="cols">구 분</th>
-							<th scope="cols">티 커</th>
-							<th scope="cols">주 가<br />(USD)</th>
-							<th scope="cols">비 중<br />(%)</th>
-							<th scope="cols">배분수량<br />(주)</th>
-							<!-- <th scope="cols">비고</th> -->
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td scope="row" class="category"></td>
-							<td scope="row" class="ticker"></td>
-							<td class="price"></td>
-							<td class="allocation"></td>
-							<td class="stocks">0</td>
-							<!-- <td class="remark"></td> -->
-						</tr>
-						<tr>
-							<td scope="row" class="category" id="even"></td>
-							<td scope="row" class="ticker" id="even"></td>
-							<td class="price" id="even"></td>
-							<td class="allocation" id="even"></td>
-							<td class="stocks" id="even">0</td>
-							<!-- <td class="remark" id="even"></td> -->
-						</tr>
-						<tr>
-							<td scope="row" class="category"></td>
-							<td scope="row" class="ticker"></td>
-							<td class="price"></td>
-							<td class="allocation"></td>
-							<td class="stocks">0</td>
-							<!-- <td class="remark"></td> -->
-						</tr>
-						<tr>
-							<td scope="row" class="category" id="even"></td>
-							<td scope="row" class="ticker" id="even"></td>
-							<td class="price" id="even"></td>
-							<td class="allocation" id="even"></td>
-							<td class="stocks" id="even">0</td>
-							<!-- <td class="remark" id="even"></td> -->
-						</tr>
-						<tr>
-							<td scope="row" class="category"></td>
-							<td scope="row" class="ticker"></td>
-							<td class="price"></td>
-							<td class="allocation"></td>
-							<td class="stocks">0</td>
-							<!-- <td class="remark"></td> -->
-						</tr>
-					</tbody>
+				※ 실시간 주가와 다소 차이가 있을 수 있음(새로고침 시 업데이트)
+				<table class="assetTable">
+					<thead class="titleTable"></thead>
+					<tbody class="contentTable"></tbody>
 				</table>
 			</section>
 
-			<section class="table-footnote">
-				<div class="remark"></div>
-				<div class="remark"></div>
-				<div class="remark"></div>
-				<div class="remark"></div>
-				<div class="remark"></div>
-			</section>
+			<section class="table-footnote"></section>
 		</div>
 		
-		<div align=center>
-			<font size="2rem">(C) 2014. <font color="red"><i>Rolling Pig</i></font> all rights reserved.</font><br>
-		</div>
 		<div align=center>
 			<div><br><br>Visitor Count</div>
 			<div id="visit-counter" class="visit-counter">0</div>
 			<br>
 		</div>
 		
+		<div align=center>
+			<font size="2rem">(C) 2022. <font color="red"><i>Rolling Pig</i></font> all rights reserved.</font><br>
+		</div>
 		<script>
 			const compteur = document.getElementById('visit-counter');
 
@@ -170,7 +104,7 @@
 			  .then(data => data.json())
 			  .then(data => {
 			  const valeur = data.value;
-			  console.log(data.value);
+			  // console.log(data.value);
 			  compteur.textContent = valeur;
 			});
 		</script>
@@ -181,7 +115,7 @@
 				var ticker = document.getElementsByClassName('ticker');
 				var price = document.getElementsByClassName('price');
 				var allocation = document.getElementsByClassName('allocation');
-				console.log(isNum(Number(budget.value)));
+				// console.log(isNum(Number(budget.value)));
 				if (isNum(Number(budget.value))) {
 					let _TICKER = [];
 					let _DATA = [];
@@ -198,9 +132,7 @@
 							// _ALLO[i] = Number(allocation[i].innerHTML.replace("/%/g", ""));
 							_ALLO[i] = Number(allocation[i].innerHTML.replace('%', ''));
 							_ALLO[i] = _ALLO[i] / 100;
-							_DATA[i] =
-								(Number(budget.value) * _ALLO[i]) /
-								(_PRICE[i] * (1 + stockfee.value / 100));
+							_DATA[i] = (Number(budget.value) * _ALLO[i]) / (_PRICE[i] * (1 + stockfee.value / 100));
 							_DATA[i] = Math.floor(_DATA[i]);
 						}
 					}
@@ -217,7 +149,7 @@
 						}
 					}
 				} else {
-					console.log('숫자를 입력하시오');
+					// console.log('숫자를 입력하시오');
 				}
 			}
 

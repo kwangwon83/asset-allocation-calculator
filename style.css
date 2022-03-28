@@ -21,7 +21,8 @@ h1 {
 .navbar-inverse {
 	font-size: 1.7rem;
 	color: white;
-	margin: 10px auto;
+	margin-top: 1px auto;
+	margin-bottom: 10px auto;
 	line-height: 2
 }
 
@@ -71,7 +72,7 @@ table.assetTable td.stocks {
 	font-weight: bold;
 }
 
-input[type=number] {
+input[type=text] {
 	font-size: 1.8rem;
 	width: 40%;
 	height: 20%;
@@ -79,7 +80,7 @@ input[type=number] {
 	padding-right: 10px;
 }
 
-input[type=number]:focus {
+input[type=text]:focus {
 	background-color: #C3E5AE;
 	border: 2px solid black
 }

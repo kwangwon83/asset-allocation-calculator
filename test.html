@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<title>[자산배분 계산기]</title>
-		<div id="hidden-footer">VAA</div>
+		<div id="hidden-footer">DAA</div>
 		
 		<link
 			rel="stylesheet"
@@ -11,7 +11,7 @@
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 		
-		<script type="text/javascript" src="GShReadAuto.js"></script>
+		<script type="text/javascript" src="GShRead_Copy.js"></script>
 		<link rel="stylesheet" href="style.css" />
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -37,18 +37,23 @@
 			</ul>
 		</nav>
 		<section class="explain">
-			<h1 align="center">VAA 자산배분(Vigilant Asset Allocation)</h1>
+			<h1 align="center">DAA 자산배분(Defensive Asset Allocation)</h1>
 			<div>
 				<p></p>
 				<li class="explain-header">
-					VAA는 공격자산, 수비자산으로 구분 : 모든 공격자산의 모멘텀 스코어가 모두 0 이상일 때, 공격자산의 모멘텀 스코어 상위 1개 종목에 투자, 그 외에는 수비자산 모멘텀 스코어 상위 1개 종목에 투자
-					<br> * 모멘텀 스코어 = (1개월 수익률 * 12) + (3개월 수익률 * 4) + (6개월 수익률 * 2) + (12개월 수익률 * 1)
+					DAA는 공격자산, 수비자산, 카나리아 자산으로 구분<br>
+					카나리아 자산의 모멘텀 스코어가 모두 0 이상 ▶ 공격자산의 모멘텀 스코어 상위 2개 종목에 투자<br>
+					그 외(카나리아 자산 하나라도 모멘텀 스코어 0 미만) ▶ 수비자산 모멘텀 스코어 상위 1개 종목에 투자<br>
+					 * 모멘텀 스코어 = (1개월 수익률 * 12) + (3개월 수익률 * 4) + (6개월 수익률 * 2) + (12개월 수익률 * 1)
 				</li>
 				<li class="explain-header">
-					<u>공격자산</u> : SPY(미국주식), VEA(선진국 주식), EEM(이머징 주식), AGG(미국 총채권)
+					<u>공격자산</u> : SPY(S&P500), IWM(러셀 2000), QQQ(나스닥), VGK(유럽 주식), EWJ(일본 주식), VWO(이머징 마켓 주식), VNQ(미국 리츠), GSG(원자재), GLD(금), TLT(미국 장기채), HYG(하이일드 채권), LQD(회사채)
 				</li>
 				<li class="explain-header">
-					<u>수비자산</u> : LQD(미국 회사채), SHY(미국 단기국채), IEF(미국 중기국채)
+					<u>수비자산</u> : SHV(미국 초단기채), IEF(미국 중기국채), UST(미국 중기채 레버리지)
+				</li>
+				<li class="explain-header">
+					<u>카나리아 자산</u> : VWO(이머징 마켓 주식), BND(미국 종합채권)
 				</li>
 			</div>
 		</section>
@@ -106,7 +111,7 @@
 			  .then(data => data.json())
 			  .then(data => {
 			  const valeur = data.value;
-			  // console.log(data.value);
+			  console.log(data.value);
 			  compteur.textContent = valeur;
 			});
 		</script>
@@ -117,7 +122,7 @@
 				var ticker = document.getElementsByClassName('ticker');
 				var price = document.getElementsByClassName('price');
 				var allocation = document.getElementsByClassName('allocation');
-				// console.log(isNum(Number(budget.value)));
+				console.log(isNum(Number(budget.value)));
 				if (isNum(Number(budget.value))) {
 					let _TICKER = [];
 					let _DATA = [];
@@ -151,7 +156,7 @@
 						}
 					}
 				} else {
-					// console.log('숫자를 입력하시오');
+					console.log('숫자를 입력하시오');
 				}
 			}
 
