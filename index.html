@@ -3,29 +3,31 @@
 	<head>
 		<title>[자산배분 계산기]</title>
 		<div id="hidden-footer">Permenant</div>
-		
+
 		<link
 			rel="stylesheet"
 			href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
 		/>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-		
+
 		<script type="text/javascript" src="GShReadAuto.js"></script>
 		<link rel="stylesheet" href="style.css" />
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 		<link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet" />
-		
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+		/>
 		<script
 			async
 			src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8909533120303262"
 			crossorigin="anonymous"
 		></script>
-		
 	</head>
-	
+
 	<body>
 		<nav class="navbar navbar-inverse">
 			<p class="navbar-text"></p>
@@ -66,9 +68,9 @@
 						class="budgetInput"
 						id="totalBudget"
 						style="text-align: right; padding-right: 10px;"
-				    	oninput="allocation_calc()"
+						oninput="allocation_calc()"
 					/>
-						<!-- onkeyup="if(window.event.keyCode==13){allocation_calc()}" -->
+					<!-- onkeyup="if(window.event.keyCode==13){allocation_calc()}" -->
 				</p>
 			</section>
 		</div>
@@ -85,25 +87,37 @@
 			<section class="table-footnote"></section>
 		</div>
 		
-		<div align=center>
-			<div><br><br>Visitor Count</div>
-			<div id="visit-counter" class="visit-counter">0</div>
-			<br>
+		<!-- 유튜브 삽입 -->
+		<div><h1 class="video-related" align="center"><u>▼ 관련영상 ▼</u></h1></div>
+		<div class="youtube-container">
+			
+			<iframe
+				src="https://www.youtube.com/embed/2BkZZNnlCHA"
+				frameborder="0"
+			></iframe>
 		</div>
-		
-		<div align=center>
-			<font size="2rem">(C) 2022. <font color="red"><i>Rolling Pig</i></font> all rights reserved.</font><br>
+
+		<div align="center">
+			<div><br /><br />Visitor Count</div>
+			<div id="visit-counter" class="visit-counter">0</div>
+			<br />
+		</div>
+
+		<div align="center">
+			<font size="2rem"
+				>(C) 2022. <font color="red"><i>Rolling Pig</i></font> all rights reserved.</font
+			><br />
 		</div>
 		<script>
 			const compteur = document.getElementById('visit-counter');
 
 			fetch('https://api.countapi.xyz/hit/jasan-calc.netlify.app/visits')
-			  .then(data => data.json())
-			  .then(data => {
-			  const valeur = data.value;
-			  // console.log(data.value);
-			  compteur.textContent = valeur;
-			});
+				.then((data) => data.json())
+				.then((data) => {
+					const valeur = data.value;
+					// console.log(data.value);
+					compteur.textContent = valeur;
+				});
 		</script>
 		<script>
 			function allocation_calc() {
@@ -129,7 +143,9 @@
 							// _ALLO[i] = Number(allocation[i].innerHTML.replace("/%/g", ""));
 							_ALLO[i] = Number(allocation[i].innerHTML.replace('%', ''));
 							_ALLO[i] = _ALLO[i] / 100;
-							_DATA[i] = (Number(budget.value) * _ALLO[i]) / (_PRICE[i] * (1 + stockfee.value / 100));
+							_DATA[i] =
+								(Number(budget.value) * _ALLO[i]) /
+								(_PRICE[i] * (1 + stockfee.value / 100));
 							_DATA[i] = Math.floor(_DATA[i]);
 						}
 					}

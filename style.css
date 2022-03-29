@@ -7,7 +7,7 @@ h1 {
 	font-size: 2.5rem;
 }
 
-.nav>li {
+.nav > li {
 	display: inline-block;
 }
 
@@ -23,7 +23,7 @@ h1 {
 	color: white;
 	margin-top: 1px auto;
 	margin-bottom: 10px auto;
-	line-height: 2
+	line-height: 2;
 }
 
 section.explain {
@@ -72,7 +72,7 @@ table.assetTable td.stocks {
 	font-weight: bold;
 }
 
-input[type=text] {
+input[type='text'] {
 	font-size: 1.8rem;
 	width: 40%;
 	height: 20%;
@@ -80,9 +80,9 @@ input[type=text] {
 	padding-right: 10px;
 }
 
-input[type=text]:focus {
-	background-color: #C3E5AE;
-	border: 2px solid black
+input[type='text']:focus {
+	background-color: #c3e5ae;
+	border: 2px solid black;
 }
 
 .input-value {
@@ -116,4 +116,27 @@ input[type=text]:focus {
 
 .visit-counter {
 	font-size: 1em;
+}
+
+.video-related {
+	font-size: 2rem;
+	color: blue;
+}
+
+.youtube-container {
+	position: relative;
+	padding-bottom: 56.25%;
+	padding-top: 30px;
+	height: 0;
+	overflow: hidden;
+}
+
+.youtube-container iframe,
+.youtube-container object,
+.youtube-container embed {
+	position: absolute;
+	top: 0%;
+	left: 0%;
+	width: 100%;
+	height: 100%;
 }
