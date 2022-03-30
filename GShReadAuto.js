@@ -12,8 +12,8 @@ async function main() {
 	// DATA[1]은 표 타이틀
 	var ramarks = '';
 	for (var i = 1; i < DATA.length; i++) {
-		console.log(i)
-		console.log(DATA.length)
+		// console.log(i)
+		// console.log(DATA.length)
 		var lines = '';
 		// i == 1 : 표 타이틀
 		if (i == 1) {
