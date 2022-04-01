@@ -67,70 +67,53 @@ async function separateRowFromJson(SOURCE) {
 	return _DATA;
 }	
 
-// async function separateRowFromJson(SOURCE) {
-// 	const FETCHED_SOURCE = await fetch(SOURCE);
-// 	let _temp = await FETCHED_SOURCE.json();
-// 	COLUMNS = _temp['values'].slice(0, 1);
-// 	temp = _temp['values'].slice(1);
+function allocation_calc() {
+	var budget = document.getElementById('totalBudget');
+	var stockfee = document.getElementById('buysellfee');
+	var ticker = document.getElementsByClassName('ticker');
+	var price = document.getElementsByClassName('price');
+	var allocation = document.getElementsByClassName('allocation');
 
-// 	let _DATA = [];
-// 	for (var i = 0; i < Object.keys(temp).length; i++) {
-// 		_DATA[i] = {};
-// 		for (var k = 0; k < Object.keys(COLUMNS[0]).length; k++) {
-// 			_DATA[i][COLUMNS[0][k]] = temp[i][k];
-// 		}
-// 	}
-// 	return _DATA;
-// }	
-	
-	
-// 	const TARGET = {
-// 		category: document.getElementsByClassName('category'),
-// 		ticker: document.getElementsByClassName('ticker'),
-// 		price: document.getElementsByClassName('price'),
-// 		allocation: document.getElementsByClassName('allocation'),
-// 		remark: document.getElementsByClassName('remark'),
-// 	};
-	
-// 	var allotype = document.getElementById("hidden-footer")
-// 	allotype = allotype.innerText
-// 	console.log(allotype)
-// 	const SOURCE =
-// 		'https://sheets.googleapis.com/v4/spreadsheets/1EgZIN-4haNamkKY82lx15CQ1U9yzpyT7dmhx4hxu-bU/values/'+allotype+'?key=AIzaSyByDPPts30eSfIvDBheddnKhuxyqqmmdw4';
+	if (isNum(Number(budget.value))) {
+		let _TICKER = [];
+		let _DATA = [];
+		let _PRICE = [];
+		let _ALLO = [];
+		for (var i = 0; i < price.length; i++) {
+			if (String(ticker[i].innerHTML) == 'USD') {
+				_ALLO[i] = Number(allocation[i].innerHTML.replace('%', ''));
+				_ALLO[i] = _ALLO[i] / 100;
+				_DATA[i] = Number(budget.value) * _ALLO[i];
+				_DATA[i] = Math.floor(_DATA[i]);
+			} else {
+				_PRICE[i] = Number(price[i].innerHTML);
+				// _ALLO[i] = Number(allocation[i].innerHTML.replace("/%/g", ""));
+				_ALLO[i] = Number(allocation[i].innerHTML.replace('%', ''));
+				_ALLO[i] = _ALLO[i] / 100;
+				_DATA[i] =
+					(Number(budget.value) * _ALLO[i]) /
+					(_PRICE[i] * (1 + stockfee.value / 100));
+				_DATA[i] = Math.floor(_DATA[i]);
+			}
+		}
 
-// 	const DATA = await separateRowFromJson(SOURCE);
+		const TARGET = {
+			stocks: document.getElementsByClassName('stocks'),
+		};
 
-// 	for (let i = 0; i < DATA.length; i++) {
-// 		if (i == 0) {
-// 			TARGET['category'][i].textContent = DATA[i][Object.keys(DATA[i])[0]];
-// 		} else {
-// 			if (DATA[i][Object.keys(DATA[i])[0]] != DATA[i-1][Object.keys(DATA[i-1])[0]]) {
-// 				TARGET['category'][i].textContent = DATA[i][Object.keys(DATA[i])[0]];
-// 			} else {
-// 				TARGET['category'][i].textContent = ""
-// 			}
-// 		}
-		
-// 		TARGET['ticker'][i].textContent = DATA[i][Object.keys(DATA[i])[1]];
-// 		TARGET['price'][i].textContent = DATA[i][Object.keys(DATA[i])[2]];
-// 		TARGET['allocation'][i].textContent = DATA[i][Object.keys(DATA[i])[3]];
-// 		TARGET['remark'][i].textContent = DATA[i][Object.keys(DATA[i])[4]];
-// 		console.log(Object.keys(DATA[3])[0]);
-// 	}
-// }
+		for (let i = 0; i < _DATA.length; i++) {
+			if (isNaN(_DATA[i])) {
+				TARGET['stocks'][i].textContent = '-';
+			} else {
+				TARGET['stocks'][i].textContent = _DATA[i].toLocaleString();
+			}
+		}
+	}
+}
 
-// async function separateRowFromJson(SOURCE) {
-// 	const FETCHED_SOURCE = await fetch(SOURCE);
-// 	let _temp = await FETCHED_SOURCE.json();
-// 	COLUMNS = _temp['values'].slice(0, 1);
-// 	temp = _temp['values'].slice(1);
-
-// 	let _DATA = [];
-// 	for (var i = 0; i < Object.keys(temp).length; i++) {
-// 		_DATA[i] = {};
-// 		for (var k = 0; k < Object.keys(COLUMNS[0]).length; k++) {
-// 			_DATA[i][COLUMNS[0][k]] = temp[i][k];
-// 		}
-// 	}
-// 	return _DATA;
-// }
+function isNum(s) {
+	s += ''; // 문자열로 변환
+	s = s.replace(/^\s*|\s*$/g, ''); // 좌우 공백 제거
+	if (s == '' || isNaN(s)) return false;
+	return true;
+}

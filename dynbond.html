@@ -25,7 +25,7 @@
 		></script>
 		
 		<title>[자산배분 계산기]</title>
-		<div id="hidden-footer">PERM</div>
+		<div id="hidden-footer">DYNBOND</div>
 	</head>
 	<body>
 		<nav class="navbar navbar-dark bg-dark">
@@ -77,13 +77,18 @@
 		</nav>
 		
 		<section class="explain">
-			<h1 align="center">영구 포트폴리오(Permenant Portfolio)</h1>
+			<h1 align="center">채권 동적자산배분</h1>
 			<div>
 				<p></p>
 				<li class="explain-header">
-					영구 포트폴리오란, 주식(25%), 장기채권(25%), 원자재(25%), 현금/단기채권(25%)에
-					투자하고 주기적(월, 분기, 반기, 연)으로 리밸런싱하여 비율을 맞추는 자산배분
-					전략이다.
+					채권 동적자산배분은 모멘텀 스코어가 상위 3개의 채권자산에 투자하되, 3개 자산 중
+					모멘텀 스코어가 0 이하인 자산의 비중만큼 현금 보유<br />
+					* 모멘텀 스코어 = 최근 6개월 수익률
+				</li>
+				<li class="explain-header">
+					<u>채권자산</u> : SHY(미국 단기국채), IEF(미국 중기국채), TLT(미국 장기국채),
+					TIP(미국 물가연동채), LQD(미국 회사채), HYG(미국 하이일드), BWX(국제 채권),
+					EMB(이머징 채권)
 				</li>
 			</div>
 		</section>
@@ -148,7 +153,7 @@
 			<h1 class="video-related" align="center"><u>▼ 관련영상 ▼</u></h1>
 		</div>
 		<div class="youtube-container">
-			<iframe src="https://www.youtube.com/embed/2BkZZNnlCHA" frameborder="0"></iframe>
+			<iframe src="https://www.youtube.com/embed/mUoxiGneJ98" frameborder="0"></iframe>
 		</div>
 		
 		<!-- 카운터 및 저작권 -->

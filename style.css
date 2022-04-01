@@ -4,7 +4,8 @@ body {
 }
 
 h1 {
-	font-size: 2.5rem;
+	margin-top: 3%;
+	font-size: 2rem;
 }
 
 .nav > li {
@@ -12,7 +13,7 @@ h1 {
 }
 
 .explain-header {
-	font-size: 1.5rem;
+	font-size: 1rem;
 	text-indent: -25px;
 	margin-left: 50px;
 	margin-right: 50px;
@@ -36,7 +37,7 @@ table.assetTable {
 	/* border-collapse: collapse; */
 	text-align: center;
 	line-height: 1.5;
-	font-size: 1.5rem;
+	font-size: 1rem;
 	/* border-top: 1px solid #ccc; */
 	/* border-bottom: 1px solid #ccc; */
 	/* margin: 10px auto; */
@@ -47,7 +48,7 @@ table.assetTable thead th {
 	/* width: 150px; */
 	padding: 5px;
 	/* font-weight: bold; */
-	font-size: 1.5rem;
+	font-size: 1rem;
 	text-align: center;
 	vertical-align: middle;
 	color: #fff;
@@ -73,7 +74,7 @@ table.assetTable td.stocks {
 }
 
 input[type='text'] {
-	font-size: 1.8rem;
+	font-size: 1rem;
 	width: 40%;
 	height: 20%;
 	text-align: right;
@@ -86,15 +87,14 @@ input[type='text']:focus {
 }
 
 .input-value {
-	font-size: 2rem;
+	font-size: 1rem;
 	margin-top: 10px;
 	margin-bottom: 10px;
 }
 
 .input-container {
 	font-size: 2rem;
-	margin: 4%;
-	margin-bottom: 2%;
+	margin: 2% 4%;
 }
 
 .content-container {
@@ -107,7 +107,7 @@ input[type='text']:focus {
 
 .remark {
 	color: 'grey';
-	font-size: 1.3rem;
+	font-size: 0.7rem;
 }
 
 #hidden-footer {
@@ -115,11 +115,12 @@ input[type='text']:focus {
 }
 
 .visit-counter {
-	font-size: 1em;
+	font-size: 0.7rem;
 }
 
 .video-related {
-	font-size: 2rem;
+	margin-top: 7%;
+	font-size: 1rem;
 	color: blue;
 }
 
