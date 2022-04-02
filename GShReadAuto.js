@@ -1,5 +1,4 @@
 var allotype = document.getElementById("hidden-footer")
-console.log(allotype.innerText)
 if (allotype.innerText == 'INDEX') {
 	window.addEventListener('DOMContentLoaded', index);
 } else {
@@ -7,7 +6,6 @@ if (allotype.innerText == 'INDEX') {
 }
 
 async function main() {
-	console.log("Main")
 	allotype = document.getElementById("hidden-footer")
 	allotype = allotype.innerText
 	const SOURCE = 'https://sheets.googleapis.com/v4/spreadsheets/1EgZIN-4haNamkKY82lx15CQ1U9yzpyT7dmhx4hxu-bU/values/'+allotype+'?key=AIzaSyByDPPts30eSfIvDBheddnKhuxyqqmmdw4';
@@ -37,25 +35,34 @@ async function main() {
 			$(".titleTable").append(lines);
 		
 		} else {
+			var alloFlag = 1
 			lines += '<tr>';
 			if (i % 2 == 0) {
 				for (var k = 0; k < DATA[i].length; k++) {
 					if (k == DATA[i].length - 1) {
 						ramarks += '<div class="remark">' + DATA[i][k] + '</div>'
 					} else {
-						lines += '<td id="even" class="' + DATA[0][k].toLowerCase() + '">' + DATA[i][k] + '</td>'
+						if (DATA[i][k] != "None") {
+							lines += '<td id="even" class="' + DATA[0][k].toLowerCase() + '">' + DATA[i][k] + '</td>'
+						} else {
+							alloFlag = 0
+						}
 					}
 				}
-				lines += '<td class="stocks" id="even">0</td>'
+				if (alloFlag == 1) {lines += '<td class="stocks" id="even">0</td>'}
 			} else {
 				for (var k = 0; k < DATA[i].length; k++) {
 					if (k == DATA[i].length - 1) {
 						ramarks += '<div class="remark">' + DATA[i][k] + '</div>'
 					} else {
-						lines += '<td class="' + DATA[0][k].toLowerCase() + '">' + DATA[i][k] + '</td>'
+						if (DATA[i][k] != "None") {
+							lines += '<td class="' + DATA[0][k].toLowerCase() + '">' + DATA[i][k] + '</td>'
+						} else {
+							alloFlag = 0
+						}
 					}
 				}
-				lines += '<td class="stocks">0</td>'
+				if (alloFlag == 1) {lines += '<td class="stocks">0</td>'}
 			}
 			lines += '</tr>';
 			// $(".contentTable").empty();
@@ -66,7 +73,6 @@ async function main() {
 }
 
 async function index() {
-	console.log("Index")
 	var allotype = document.getElementById("hidden-footer")
 	allotype = allotype.innerText
 	const SOURCE = 'https://sheets.googleapis.com/v4/spreadsheets/1EgZIN-4haNamkKY82lx15CQ1U9yzpyT7dmhx4hxu-bU/values/'+allotype+'?key=AIzaSyByDPPts30eSfIvDBheddnKhuxyqqmmdw4';
