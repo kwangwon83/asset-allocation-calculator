@@ -25,11 +25,11 @@
 		></script>
 		
 		<title>[자산배분 계산기]</title>
-		<div id="hidden-footer">PERM</div>
+		<div id="hidden-footer">INDEX</div>
 	</head>
 	<body>
 		<nav class="navbar navbar-dark bg-dark">
-			<a class="navbar-brand" href="#">[자산배분 계산기]</a>
+			<a class="navbar-brand" href="index.html">[자산배분 계산기]</a>
 			<button
 				class="navbar-toggler"
 				type="button"
@@ -52,7 +52,7 @@
 					<li class="nav-item">
 						<a class="nav-link" href="#">Pricing</a>
 					</li> -->
-					<li class="nav-item dropdown">
+					<!-- <li class="nav-item dropdown">
 						<a
 							class="nav-link dropdown-toggle"
 							href="#"
@@ -60,11 +60,20 @@
 							data-toggle="dropdown"
 							aria-haspopup="true"
 							aria-expanded="false"
+						> -->
+					<li class="nav-item dropdown show">
+						<a
+							class="nav-link dropdown-toggle"
+							href="#"
+							id="navbarDropdownMenuLink"
+							aria-haspopup="true"
+							aria-expanded="true"
 						>
+							<!-- data-toggle="dropdown" -->
 							자산배분 전략
 						</a>
-						<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-							<a class="dropdown-item" href="index.html">영구포트폴리오</a>
+						<div class="dropdown-menu show" aria-labelledby="navbarDropdownMenuLink">
+							<a class="dropdown-item" href="perm.html">영구포트폴리오</a>
 							<a class="dropdown-item" href="laa.html">LAA</a>
 							<a class="dropdown-item" href="vaa.html">VAA</a>
 							<a class="dropdown-item" href="paa.html">PAA</a>
@@ -77,46 +86,14 @@
 		</nav>
 		
 		<section class="explain">
-			<h1 align="center">영구 포트폴리오(Permenant Portfolio)</h1>
+			<h1 align="center">전략별 보유종목&비중</h1>
 			<div>
-				<p></p>
-				<li class="explain-header">
-					영구 포트폴리오란, 주식(25%), 장기채권(25%), 원자재(25%), 현금/단기채권(25%)에
-					투자하고 주기적(월, 분기, 반기, 연)으로 리밸런싱하여 비율을 맞추는 자산배분
-					전략이다.
-				</li>
 			</div>
 		</section>
-		
-		<div class="input-container">
-			<section class="controlPanel">
-				<p class="input-value">
-					수 수 료(%) :
-					<input
-						type="text"
-						class="feeInput"
-						id="buysellfee"
-						style="text-align: right; padding-right: 10px;"
-						value="0.25"
-					/>
-				</p>
-				<p class="input-value">
-					금 액(USD) :
-					<input
-						type="text"
-						class="budgetInput"
-						id="totalBudget"
-						style="text-align: right; padding-right: 10px;"
-						oninput="allocation_calc()"
-					/>
-				</p>
-			</section>
-		</div>
 		
 		<div class="content-container">
 			<section class="dataTable">
 				<div class="remark">
-					※ 실시간 주가와 다소 차이가 있을 수 있음(새로고침 시 업데이트)
 				</div>
 				<table class="assetTable">
 					<thead class="titleTable"></thead>

@@ -1,8 +1,14 @@
-window.addEventListener('DOMContentLoaded', main);
+var allotype = document.getElementById("hidden-footer")
+console.log(allotype.innerText)
+if (allotype.innerText == 'INDEX') {
+	window.addEventListener('DOMContentLoaded', index);
+} else {
+	window.addEventListener('DOMContentLoaded', main);
+}
 
 async function main() {
-	
-	var allotype = document.getElementById("hidden-footer")
+	console.log("Main")
+	allotype = document.getElementById("hidden-footer")
 	allotype = allotype.innerText
 	const SOURCE = 'https://sheets.googleapis.com/v4/spreadsheets/1EgZIN-4haNamkKY82lx15CQ1U9yzpyT7dmhx4hxu-bU/values/'+allotype+'?key=AIzaSyByDPPts30eSfIvDBheddnKhuxyqqmmdw4';
 	
@@ -57,6 +63,47 @@ async function main() {
 		}
 	}
 	$(".table-footnote").append(ramarks);
+}
+
+async function index() {
+	console.log("Index")
+	var allotype = document.getElementById("hidden-footer")
+	allotype = allotype.innerText
+	const SOURCE = 'https://sheets.googleapis.com/v4/spreadsheets/1EgZIN-4haNamkKY82lx15CQ1U9yzpyT7dmhx4hxu-bU/values/'+allotype+'?key=AIzaSyByDPPts30eSfIvDBheddnKhuxyqqmmdw4';
+	
+	const DATA = await separateRowFromJson(SOURCE);
+	
+	// DATA[0]은 ClassName
+	// DATA[1]은 표 타이틀
+	for (var i = 1; i < DATA.length; i++) {
+		
+		var lines = '';
+		// i == 1 : 표 타이틀
+		if (i == 1) {
+			lines += '<tr>';
+			
+			for (var k = 0; k < DATA[i].length; k++) {
+				lines += '<th>' + DATA[i][k] + '</th>'
+			}
+			lines += '</tr>';
+			$(".titleTable").append(lines);
+		
+		} else {
+			lines += '<tr>';
+			if (i % 2 == 0) {
+				for (var k = 0; k < DATA[i].length; k++) {
+					lines += '<td id="even" class="' + DATA[0][k].toLowerCase() + '">' + DATA[i][k] + '</td>'
+				}
+			} else {
+				for (var k = 0; k < DATA[i].length; k++) {
+					lines += '<td class="' + DATA[0][k].toLowerCase() + '">' + DATA[i][k] + '</td>'
+				}
+			}
+			lines += '</tr>';
+			// $(".contentTable").empty();
+			$(".contentTable").append(lines);
+		}
+	}
 }
 
 async function separateRowFromJson(SOURCE) {
