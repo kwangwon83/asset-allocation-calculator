@@ -25,7 +25,7 @@
 		></script>
 		
 		<title>[자산배분 계산기]</title>
-		<div id="hidden-footer">PERM</div>
+		<div id="hidden-footer">CDM</div>
 	</head>
 	<body>
 		<nav class="navbar navbar-dark bg-dark">
@@ -90,12 +90,18 @@
 		</nav>
 		
 		<section class="explain">
-			<h1 align="center">영구 포트폴리오</h1>
-			<h2 align="center">(Permenant Portfolio)</h2>
+			<h1 align="center">종합 듀얼모멘텀</h1>
+			<h2 align="center">(Composite Dual Momentum)</h2>
 			<div>
 				<p></p>
 				<li class="explain-header">
-					영구 포트폴리오란, 주식(25%), 장기채권(25%), 원자재(25%), 현금/단기채권(25%)에 투자하고 주기적(월, 분기, 반기, 연)으로 리밸런싱하여 비율을 맞추는 자산배분 전략
+					각 자산군에서 둘 중 모멘텀 스코어가 높은 자산에 25% 비중 투자<br>
+					* 모멘텀 스코어 = 12개월 수익률<br>
+					※ 단, 각 자산군 내 모든 ETF가 미국 초단기채(BIL)보다 모멘텀 스코어가 낮을 시 해당 비중은 현금에 투자<br>
+					<u>자산군#1</u> : 미국 주식(SPY), 선진국 주식(EFA)<br>
+					<u>자산군#2</u> : 미국 회사채(LQD), 미국 하이일드 채권(HYG)<br>
+					<u>자산군#3</u> : 미국 리츠(VNQ), 모기지 리츠(REM)<br>
+					<u>자산군#4</u> : 미국 장기채(TLT), 금(GLD)<br><br>
 				</li>
 			</div>
 		</section>
@@ -160,7 +166,7 @@
 			<h1 class="video-related" align="center"><u>▼ 관련영상 ▼</u></h1>
 		</div>
 		<div class="youtube-container">
-			<iframe src="https://www.youtube.com/embed/2BkZZNnlCHA" frameborder="0"></iframe>
+			<iframe src="https://www.youtube.com/embed/b9YLkxSPIMs" frameborder="0"></iframe>
 		</div>
 		
 		<!-- 카운터 및 저작권 -->
