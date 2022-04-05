@@ -30,7 +30,7 @@ async function main() {
 					lines += '<th>' + DATA[i][k] + '</th>'
 				}
 			}
-			lines += '<th>배분수량(주)</th>'
+			lines += '<th>배분수량<br>(주)</th>'
 			lines += '</tr>';
 			$(".titleTable").append(lines);
 		
