@@ -26,7 +26,7 @@
 		></script>
 		
 		<title>[자산배분 계산기]</title>
-		<div id="hidden-footer">DAA</div>
+		<div id="hidden-footer">FAA</div>
 	</head>
 	<body>
 		<nav class="navbar navbar-dark bg-dark">
@@ -92,23 +92,20 @@
 		</nav>
 		
 		<section class="explain">
-			<h1 align="center">DAA 자산배분</h1>
-			<h2 align="center">(Defensive Asset Allocation)</h2>
+			<h1 align="center">FAA 자산배분</h1>
+			<h2 align="center">(Flexible Asset Allocation)</h2>
 			<div>
 				<p></p>
 				<ul class="first-level">
-					<li>DAA는 공격자산, 수비자산, 카나리아 자산으로 구분<br>
-						* 모멘텀 스코어 = (1개월 수익률 * 12) + (3개월 수익률 * 4) + (6개월 수익률 * 2) + (12개월 수익률 * 1)</li>
+					<li>자산군(7개 자산)의 모멘텀, 변동성, 상관성을 가중평균 평균하여 상위 3개 종목에 투자하는 방법</li>
+					<li>단, 모멘텀 < 0인 종목의 비중은 현금에 투자</li>
 					<ul class="second-level">
-						<li>카나리아 자산의 모멘텀 스코어가 모두 0 이상 ▶ 공격자산의 모멘텀 스코어 상위 2개 종목에 투자</li>
-						<li>그 외(카나리아 자산 하나라도 모멘텀 스코어 0 미만) ▶ 수비자산 모멘텀 스코어 상위 1개 종목에 투자</li>
+						<li>모멘텀 : 4개월 수익률</li>
+						<li>변동성 : 4개월 일일수익률의 표준편차(standard deviation)</li>
+						<li>상관성 : 하나의 자산과 다른 6개 자산간의 일일수익률의 상관성(correlation)</li>
+						<li>가중평균 : (모멘텀 * 1) + (변동성 * 0.5) + (상관성 * 0.5)</li>
 					</ul>
-					<li><u>공격자산</u> : SPY(미국 대형주), IWM(미국 소형주), QQQ(나스닥), VGK(유럽 주식), EWJ(일본 주식), EEM(신흥국 주식), VNQ(미국 리츠), DBC(원자재), GLD(금), TLT(미국 장기채), HYG(미국 하이일드 채권), LQD(미국 회사채)
-					</li>
-					<li><u>수비자산</u> : SHY(미국 단기국채), IEF(미국 중기국채), LQD(미국 회사채)
-					</li>
-					<li><u>카나리아 자산</u> : VWO(신흥국 주식), BND(미국 종합채권)
-					</li>
+					<li><u>자산군</u> : VTI(미국 주식), VEA(선진국 주식), VWO(신흥국 주식), SHY(미국 단기국채), BND(미국 혼합채권), GSG(원자재), VNQ(미국 리츠)</li>
 				</ul>
 			</div>
 		</section>
@@ -173,7 +170,7 @@
 			<h1 class="video-related" align="center"><u>▼ 관련영상 ▼</u></h1>
 		</div>
 		<div class="youtube-container">
-			<iframe src="https://www.youtube.com/embed/2cNkblOxnFQ" frameborder="0"></iframe>
+			<iframe src="https://www.youtube.com/embed/2BkZZNnlCHA" frameborder="0"></iframe>
 		</div>
 		
 		<!-- 카운터 및 저작권 -->

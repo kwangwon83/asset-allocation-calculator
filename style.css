@@ -1,5 +1,13 @@
+html,
 body {
-	font-size: 1rem;
+	-webkit-text-size-adjust: none; /* 크롬, 사파리, 오페라 신버전 */
+	-ms-text-size-adjust: none; /* IE */
+	-moz-text-size-adjust: none; /* 파이어폭스 */
+	-o-text-size-adjust: none; /* 오페라 구버전 */
+}
+
+body {
+	font-size: 10px;
 	font-family: 'Do Hyeon', sans-serif;
 }
 
@@ -17,31 +25,18 @@ h2 {
 	display: inline-block;
 }
 
-/* @media (max-width: 640px) {
-	ul.first-level {
-		font-size: 1rem;
-		padding: 0px 10px;
-		margin-left: 20px;
-		margin-right: 10px;
-	}
-
-	ul.second-level {
-		font-size: 0.9rem;
-		padding: 0px 10px;
-	}
-} */
-	
 ul.first-level {
-	font-size: 1rem;
+	font-size: 1.3rem;
 	padding: 0px 10px;
 	margin-left: 20px;
 	margin-right: 10px;
 }
 
 ul.second-level {
-	font-size: 0.9rem;
+	font-size: 1.1rem;
 	padding: 0px 10px;
 }
+
 /* .explain-header {
 	font-size: 0.9rem;
 	text-indent: 0em;
@@ -57,17 +52,13 @@ ul.second-level {
 	line-height: 2;
 }
 
-section.explain {
-	font-size: 1.5rem;
-}
-
 table.assetTable {
 	/* display: inline-block; */
 	width: 100%;
 	/* border-collapse: collapse; */
 	text-align: center;
 	line-height: 1.5;
-	font-size: 0.8rem;
+	font-size: 1.2rem;
 	/* border-top: 1px solid #ccc; */
 	/* border-bottom: 1px solid #ccc; */
 	/* margin: 10px auto; */
@@ -78,7 +69,7 @@ table.assetTable thead th {
 	/* width: 150px; */
 	padding: 5px;
 	/* font-weight: bold; */
-	font-size: 0.8rem;
+	font-size: 1.2rem;
 	text-align: center;
 	vertical-align: middle;
 	color: #fff;
@@ -105,7 +96,7 @@ table.assetTable td.stocks {
 }
 
 input[type='text'] {
-	font-size: 1rem;
+	font-size: 1.2rem;
 	width: 40%;
 	height: 20%;
 	text-align: right;
@@ -118,7 +109,7 @@ input[type='text']:focus {
 }
 
 .input-value {
-	font-size: 1rem;
+	font-size: 1.2rem;
 	margin-top: 10px;
 	margin-bottom: 10px;
 }
@@ -138,7 +129,7 @@ input[type='text']:focus {
 
 .remark {
 	color: 'grey';
-	font-size: 0.6rem;
+	font-size: 0.8rem;
 }
 
 #hidden-footer {
@@ -171,4 +162,68 @@ input[type='text']:focus {
 	left: 0%;
 	width: 100%;
 	height: 100%;
+}
+
+@media screen and (max-width: 640px) {
+	ul.first-level {
+		font-size: 1.0rem;
+		padding: 0px 10px;
+		margin-left: 20px;
+		margin-right: 10px;
+	}
+
+	ul.second-level {
+		font-size: 0.9rem;
+		padding: 0px 10px;
+	}
+
+	table.assetTable {
+		/* display: inline-block; */
+		width: 100%;
+		/* border-collapse: collapse; */
+		text-align: center;
+		line-height: 1.5;
+		font-size: 0.8rem;
+		/* border-top: 1px solid #ccc; */
+		/* border-bottom: 1px solid #ccc; */
+		/* margin: 10px auto; */
+		margin-bottom: 5px;
+	}
+
+	table.assetTable thead th {
+		/* width: 150px; */
+		padding: 5px;
+		/* font-weight: bold; */
+		font-size: 0.8rem;
+		text-align: center;
+		vertical-align: middle;
+		color: #fff;
+		background: #e7708d;
+		margin: 10px 10px;
+		padding: 2px;
+	}
+	
+	input[type='text'] {
+		font-size: 1rem;
+		width: 40%;
+		height: 20%;
+		text-align: right;
+		padding-right: 10px;
+	}
+	
+	.input-value {
+		font-size: 1rem;
+		margin-top: 10px;
+		margin-bottom: 10px;
+	}
+
+	.input-container {
+		font-size: 2rem;
+		margin: 2% 4%;
+	}
+	
+	.remark {
+		color: 'grey';
+		font-size: 0.6rem;
+	}
 }
