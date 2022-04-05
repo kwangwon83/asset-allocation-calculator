@@ -1,6 +1,6 @@
 body {
 	font-size: 1rem;
-	font-family: 'Jua', sans-serif;
+	font-family: 'Do Hyeon', sans-serif;
 }
 
 h1 {
@@ -17,12 +17,37 @@ h2 {
 	display: inline-block;
 }
 
-.explain-header {
+/* @media (max-width: 640px) {
+	ul.first-level {
+		font-size: 1rem;
+		padding: 0px 10px;
+		margin-left: 20px;
+		margin-right: 10px;
+	}
+
+	ul.second-level {
+		font-size: 0.9rem;
+		padding: 0px 10px;
+	}
+} */
+	
+ul.first-level {
 	font-size: 1rem;
-	text-indent: -25px;
-	margin-left: 50px;
-	margin-right: 50px;
+	padding: 0px 10px;
+	margin-left: 20px;
+	margin-right: 10px;
 }
+
+ul.second-level {
+	font-size: 0.9rem;
+	padding: 0px 10px;
+}
+/* .explain-header {
+	font-size: 0.9rem;
+	text-indent: 0em;
+	margin-left: 10px;
+	margin-right: 40px;
+} */
 
 .navbar-inverse {
 	font-size: 1.7rem;
@@ -33,7 +58,7 @@ h2 {
 }
 
 section.explain {
-	font-size: 2rem;
+	font-size: 1.5rem;
 }
 
 table.assetTable {
@@ -42,7 +67,7 @@ table.assetTable {
 	/* border-collapse: collapse; */
 	text-align: center;
 	line-height: 1.5;
-	font-size: 1rem;
+	font-size: 0.8rem;
 	/* border-top: 1px solid #ccc; */
 	/* border-bottom: 1px solid #ccc; */
 	/* margin: 10px auto; */
@@ -53,21 +78,22 @@ table.assetTable thead th {
 	/* width: 150px; */
 	padding: 5px;
 	/* font-weight: bold; */
-	font-size: 1rem;
+	font-size: 0.8rem;
 	text-align: center;
 	vertical-align: middle;
 	color: #fff;
 	background: #e7708d;
-	margin: 20px 10px;
+	margin: 10px 10px;
+	padding: 2px;
 }
 
 table.assetTable tbody th {
 	/* width: 150px; */
-	padding: 10px;
+	padding: 2px;
 }
 table.assetTable td {
 	/* width: 350px; */
-	padding: 5px;
+	padding: 2px;
 	vertical-align: top;
 }
 table.assetTable #even {
@@ -112,7 +138,7 @@ input[type='text']:focus {
 
 .remark {
 	color: 'grey';
-	font-size: 0.7rem;
+	font-size: 0.6rem;
 }
 
 #hidden-footer {
