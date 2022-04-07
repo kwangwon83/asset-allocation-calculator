@@ -8,7 +8,7 @@ if (allotype.innerText == 'INDEX') {
 async function main() {
 	allotype = document.getElementById("hidden-footer")
 	allotype = allotype.innerText
-	const SOURCE = 'https://sheets.googleapis.com/v4/spreadsheets/1EgZIN-4haNamkKY82lx15CQ1U9yzpyT7dmhx4hxu-bU/values/'+allotype+'?key=AIzaSyByDPPts30eSfIvDBheddnKhuxyqqmmdw4';
+	const SOURCE = 'https://sheets.googleapis.com/v4/spreadsheets/1EgZIN-4haNamkKY82lx15CQ1U9yzpyT7dmhx4hxu-bU/values/'+allotype+'!A1:J30?key=AIzaSyByDPPts30eSfIvDBheddnKhuxyqqmmdw4';
 	
 	const DATA = await separateRowFromJson(SOURCE);
 	
@@ -65,11 +65,11 @@ async function main() {
 				if (alloFlag == 1) {lines += '<td class="stocks">0</td>'}
 			}
 			lines += '</tr>';
-			// $(".contentTable").empty();
 			$(".contentTable").append(lines);
 		}
 	}
 	$(".table-footnote").append(ramarks);
+	$(".loading_space").empty();
 }
 
 async function index() {
@@ -106,10 +106,10 @@ async function index() {
 				}
 			}
 			lines += '</tr>';
-			// $(".contentTable").empty();
 			$(".contentTable").append(lines);
 		}
 	}
+	$(".loading_space").empty();
 }
 
 async function separateRowFromJson(SOURCE) {
