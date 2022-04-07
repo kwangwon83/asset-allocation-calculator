@@ -1,18 +1,7 @@
-var allotype = document.getElementById('hidden-footer');
-if (allotype.innerText == 'INDEX') {
-	window.addEventListener('DOMContentLoaded', index);
-} else {
-	window.addEventListener('DOMContentLoaded', main);
-}
+window.addEventListener('DOMContentLoaded', handleClientLoad);
 
-async function main() {
-	var allotype = document.getElementById('hidden-footer');
-	allotype = allotype.innerText;
-	const SOURCE =
-		'https://sheets.googleapis.com/v4/spreadsheets/1EgZIN-4haNamkKY82lx15CQ1U9yzpyT7dmhx4hxu-bU/values/' + allotype + '!A1:J30?key=AIzaSyByDPPts30eSfIvDBheddnKhuxyqqmmdw4';
-
-	const DATA = await separateRowFromJson(SOURCE);
-	console.log(DATA)
+async function main(DATA) {
+	
 	// DATA[0]은 ClassName
 	// DATA[1]은 표 타이틀
 	var ramarks = '';
@@ -86,15 +75,7 @@ async function main() {
 	$('.loading_space').empty();
 }
 
-async function index() {
-	var allotype = document.getElementById('hidden-footer');
-	allotype = allotype.innerText;
-	const SOURCE =
-		'https://sheets.googleapis.com/v4/spreadsheets/1EgZIN-4haNamkKY82lx15CQ1U9yzpyT7dmhx4hxu-bU/values/' +
-		allotype +
-		'?key=AIzaSyByDPPts30eSfIvDBheddnKhuxyqqmmdw4';
-
-	const DATA = await separateRowFromJson(SOURCE);
+async function index(DATA) {
 
 	// DATA[0]은 ClassName
 	// DATA[1]은 표 타이틀
@@ -188,4 +169,32 @@ function isNum(s) {
 	s = s.replace(/^\s*|\s*$/g, ''); // 좌우 공백 제거
 	if (s == '' || isNaN(s)) return false;
 	return true;
+}
+
+// https://stackoverflow.com/questions/62374092/get-a-cell-value-from-a-public-google-spreadsheet-using-v-4-api
+async function handleClientLoad() {	
+	var _SHEETNAME = document.getElementById('hidden-footer');
+	_SHEETNAME = _SHEETNAME.innerText;
+	
+	const apiKey = 'AIzaSyByDPPts30eSfIvDBheddnKhuxyqqmmdw4'; // Please set your API key.
+	
+	gapi.load('client', () => {
+		gapi.client.setApiKey(apiKey);
+		gapi.client.load('sheets', 'v4', (value) => {
+			gapi.client.sheets.spreadsheets.values
+				.get({
+					spreadsheetId: '1EgZIN-4haNamkKY82lx15CQ1U9yzpyT7dmhx4hxu-bU',
+					// range: 'INDEX!A1:J30',
+					range: _SHEETNAME + '!A1:J30',
+				})
+				.then((res) => {
+					const value = res.result.values;
+					if (_SHEETNAME == 'INDEX') {
+						index(value);
+					} else {
+						main(value);
+					}
+				});
+		});
+	});
 }
