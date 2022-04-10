@@ -28,7 +28,7 @@
 		<script async defer src="https://apis.google.com/js/api.js"></script>
 		
 		<title>[자산배분 계산기]</title>
-		<div id="hidden-footer">GTAA</div>
+		<div id="hidden-footer">AAA</div>
 	</head>
 	<body>
 		<nav class="navbar fixed-top navbar-dark bg-dark">
@@ -96,17 +96,18 @@
 		</nav>
 		
 		<section class="explain">
-			<h1 align="center">GTAA 자산배분</h1>
-			<h2 align="center">(Global Tactical Asset Allocation)</h2>
+			<h1 align="center">AAA 자산배분</h1>
+			<h2 align="center">(Adaptive Asset Allocation)</h2>
 			<div>
 				<p></p>
 				<ul class="first-level">
-					<li>GTAA는 다음 5개 자산에 각 20% 비중으로 투자하되, 모멘텀 스코어 0 미만인 자산의 비중만큼은 현금 보유<br>
-						* 모멘텀 스코어 = (가격 / 10개월 이동평균) - 1
-					</li>
-					<li>
-						<u>투자자산군</u> : SPY(미국 대형주), EFA(선진국 주식), IEF(미국 중기국채), DBC(원자재), VNQ(미국 리츠)
-					</li>
+					<li>모멘텀 0 이상인 자산에 대해 마코비츠의 최소분산 포트폴리오 이론에 따라 자산을 배분하는 전략</li>
+					<ul class="second-level">
+						<li>모멘텀 : 6개월 수익률</li>
+						<li>배분비중 : 마코비츠 최소분산 포트폴리오 이론에 따름<br>
+							* <a href="https://portfoliooptimizer.io">https://portfoliooptimizer.io</a>의 API 사용</li>
+					</ul>
+					<li><u>자산군</u> : SPY(미국 대형주), VGK(유럽 주식), EWJ(일본 주식), EEM(신흥국 주식), VNQ(미국 리츠), RWX(국제 리츠), IEF(미국 중기채), TLT(미국 장기채), GLD(금), DBC(원자재)</li>
 				</ul>
 			</div>
 		</section>
@@ -174,7 +175,7 @@
 			<h1 class="video-related" align="center"><u>▼ 관련영상 ▼</u></h1>
 		</div>
 		<div class="youtube-container">
-			<iframe src="https://www.youtube.com/embed/XC_eFe2qDG8" frameborder="0"></iframe>
+			<iframe src="https://www.youtube.com/embed/8RSKceLoE_8" frameborder="0"></iframe>
 		</div>
 		
 		<!-- 카운터 및 저작권 -->
