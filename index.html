@@ -97,22 +97,49 @@
 			</div>
 		</nav>
 		
-		<section class="explain">
-			<h1 align="center">전략별 보유종목&비중</h1>
-			<div>
+		<!-- Hero Section -->
+		<section class="hero-section">
+			<div class="hero-content">
+				<h1 class="hero-title">전략별 보유종목 & 비중</h1>
+				<p class="hero-subtitle">다양한 자산배분 전략을 한눈에 확인하고 투자 포트폴리오를 계획하세요</p>
+				<div class="hero-badge">
+					<span class="badge-text">📊 실시간 업데이트</span>
+				</div>
 			</div>
 		</section>
 		
 		<div class="content-container">
-			<section class="dataTable">
-				<div class="remark">
+			<!-- Strategy Cards Section -->
+			<section class="strategy-info">
+				<div class="info-card">
+					<div class="info-icon">💡</div>
+					<h3>투자 전략 선택</h3>
+					<p>전략 이름을 클릭하면 자세한 자산배분 계산기로 이동합니다</p>
 				</div>
-				<table class="assetTable">
-					<thead class="titleTable"></thead>
-					<tbody class="contentTable">※ 전략이름을 터치(클릭)하시면, 자산배분 계산기 화면으로 이동합니다.</tbody>
-				</table>
-				<div class="loading_space" align="center"><br>
-					<div class="loader"></div>
+			</section>
+
+			<section class="dataTable">
+				<div class="table-wrapper">
+					<div class="remark"></div>
+					<table class="assetTable">
+						<thead class="titleTable"></thead>
+						<tbody class="contentTable">
+							<tr>
+								<td colspan="100%" class="table-notice">
+									<div class="notice-content">
+										<span class="notice-icon">👆</span>
+										전략이름을 터치(클릭)하시면, 자산배분 계산기 화면으로 이동합니다.
+									</div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					<div class="loading_space">
+						<div class="modern-loader">
+							<div class="loader-ring"></div>
+							<div class="loader-text">데이터 로딩중...</div>
+						</div>
+					</div>
 				</div>
 			</section>
 			
@@ -143,11 +170,18 @@
 			<iframe src="https://www.youtube.com/embed/qCMDtXgi1Hw" frameborder="0"></iframe>
 		</div> -->
 		
-		<!-- 저작권 -->
-		<div align="center" class="copyright">
-			<br />
-			(C) 2022. <font color="red"><i>Rolling Pig</i></font> all rights reserved. <br /><br />
-		</div>
+		<!-- Footer -->
+		<footer class="footer">
+			<div class="footer-content">
+				<div class="footer-logo">
+					<span class="logo-icon">🐷</span>
+					<span class="logo-text">Rolling Pig</span>
+				</div>
+				<div class="footer-text">
+					© 2022. All rights reserved.
+				</div>
+			</div>
+		</footer>
 		
 		<script type="text/javascript" src="GShReadAuto.js"></script>
 		
