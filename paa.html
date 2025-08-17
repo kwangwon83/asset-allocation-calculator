@@ -186,26 +186,18 @@
 			<iframe src="https://www.youtube.com/embed/MvpcevwtcUo" frameborder="0"></iframe>
 		</div>
 		
-		<!-- 카운터 및 저작권 -->
-		<div align="center" class="visit-counter">
-			<div><br /><br />Visitor Count</div>
-			<div id="visit-counter">0</div>
-			<br />
-			(C) 2022. <font color="red"><i>Rolling Pig</i></font> all rights reserved. <br /><br />
-		</div>
-		
-		<!-- 카운터 스크립트 -->
-		<script>
-			const compteur = document.getElementById('visit-counter');
-
-			fetch('https://api.countapi.xyz/hit/jasan-calc.netlify.app/visits')
-				.then((data) => data.json())
-				.then((data) => {
-					const valeur = data.value;
-					// console.log(data.value);
-					compteur.textContent = valeur;
-				});
-		</script>
+		<!-- Footer -->
+		<footer class="footer">
+			<div class="footer-content">
+				<div class="footer-logo">
+					<span class="logo-icon">🐷</span>
+					<span class="logo-text">Rolling Pig</span>
+				</div>
+				<div class="footer-text">
+					© 2022. All rights reserved.
+				</div>
+			</div>
+		</footer>
 		
 		<script type="text/javascript" src="GShReadAuto.js"></script>
 		
