@@ -226,9 +226,8 @@ table.assetTable thead th {
   text-align: center;
   vertical-align: middle;
   border: none;
-  position: sticky;
-  top: 60px;
-  z-index: 10;
+  /* sticky 제거 - 겹침 문제 해결 */
+  position: static;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -595,6 +594,7 @@ tbody:empty {
   table.assetTable thead th {
     padding: 10px 6px;
     font-size: 0.8rem;
+    position: static;  /* 모바일에서도 sticky 제거 */
   }
   
   table.assetTable tbody td {
@@ -669,6 +669,7 @@ tbody:empty {
   table.assetTable thead th {
     padding: 8px 4px;
     font-size: 0.75rem;
+    position: static;  /* 480px 이하에서도 sticky 제거 */
   }
   
   table.assetTable tbody td {
@@ -694,6 +695,7 @@ tbody:empty {
   table.assetTable thead th {
     font-size: 1rem;
     padding: 16px 12px;
+    position: static;  /* 큰 화면에서도 sticky 제거 */
   }
   
   table.assetTable tbody td {
