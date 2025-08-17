@@ -1,4 +1,4 @@
-/* Modern Bright Asset Allocation Calculator Styles */
+/* Table-Focused Asset Allocation Calculator Styles */
 :root {
   /* 밝고 부드러운 색상 팔레트 */
   --primary-color: #3b82f6;
@@ -55,17 +55,17 @@ body {
 
 body {
   font-family: 'Do Hyeon', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  font-size: 16px;
-  line-height: 1.6;
+  font-size: 15px;
+  line-height: 1.5;
   color: var(--text-primary);
   background: var(--bg-secondary);
   margin: 0 auto;
   max-width: 1200px;
-  padding-top: 70px;
+  padding-top: 60px;
   min-height: 100vh;
 }
 
-/* Enhanced Navigation */
+/* Compact Navigation */
 nav {
   background: rgba(255, 255, 255, 0.98);
   backdrop-filter: blur(12px);
@@ -77,11 +77,12 @@ nav {
   right: 0;
   z-index: 1000;
   transition: var(--transition);
+  padding: 8px 0;
 }
 
 .navbar-brand {
-  font-size: 1.4rem;
-  font-weight: 700;
+  font-size: 1.2rem;
+  font-weight: 600;
   background: var(--primary-gradient);
   -webkit-background-clip: text;
   background-clip: text;
@@ -97,6 +98,7 @@ nav {
 .nav-link {
   color: var(--text-primary) !important;
   font-weight: 500;
+  font-size: 0.9rem;
   transition: var(--transition);
   position: relative;
 }
@@ -123,13 +125,14 @@ nav {
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius);
   box-shadow: var(--shadow-medium);
-  margin-top: 8px;
+  margin-top: 6px;
 }
 
 .dropdown-item {
   color: var(--text-primary);
   font-weight: 500;
-  padding: 10px 16px;
+  font-size: 0.85rem;
+  padding: 8px 14px;
   transition: var(--transition);
   border-radius: 6px;
   margin: 2px 6px;
@@ -141,62 +144,62 @@ nav {
   transform: translateX(2px);
 }
 
-/* Hero Section - 더 컴팩트하게 */
+/* Compact Hero Section - 표를 위한 최소 공간 */
 .hero-section {
   text-align: center;
-  padding: 20px;
+  padding: 12px 15px;
   background: var(--bg-primary);
   border-radius: var(--border-radius);
-  margin: 15px 20px 15px 20px;
+  margin: 8px 15px 8px 15px;
   box-shadow: var(--shadow-light);
   border: 1px solid var(--border-light);
 }
 
 .hero-content {
-  max-width: 800px;
+  max-width: 700px;
   margin: 0 auto;
 }
 
 .hero-title {
-  font-size: 2rem;
-  font-weight: 700;
+  font-size: 1.4rem;
+  font-weight: 600;
   background: var(--primary-gradient);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  margin-bottom: 8px;
+  margin-bottom: 4px;
   line-height: 1.2;
 }
 
 .hero-subtitle {
-  font-size: 0.95rem;
+  font-size: 0.8rem;
   color: var(--text-secondary);
   margin: 0;
-  line-height: 1.4;
+  line-height: 1.3;
 }
 
-/* Content Container - 더 타이트하게 */
+/* Compact Content Container */
 .content-container {
-  padding: 0 20px;
-  margin-bottom: 20px;
+  padding: 0 15px;
+  margin-bottom: 15px;
 }
 
-/* 표 상단 공백 제거 및 개선된 테이블 래퍼 */
+/* 표 중심 레이아웃 - 최대한 컴팩트 */
 .table-wrapper {
   background: var(--bg-primary);
   border-radius: var(--border-radius);
   overflow: hidden;
   box-shadow: var(--shadow-light);
   border: 1px solid var(--border-color);
-  margin-top: 0;
+  margin: 5px 0;
 }
 
-/* 반응형 테이블 스타일 */
+/* ===== 표 스타일 - 가장 중요한 부분 ===== */
 table.assetTable {
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
-  font-size: 0.9rem;
+  font-size: 1rem;  /* 표 글자 크기 증가 */
   line-height: 1.4;
   margin: 0;
 }
@@ -204,14 +207,14 @@ table.assetTable {
 table.assetTable thead th {
   background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
   color: white;
-  padding: 12px 8px;
-  font-size: 0.85rem;
+  padding: 14px 10px;
+  font-size: 0.95rem;  /* 헤더 글자 크기 증가 */
   font-weight: 600;
   text-align: center;
   vertical-align: middle;
   border: none;
   position: sticky;
-  top: 70px;
+  top: 60px;
   z-index: 10;
   white-space: nowrap;
   overflow: hidden;
@@ -227,21 +230,17 @@ table.assetTable thead th:last-child {
 }
 
 table.assetTable tbody td {
-  padding: 10px 6px;
+  padding: 12px 8px;  /* 패딩 증가 */
   vertical-align: middle;
   border-bottom: 1px solid var(--border-light);
   transition: var(--transition);
-  font-size: 0.8rem;
+  font-size: 0.9rem;  /* 셀 글자 크기 증가 */
   text-align: center;
   background: var(--bg-primary);
   /* 반응형 텍스트 처리 */
   word-wrap: break-word;
   overflow-wrap: break-word;
   hyphens: auto;
-  max-width: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 table.assetTable tbody tr:hover td {
@@ -263,6 +262,7 @@ table.assetTable #even:hover {
 table.assetTable td.stocks {
   font-weight: 700;
   color: var(--primary-color);
+  font-size: 0.95rem;  /* 중요한 수량 정보는 조금 더 크게 */
 }
 
 /* 테이블 셀 호버 효과 개선 */
@@ -271,10 +271,10 @@ table.assetTable tbody td:hover {
   color: var(--text-primary);
 }
 
-/* Table Notice */
+/* Table Notice - 컴팩트 */
 .table-notice {
-  padding: 15px !important;
-  background: linear-gradient(135deg, rgba(34, 197, 94, 0.08) 0%, rgba(59, 130, 246, 0.08) 100%);
+  padding: 10px !important;
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.06) 0%, rgba(59, 130, 246, 0.06) 100%);
   border: none !important;
   text-align: center;
   white-space: normal !important;
@@ -287,30 +287,30 @@ table.assetTable tbody td:hover {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 6px;
   font-weight: 500;
   color: var(--text-secondary);
-  font-size: 0.85rem;
+  font-size: 0.8rem;
 }
 
 .notice-icon {
-  font-size: 1rem;
+  font-size: 0.9rem;
   animation: bounce 2s infinite;
 }
 
 @keyframes bounce {
   0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-  40% { transform: translateY(-3px); }
-  60% { transform: translateY(-2px); }
+  40% { transform: translateY(-2px); }
+  60% { transform: translateY(-1px); }
 }
 
-/* Enhanced Loading Animation */
+/* Compact Loading Animation */
 .loading_space {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 30px 15px;
+  padding: 20px 10px;
   background: var(--bg-secondary);
 }
 
@@ -318,12 +318,12 @@ table.assetTable tbody td:hover {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 15px;
+  gap: 12px;
 }
 
 .loader-ring {
-  width: 40px;
-  height: 40px;
+  width: 32px;
+  height: 32px;
   border: 3px solid rgba(59, 130, 246, 0.2);
   border-left: 3px solid var(--primary-color);
   border-radius: 50%;
@@ -338,7 +338,7 @@ table.assetTable tbody td:hover {
 .loader-text {
   color: var(--text-secondary);
   font-weight: 500;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   animation: fadeInOut 2s ease-in-out infinite;
 }
 
@@ -347,14 +347,14 @@ table.assetTable tbody td:hover {
   50% { opacity: 1; }
 }
 
-/* Input Styles */
+/* 입력 스타일 - 컴팩트하게 */
 input[type='text'] {
-  font-size: 1rem;
-  padding: 10px 14px;
+  font-size: 0.9rem;
+  padding: 6px 10px;  /* 패딩 축소 */
   border: 2px solid var(--border-color);
   border-radius: 6px;
   width: 100%;
-  max-width: 180px;
+  max-width: 140px;  /* 너비 축소 */
   transition: var(--transition);
   background: var(--bg-primary);
   text-align: right;
@@ -364,13 +364,13 @@ input[type='text'] {
 input[type='text']:focus {
   outline: none;
   border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
   background-color: var(--bg-primary);
 }
 
 .input-container {
-  margin: 20px 0;
-  padding: 16px;
+  margin: 10px 0;  /* 여백 축소 */
+  padding: 10px;   /* 패딩 축소 */
   background: var(--bg-primary);
   border-radius: var(--border-radius);
   box-shadow: var(--shadow-light);
@@ -378,18 +378,18 @@ input[type='text']:focus {
 }
 
 .input-value {
-  font-size: 1rem;
-  margin: 12px 0;
+  font-size: 0.9rem;
+  margin: 8px 0;  /* 여백 축소 */
   color: var(--text-primary);
   font-weight: 500;
 }
 
-/* Footer */
+/* Compact Footer */
 .footer {
   background: var(--text-primary);
   color: var(--bg-primary);
-  padding: 16px 20px;
-  margin-top: 15px;
+  padding: 12px 15px;  /* 패딩 축소 */
+  margin-top: 10px;
   border-radius: var(--border-radius) var(--border-radius) 0 0;
 }
 
@@ -403,14 +403,14 @@ input[type='text']:focus {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  margin-bottom: 8px;
-  font-size: 0.95rem;
+  gap: 5px;
+  margin-bottom: 6px;
+  font-size: 0.85rem;
   font-weight: 600;
 }
 
 .logo-icon {
-  font-size: 1.2rem;
+  font-size: 1rem;
   animation: rotate 4s ease-in-out infinite;
 }
 
@@ -428,31 +428,63 @@ input[type='text']:focus {
 
 .footer-text {
   color: var(--text-light);
-  font-size: 0.8rem;
+  font-size: 0.75rem;
 }
 
-/* Table Footnote - ETF 참고 정보 더 작게 */
+/* Table Footnote - 더 작게 */
 .table-footnote {
-  margin-top: 10px;
-  padding: 8px 10px;
+  margin-top: 8px;
+  padding: 6px 8px;
   background: rgba(248, 250, 252, 0.4);
   border-radius: 6px;
   border: 1px solid rgba(226, 232, 240, 0.3);
-  font-size: 0.7rem;
+  font-size: 0.65rem;
   color: var(--text-light);
   line-height: 1.3;
 }
 
 .remark {
   color: var(--text-light);
-  font-size: 0.65rem;
+  font-size: 0.6rem;
   line-height: 1.3;
-  padding: 6px 8px;
-  background: rgba(245, 158, 11, 0.03);
-  border-left: 2px solid rgba(245, 158, 11, 0.2);
+  padding: 4px 6px;
+  background: rgba(245, 158, 11, 0.02);
+  border-left: 2px solid rgba(245, 158, 11, 0.15);
   border-radius: 0 3px 3px 0;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
   opacity: 0.7;
+}
+
+/* 유튜브 컨테이너 - 웹페이지 크기에 맞춤 */
+.youtube-container {
+  position: relative;
+  width: 100%;
+  max-width: 800px;  /* 최대 크기 제한 */
+  margin: 15px auto;  /* 중앙 정렬 */
+  padding-bottom: 56.25%;  /* 16:9 비율 */
+  height: 0;
+  overflow: hidden;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-medium);
+}
+
+.youtube-container iframe,
+.youtube-container object,
+.youtube-container embed {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: var(--border-radius);
+}
+
+/* 관련영상 제목 스타일 */
+.video-related {
+  font-size: 1.1rem;
+  margin: 20px 0 10px 0;
+  color: var(--text-secondary);
+  text-align: center;
 }
 
 /* Hidden Elements */
@@ -465,47 +497,47 @@ input[type='text']:focus {
 .text-right { text-align: right; }
 .font-bold { font-weight: 700; }
 
-/* 반응형 디자인 개선 */
+/* 반응형 디자인 - 표 중심 최적화 */
 @media screen and (max-width: 768px) {
   body {
-    padding: 60px 8px 0 8px;
+    padding: 55px 6px 0 6px;
     font-size: 14px;
   }
   
   nav {
-    padding: 0 8px;
+    padding: 6px 0;
   }
   
   .hero-title {
-    font-size: 1.6rem;
+    font-size: 1.2rem;
   }
   
   .hero-subtitle {
-    font-size: 0.85rem;
-  }
-  
-  .hero-section {
-    padding: 15px;
-    margin: 10px 8px 10px 8px;
-  }
-  
-  .content-container {
-    padding: 0 8px;
-  }
-  
-  /* 모바일에서 테이블 텍스트 더 작게 */
-  table.assetTable {
     font-size: 0.75rem;
   }
   
+  .hero-section {
+    padding: 10px;
+    margin: 6px 6px 6px 6px;
+  }
+  
+  .content-container {
+    padding: 0 6px;
+  }
+  
+  /* 모바일에서 표 텍스트 크기 유지 - 가독성 중요 */
+  table.assetTable {
+    font-size: 0.85rem;  /* 모바일에서도 충분한 크기 */
+  }
+  
   table.assetTable thead th {
-    padding: 8px 4px;
-    font-size: 0.7rem;
+    padding: 10px 6px;
+    font-size: 0.8rem;
   }
   
   table.assetTable tbody td {
-    padding: 8px 4px;
-    font-size: 0.65rem;
+    padding: 10px 6px;
+    font-size: 0.75rem;  /* 모바일에서도 읽기 쉬운 크기 */
     /* 모바일에서는 텍스트 줄바꿈 허용 */
     white-space: normal;
     overflow: visible;
@@ -515,63 +547,94 @@ input[type='text']:focus {
   }
   
   .footer {
-    padding: 12px 15px;
+    padding: 10px 12px;
   }
   
   .notice-content {
     flex-direction: column;
-    gap: 4px;
+    gap: 3px;
     font-size: 0.75rem;
+  }
+  
+  /* 모바일 유튜브 */
+  .youtube-container {
+    max-width: 100%;
+    margin: 10px auto;
+  }
+  
+  .video-related {
+    font-size: 1rem;
+    margin: 15px 0 8px 0;
+  }
+  
+  /* 입력 요소 모바일 최적화 */
+  input[type='text'] {
+    max-width: 120px;
+    font-size: 0.85rem;
+  }
+  
+  .input-container {
+    padding: 8px;
+    margin: 8px 0;
   }
 }
 
 @media screen and (max-width: 480px) {
   .hero-title {
-    font-size: 1.4rem;
+    font-size: 1.1rem;
   }
   
   .hero-subtitle {
-    font-size: 0.8rem;
-  }
-  
-  /* 아주 작은 화면에서는 더욱 컴팩트하게 */
-  table.assetTable {
     font-size: 0.7rem;
   }
   
+  /* 아주 작은 화면에서도 표 가독성 유지 */
+  table.assetTable {
+    font-size: 0.8rem;
+  }
+  
   table.assetTable thead th {
-    padding: 6px 3px;
-    font-size: 0.65rem;
+    padding: 8px 4px;
+    font-size: 0.75rem;
   }
   
   table.assetTable tbody td {
-    padding: 6px 3px;
-    font-size: 0.6rem;
+    padding: 8px 4px;
+    font-size: 0.7rem;
   }
   
   .notice-content {
     font-size: 0.7rem;
   }
+  
+  input[type='text'] {
+    max-width: 100px;
+  }
 }
 
-/* 큰 화면에서의 최적화 */
+/* 큰 화면에서의 최적화 - 표 중심 */
 @media screen and (min-width: 1200px) {
   table.assetTable {
-    font-size: 0.95rem;
+    font-size: 1.1rem;  /* 큰 화면에서는 더 크게 */
   }
   
   table.assetTable thead th {
-    font-size: 0.9rem;
-    padding: 14px 10px;
+    font-size: 1rem;
+    padding: 16px 12px;
   }
   
   table.assetTable tbody td {
-    font-size: 0.85rem;
-    padding: 12px 8px;
+    font-size: 1rem;
+    padding: 14px 10px;
     /* 큰 화면에서는 말줄임표 사용 */
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+  }
+  
+  /* 큰 화면 유튜브 */
+  .youtube-container {
+    max-width: 900px;
   }
 }
 
@@ -609,5 +672,9 @@ input[type='text']:focus {
   .table-wrapper {
     box-shadow: none;
     border: 1px solid #ccc;
+  }
+  
+  .youtube-container {
+    display: none;
   }
 }
