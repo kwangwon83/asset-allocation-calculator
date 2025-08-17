@@ -204,6 +204,19 @@ table.assetTable {
   margin: 0;
 }
 
+/* titleTable - 빈 상태일 때 공간 0 */
+.titleTable:empty {
+  display: none;
+  height: 0;
+  padding: 0;
+  margin: 0;
+  border: none;
+}
+
+.titleTable {
+  /* 내용이 있을 때만 기본 스타일 적용 */
+}
+
 table.assetTable thead th {
   background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
   color: white;
@@ -312,6 +325,16 @@ table.assetTable tbody td:hover {
   justify-content: center;
   padding: 20px 10px;
   background: var(--bg-secondary);
+}
+
+/* loading_space - 빈 상태일 때 공간 완전 제거 */
+.loading_space:empty {
+  display: none !important;
+  height: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: none !important;
+  background: none !important;
 }
 
 .modern-loader {
@@ -443,6 +466,16 @@ input[type='text']:focus {
   line-height: 1.3;
 }
 
+/* table-footnote - 빈 상태일 때 공간 제거 */
+.table-footnote:empty {
+  display: none;
+  height: 0;
+  padding: 0;
+  margin: 0;
+  border: none;
+  background: none;
+}
+
 .remark {
   color: var(--text-light);
   font-size: 0.6rem;
@@ -453,6 +486,16 @@ input[type='text']:focus {
   border-radius: 0 3px 3px 0;
   margin-bottom: 6px;
   opacity: 0.7;
+}
+
+/* remark - 빈 상태일 때 공간 제거 */
+.remark:empty {
+  display: none;
+  height: 0;
+  padding: 0;
+  margin: 0;
+  border: none;
+  background: none;
 }
 
 /* 유튜브 컨테이너 - 웹페이지 크기에 맞춤 */
@@ -490,6 +533,25 @@ input[type='text']:focus {
 /* Hidden Elements */
 #hidden-footer {
   display: none;
+}
+
+/* 범용 빈 컨테이너 최적화 */
+.dataTable > *:empty,
+.content-container > *:empty {
+  display: none !important;
+  height: 0 !important;
+  min-height: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: none !important;
+  background: none !important;
+}
+
+/* 빈 테이블 섹션 최적화 */
+thead:empty,
+tbody:empty {
+  display: none;
+  height: 0;
 }
 
 /* Utility Classes */
@@ -554,6 +616,17 @@ input[type='text']:focus {
     flex-direction: column;
     gap: 3px;
     font-size: 0.75rem;
+  }
+  
+  /* 모바일에서도 빈 공간 제거 적용 */
+  .titleTable:empty,
+  .loading_space:empty,
+  .table-footnote:empty,
+  .remark:empty {
+    display: none !important;
+    height: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
   }
   
   /* 모바일 유튜브 */
