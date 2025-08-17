@@ -143,26 +143,11 @@
 			<iframe src="https://www.youtube.com/embed/qCMDtXgi1Hw" frameborder="0"></iframe>
 		</div> -->
 		
-		<!-- 카운터 및 저작권 -->
-		<div align="center" class="visit-counter">
-			<div><br /><br />Visitor Count</div>
-			<div id="visit-counter">0</div>
+		<!-- 저작권 -->
+		<div align="center" class="copyright">
 			<br />
 			(C) 2022. <font color="red"><i>Rolling Pig</i></font> all rights reserved. <br /><br />
 		</div>
-		
-		<!-- 카운터 스크립트 -->
-		<script>
-			const compteur = document.getElementById('visit-counter');
-
-			fetch('https://api.countapi.xyz/hit/jasan-calc.netlify.app/visits')
-				.then((data) => data.json())
-				.then((data) => {
-					const valeur = data.value;
-					// console.log(data.value);
-					compteur.textContent = valeur;
-				});
-		</script>
 		
 		<script type="text/javascript" src="GShReadAuto.js"></script>
 		
