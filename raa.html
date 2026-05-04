@@ -1,105 +1,107 @@
 <!DOCTYPE html>
-<html lang="en">
-	<head>
-		<link rel="icon" href="./favicon.ico" type="image/x-icon">
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
-		<meta name="google-site-verification" content="_PrI6oJtZolSTBXUs_07NJGIF9m0Kxg3Gtd_P-fDtK4" />
-		<meta name="naver-site-verification" content="55de3af1db6d6b19fd2cf7ca250ebfa96294c71d" />
-		<link rel="preconnect" href="https://fonts.googleapis.com" />
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-		<link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet" />
-		<link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap" rel="stylesheet" />
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous" />
-		<link rel="stylesheet" href="style.css" />
-		<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8909533120303262" crossorigin="anonymous"></script>
-		<!-- Standalone engine -->
-		<script src="js/data-loader.js"></script>
-		<script src="js/engine.js"></script>
-		<script src="js/renderer.js"></script>
-		<title>[자산배분 계산기]</title>
-		<div id="hidden-footer">RAA</div>
-	</head>
-	<body>
-		<nav class="navbar fixed-top navbar-dark bg-dark">
-			<a class="navbar-brand" href="index.html">[자산배분 계산기]</a>
-			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
-			<div class="collapse navbar-collapse" id="navbarNavDropdown">
-				<ul class="navbar-nav">
-					<li class="nav-item active"><a class="nav-link" href="index.html">Home</a></li>
-					<li class="nav-item dropdown show">
-						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" aria-haspopup="true" aria-expanded="true">자산배분 전략</a>
-						<div class="dropdown-menu show" aria-labelledby="navbarDropdownMenuLink">
-							<a class="dropdown-item" href="dual.html">전통듀얼모멘텀</a>
-							<a class="dropdown-item" href="cdm.html">종합듀얼모멘텀</a>
-							<a class="dropdown-item" href="adm.html">가속듀얼모멘텀</a>
-							<a class="dropdown-item" href="perm.html">영구포트폴리오</a>
-							<a class="dropdown-item" href="laa.html">LAA</a>
-							<a class="dropdown-item" href="raa.html">RAA</a>
-							<a class="dropdown-item" href="gtaa.html">GTAA</a>
-							<a class="dropdown-item" href="paa.html">PAA</a>
-							<a class="dropdown-item" href="vaa.html">VAA</a>
-							<a class="dropdown-item" href="faa.html">FAA</a>
-							<a class="dropdown-item" href="aaa.html">AAA</a>
-							<a class="dropdown-item" href="daa.html">DAA</a>
-							<a class="dropdown-item" href="dynbond.html">채권 동적배분</a>
-						</div>
-					</li>
-				</ul>
-			</div>
-		</nav>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="./favicon.ico" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+    <title>자산배분 계산기 - RAA</title>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <a class="navbar-brand" href="index.html">자산배분 계산기</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navMenu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navMenu">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">전략</a>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <a class="dropdown-item" href="dual.html">전통듀얼모멘텀</a>
+                        <a class="dropdown-item" href="cdm.html">종합듀얼모멘텀</a>
+                        <a class="dropdown-item" href="adm.html">가속듀얼모멘텀</a>
+                        <a class="dropdown-item" href="perm.html">영구포트폴리오</a>
+                        <a class="dropdown-item" href="laa.html">LAA</a>
+                        <a class="dropdown-item" href="raa.html">RAA</a>
+                        <a class="dropdown-item" href="gtaa.html">GTAA</a>
+                        <a class="dropdown-item" href="paa.html">PAA</a>
+                        <a class="dropdown-item" href="vaa.html">VAA</a>
+                        <a class="dropdown-item" href="faa.html">FAA</a>
+                        <a class="dropdown-item" href="aaa.html">AAA</a>
+                        <a class="dropdown-item" href="daa.html">DAA</a>
+                        <a class="dropdown-item" href="dynbond.html">채권동적배분</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
 
-		<section class="explain">
-			<h1 align="center">RAA</h1>
-			<h2 align="center">(RAA(Resilient))</h2>
-			<div>
-				<ul class="first-level">
-					<li>RAA란 각 자산별 1/3/6/12개월 모멘텀 스코어와 실업률을 조합해 동적으로 배분하는 전략</li>
-				</ul>
-			</div>
-		</section>
+    <div class="page-header">
+        <h1>RAA</h1>
+        <h2>Resilient Asset Allocation</h2>
+        <div class="page-desc"><p>각 자산별 1/3/6/12개월 모멘텀 스코어와 실업률을 조합하여 동적으로 자산을 배분하는 전략입니다.</p></div>
+    </div>
 
-		<div class="input-container">
-			<section class="controlPanel">
-				<p class="input-value">수 수 료(%) : <input type="text" class="feeInput" id="buysellfee" style="text-align:right;padding-right:10px;" value="0.25"/></p>
-				<p class="input-value">금 액(USD) : <input type="text" class="budgetInput" id="totalBudget" style="text-align:right;padding-right:10px;" oninput="allocation_calc()"/></p>
-			</section>
-		</div>
+    <div class="input-section">
+        <div class="input-row">
+            <label>수수료(%)</label>
+            <input type="text" id="buysellfee" value="0.25">
+        </div>
+        <div class="input-row">
+            <label>투자금액(USD)</label>
+            <input type="text" id="totalBudget" placeholder="예: 10000">
+        </div>
+    </div>
 
-		<div class="content-container">
-			<section class="dataTable">
-				<div class="remark">※ 실시간 주가와 다소 차이가 있을 수 있음</div>
-				<div class="loading_space" align="center"><br><div class="loader"></div></div>
-				<table class="assetTable">
-					<thead class="titleTable"></thead>
-					<tbody class="contentTable"></tbody>
-				</table>
-			</section>
-			<section class="table-footnote"></section>
-		</div>
+    <div class="table-section">
+        <div class="table-remark">※ 실시간 주가와 다소 차이가 있을 수 있습니다</div>
+        <div class="loading-wrap">
+            <div class="loader-spin"></div>
+            <div>데이터 로딩 중...</div>
+        </div>
+        <table class="assetTable" style="display:none;">
+            <thead class="titleTable"></thead>
+            <tbody class="contentTable"></tbody>
+        </table>
+        <div class="table-footnote"></div>
+    </div>
 
-		<footer class="footer">
-			<div class="footer-content">
-				<div class="footer-logo"><span class="logo-icon">🐷</span><span class="logo-text">Rolling Pig</span></div>
-				<div class="footer-text">© 2022. All rights reserved.</div>
-			</div>
-		</footer>
+    
 
-		<script>
-			(async function() {{
-				const loader = new DataLoader();
-				const {{ prices, economic }} = await loader.loadAll();
-				const engine = new AllocationEngine(prices, economic);
-				const renderer = new Renderer(engine);
-				const strategy = document.getElementById('hidden-footer').innerText.trim();
-				await renderer.render(strategy);
-				document.querySelector('.loading_space').innerHTML = '';
-			}})();
-		</script>
+    <footer class="footer">
+        <div>© Rolling Pig. All rights reserved.</div>
+    </footer>
 
-		<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-		<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-		<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-	</body>
+    <div id="hidden-footer">RAA</div>
+
+    <script src="js/data-loader.js"></script>
+    <script src="js/engine.js"></script>
+    <script src="js/renderer.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" crossorigin="anonymous"></script>
+    <script>
+        (async function() {
+            try {
+                const loader = new DataLoader();
+                const { prices, economic } = await loader.loadAll();
+                const engine = new AllocationEngine(prices, economic);
+                const renderer = new Renderer(engine);
+                const strategy = document.getElementById('hidden-footer').textContent.trim();
+                await renderer.render(strategy);
+                document.querySelector('.assetTable').style.display = '';
+            } catch (e) {
+                console.error(e);
+                document.querySelector('.contentTable').innerHTML = '<tr><td colspan="6" class="error-msg">데이터를 불러오는 중 오류가 발생했습니다. 새로고침 핸 보세요.</td></tr>';
+            } finally {
+                document.querySelector('.loading-wrap').style.display = 'none';
+            }
+        })();
+    </script>
+</body>
 </html>

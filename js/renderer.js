@@ -1,43 +1,55 @@
 /**
  * Renderer - renders allocation tables and handles budget calculations
- * Replaces GShRead.js / GShReadAuto.js spreadsheet dependency
  */
 class Renderer {
     constructor(engine) {
         this.engine = engine;
-        this.budgetInput = document.getElementById('totalBudget');
-        this.feeInput = document.getElementById('buysellfee');
-        this.tableBody = document.querySelector('.contentTable');
-        this.tableHead = document.querySelector('.titleTable');
-        this.footnote = document.querySelector('.table-footnote');
     }
 
     async render(strategy) {
-        const data = this.engine.calculate(strategy);
-        if (!data || data.length === 0) {
-            this.showError('계산 데이터를 불러올 수 없습니다.');
+        // Get DOM refs fresh each render (DOM may not be ready at construct time)
+        const tableBody = document.querySelector('.contentTable');
+        const tableHead = document.querySelector('.titleTable');
+        const footnote = document.querySelector('.table-footnote');
+
+        if (!tableBody) {
+            console.error('[Renderer] .contentTable not found');
             return;
         }
 
-        // Clear tables
-        if (this.tableHead) this.tableHead.innerHTML = '';
-        if (this.tableBody) this.tableBody.innerHTML = '';
-        if (this.footnote) this.footnote.innerHTML = '';
+        // Clear
+        tableHead.innerHTML = '';
+        tableBody.innerHTML = '';
+        if (footnote) footnote.innerHTML = '';
 
-        // Render header
-        this.renderHeader(strategy);
+        // Calculate
+        let data;
+        try {
+            data = this.engine.calculate(strategy);
+        } catch (e) {
+            console.error('[Renderer] calculate error:', e);
+            this.showError(tableBody, '계산 중 오류가 발생했습니다.');
+            return;
+        }
 
-        // Render rows
+        if (!data || data.length === 0) {
+            this.showError(tableBody, '전략 "' + strategy + '"의 계산 결과가 없습니다.');
+            return;
+        }
+
+        // Header
+        this.renderHeader(tableHead);
+
+        // Rows
         let prevCategory = '';
         data.forEach((row, idx) => {
-            const isEven = idx % 2 === 0;
             const tr = document.createElement('tr');
-            if (isEven) tr.id = 'even';
+            if (idx % 2 === 0) tr.className = 'even';
 
-            // Category (merge same categories)
+            // Category
             const tdCat = document.createElement('td');
-            tdCat.className = 'category';
-            if (row.category && row.category !== prevCategory && row.category !== 'None') {
+            tdCat.className = 'cell-category';
+            if (row.category && row.category !== prevCategory) {
                 tdCat.textContent = row.category;
                 prevCategory = row.category;
             }
@@ -45,63 +57,61 @@ class Renderer {
 
             // Sector
             const tdSec = document.createElement('td');
-            tdSec.className = 'sector';
+            tdSec.className = 'cell-sector';
             tdSec.textContent = row.sector || '-';
             tr.appendChild(tdSec);
 
             // Ticker
             const tdTick = document.createElement('td');
-            tdTick.className = 'ticker';
+            tdTick.className = 'cell-ticker';
             tdTick.textContent = row.ticker;
             tr.appendChild(tdTick);
 
             // Price
             const tdPrice = document.createElement('td');
-            tdPrice.className = 'price';
+            tdPrice.className = 'cell-price';
             tdPrice.textContent = row.price ? row.price.toFixed(1) : '-';
             tr.appendChild(tdPrice);
 
             // Allocation
             const tdAlloc = document.createElement('td');
-            tdAlloc.className = 'allocation';
+            tdAlloc.className = 'cell-allocation';
             const pct = (row.allocation * 100).toFixed(1);
             tdAlloc.textContent = row.allocation > 0 ? pct + '%' : '-';
             tr.appendChild(tdAlloc);
 
-            // Stocks (calculated on input)
+            // Stocks
             const tdStocks = document.createElement('td');
-            tdStocks.className = 'stocks';
-            tdStocks.textContent = '0';
+            tdStocks.className = 'cell-stocks';
+            tdStocks.textContent = '-';
             tr.appendChild(tdStocks);
 
-            this.tableBody.appendChild(tr);
+            tableBody.appendChild(tr);
 
-            // Remark footnote
-            if (row.remark && this.footnote) {
+            // Footnote
+            if (row.remark && footnote) {
                 const div = document.createElement('div');
                 div.className = 'remark';
                 div.textContent = row.remark;
-                this.footnote.appendChild(div);
+                footnote.appendChild(div);
             }
         });
 
-        // Bind budget calculation
+        // Budget calc
         this.bindCalculation();
-
-        // Update last updated info
         this.updateTimestamp();
     }
 
-    renderHeader(strategy) {
-        if (!this.tableHead) return;
+    renderHeader(tableHead) {
+        if (!tableHead) return;
         const headers = ['구분', '투자섹터', '티커', '주가(USD)', '배분비중(%)', '배분수량(주)'];
         const tr = document.createElement('tr');
         headers.forEach(h => {
             const th = document.createElement('th');
-            th.innerHTML = h;
+            th.textContent = h;
             tr.appendChild(th);
         });
-        this.tableHead.appendChild(tr);
+        tableHead.appendChild(tr);
     }
 
     bindCalculation() {
@@ -110,35 +120,33 @@ class Renderer {
         if (!budgetInput) return;
 
         const calculate = () => {
-            const budget = parseFloat(budgetInput.value) || 0;
+            const budget = parseFloat(budgetInput.value.replace(/,/g, '')) || 0;
             const fee = parseFloat(feeInput?.value) || 0;
-            if (budget <= 0) return;
 
-            const tickers = document.getElementsByClassName('ticker');
-            const prices = document.getElementsByClassName('price');
-            const allocs = document.getElementsByClassName('allocation');
-            const stocks = document.getElementsByClassName('stocks');
+            const stocks = document.getElementsByClassName('cell-stocks');
+            const prices = document.getElementsByClassName('cell-price');
+            const allocs = document.getElementsByClassName('cell-allocation');
+            const tickers = document.getElementsByClassName('cell-ticker');
 
-            for (let i = 0; i < tickers.length; i++) {
-                const ticker = tickers[i].textContent.trim();
-                const priceText = prices[i].textContent.trim();
-                const allocText = allocs[i].textContent.trim();
+            for (let i = 0; i < stocks.length; i++) {
+                const ticker = tickers[i]?.textContent.trim();
+                const priceText = prices[i]?.textContent.trim();
+                const allocText = allocs[i]?.textContent.trim();
 
-                if (ticker === 'USD' || allocText === '-' || priceText === '-') {
-                    stocks[i].textContent = ticker === 'USD' ? '-' : '0';
+                if (!ticker || ticker === 'USD' || allocText === '-' || priceText === '-') {
+                    stocks[i].textContent = '-'
                     continue;
                 }
 
                 const price = parseFloat(priceText);
                 const alloc = parseFloat(allocText.replace('%', '')) / 100;
 
-                if (isNaN(price) || isNaN(alloc) || price <= 0) {
+                if (isNaN(price) || isNaN(alloc) || price <= 0 || budget <= 0) {
                     stocks[i].textContent = '-';
                     continue;
                 }
 
-                const amount = budget * alloc;
-                const qty = Math.floor(amount / (price * (1 + fee / 100)));
+                const qty = Math.floor(budget * alloc / (price * (1 + fee / 100)));
                 stocks[i].textContent = qty.toLocaleString();
             }
         };
@@ -154,10 +162,8 @@ class Renderer {
         }
     }
 
-    showError(msg) {
-        if (this.tableBody) {
-            this.tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:red;padding:20px;">${msg}</td></tr>`;
-        }
+    showError(tableBody, msg) {
+        tableBody.innerHTML = '<tr><td colspan="6" class="error-msg">' + msg + '</td></tr>';
     }
 }
 

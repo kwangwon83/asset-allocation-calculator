@@ -1,205 +1,115 @@
-<!DOCTYPE html> 
-<html lang="en">
-	<head>
-		<link rel="icon" href="./favicon.ico" type="image/x-icon">
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
-		<meta name="google-site-verification" content="_PrI6oJtZolSTBXUs_07NJGIF9m0Kxg3Gtd_P-fDtK4" />
-		<meta name="naver-site-verification" content="55de3af1db6d6b19fd2cf7ca250ebfa96294c71d" />
-		<!-- Google Font -->
-		<link rel="preconnect" href="https://fonts.googleapis.com" />
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-		<link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet" />
-		<link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap" rel="stylesheet" />
-		
-		<link
-			rel="stylesheet"
-			href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
-			integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
-			crossorigin="anonymous"
-		/>
-		<link rel="stylesheet" href="style.css" />
-		
-		<script
-			async
-			src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8909533120303262"
-			crossorigin="anonymous"
-		></script>
-		
-		<!-- Standalone Allocation Engine (no Google Sheets) -->
-		<script src="js/data-loader.js"></script>
-		<script src="js/engine.js"></script>
-		<script src="js/renderer.js"></script>
-		
-		<title>[자산배분 계산기]</title>
-		<div id="hidden-footer">INDEX</div>
-	</head>
-	<body>
-		<nav class="navbar fixed-top navbar-dark bg-dark">
-			<a class="navbar-brand" href="index.html">[자산배분 계산기]</a>
-			<button
-				class="navbar-toggler"
-				type="button"
-				data-toggle="collapse"
-				data-target="#navbarNavDropdown"
-				aria-controls="navbarNavDropdown"
-				aria-expanded="false"
-				aria-label="Toggle navigation"
-			>
-				<span class="navbar-toggler-icon"></span>
-			</button>
-			<div class="collapse navbar-collapse" id="navbarNavDropdown">
-				<ul class="navbar-nav">
-					<li class="nav-item active">
-						<a class="nav-link" href="index.html">Home <span class="sr-only">(current)</span></a>
-					</li>
-					<li class="nav-item dropdown show">
-						<a
-							class="nav-link dropdown-toggle"
-							href="#"
-							id="navbarDropdownMenuLink"
-							aria-haspopup="true"
-							aria-expanded="true"
-						>
-							자산배분 전략
-						</a>
-						<div class="dropdown-menu show" aria-labelledby="navbarDropdownMenuLink">
-							<a class="dropdown-item" href="dual.html">전통듀얼모멘텀(Dual Momentum)</a>
-							<a class="dropdown-item" href="cdm.html">종합듀얼모멘텀(Composite Dual Momentum)</a>
-							<a class="dropdown-item" href="adm.html">가속듀얼모멘텀(Accelerating Dual Momentum)</a>
-							<a class="dropdown-item" href="perm.html">영구포트폴리오(Permenant Portfolio)</a>
-							<a class="dropdown-item" href="laa.html">LAA(Lethargic)</a>
-							<a class="dropdown-item" href="raa.html">RAA(Resilitent)</a>
-							<a class="dropdown-item" href="gtaa.html">GTAA(Global Tactical)</a>
-							<a class="dropdown-item" href="paa.html">PAA(Protective)</a>
-							<a class="dropdown-item" href="vaa.html">VAA(Vigilant)</a>
-							<a class="dropdown-item" href="faa.html">FAA(Flexible)</a>
-							<a class="dropdown-item" href="aaa.html">AAA(Adaptive)</a>
-							<a class="dropdown-item" href="daa.html">DAA(Defensive)</a>
-							<a class="dropdown-item" href="dynbond.html">채권 동적배분</a>
-						</div>
-					</li>
-				</ul>
-			</div>
-		</nav>
-		
-		<!-- Hero Section -->
-		<section class="hero-section">
-			<div class="hero-content">
-				<h1 class="hero-title">전략별 보유종목 & 비중</h1>
-				<p class="hero-subtitle">다양한 자산배분 전략을 한눈에 확인하고 투자 포트폴리오를 계획하세요</p>
-				<p id="lastUpdated" style="font-size:0.85rem;color:#888;margin-top:8px;"></p>
-			</div>
-		</section>
-		
-		<div class="content-container">
-			<section class="dataTable">
-				<div class="table-wrapper">
-					<div class="remark"></div>
-					<table class="assetTable">
-						<thead class="titleTable"></thead>
-						<tbody class="contentTable">
-							<tr>
-								<td colspan="100%" class="table-notice">
-									<div class="notice-content">
-										전략이름을 터치(클릭)하시면, 자산배분 계산기 화면으로 이동합니다.
-									</div>
-								</td>
-							</tr>
-						</tbody>
-					</table>
-					<div class="loading_space">
-						<div class="modern-loader">
-							<div class="loader-ring"></div>
-							<div class="loader-text">데이터 로딩중...</div>
-						</div>
-					</div>
-				</div>
-			</section>
-			
-			<section class="table-footnote"></section>
-		</div>
-		
-		<!-- Footer -->
-		<footer class="footer">
-			<div class="footer-content">
-				<div class="footer-logo">
-					<span class="logo-icon">🐷</span>
-					<span class="logo-text">Rolling Pig</span>
-				</div>
-				<div class="footer-text">
-					© 2022. All rights reserved.
-				</div>
-			</div>
-		</footer>
-		
-		<script>
-			(async function() {
-				const loader = new DataLoader();
-				const { prices, economic } = await loader.loadAll();
-				
-				// Update timestamp
-				const updated = loader.getLastUpdated();
-				if (updated) {
-					document.getElementById('lastUpdated').textContent = 'Updated: ' + updated;
-				}
-				
-				// Render strategy summary table
-				const engine = new AllocationEngine(prices, economic);
-				const renderer = new Renderer(engine);
-				
-				// INDEX page shows all strategies overview
-				const strategies = ['PERM','LAA','RAA','GTAA','PAA','DAA','VAA','FAA','AAA','DUAL','CDM','ADM','DYNBOND'];
-				
-				// Clear and build strategy list
-				const tbody = document.querySelector('.contentTable');
-				tbody.innerHTML = '';
-				
-				strategies.forEach((strat, idx) => {
-					const result = engine.calculate(strat);
-					if (!result || result.length === 0) return;
-					
-					const tr = document.createElement('tr');
-					if (idx % 2 === 0) tr.id = 'even';
-					
-					// Strategy name as link
-					const tdName = document.createElement('td');
-					tdName.style.fontWeight = 'bold';
-					tdName.innerHTML = `<a href="${strat.toLowerCase()}.html">${strat}</a>`;
-					tr.appendChild(tdName);
-					
-					// Assets summary
-					const tdAssets = document.createElement('td');
-					const assetList = result
-						.filter(r => r.allocation > 0)
-						.map(r => r.ticker + '(' + Math.round(r.allocation*100) + '%)')
-						.join(', ');
-					tdAssets.textContent = assetList;
-					tr.appendChild(tdAssets);
-					
-					tbody.appendChild(tr);
-				});
-				
-				// Clear loading
-				document.querySelector('.loading_space').innerHTML = '';
-			})();
-		</script>
-		
-		<script
-			src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-			integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-			crossorigin="anonymous"
-		></script>
-		<script
-			src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
-			integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-			crossorigin="anonymous"
-		></script>
-		<script
-			src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
-			integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-			crossorigin="anonymous"
-		></script>
-	</body>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="./favicon.ico" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+    <title>자산배분 계산기</title>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <a class="navbar-brand" href="index.html">자산배분 계산기</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navMenu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navMenu">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item active"><a class="nav-link" href="index.html">Home</a></li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">전략</a>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <a class="dropdown-item" href="dual.html">전통듀얼모멘텀</a>
+                        <a class="dropdown-item" href="cdm.html">종합듀얼모멘텀</a>
+                        <a class="dropdown-item" href="adm.html">가속듀얼모멘텀</a>
+                        <a class="dropdown-item" href="perm.html">영구포트폴리오</a>
+                        <a class="dropdown-item" href="laa.html">LAA</a>
+                        <a class="dropdown-item" href="raa.html">RAA</a>
+                        <a class="dropdown-item" href="gtaa.html">GTAA</a>
+                        <a class="dropdown-item" href="paa.html">PAA</a>
+                        <a class="dropdown-item" href="vaa.html">VAA</a>
+                        <a class="dropdown-item" href="faa.html">FAA</a>
+                        <a class="dropdown-item" href="aaa.html">AAA</a>
+                        <a class="dropdown-item" href="daa.html">DAA</a>
+                        <a class="dropdown-item" href="dynbond.html">채권동적배분</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="hero-section">
+        <div class="hero-title">전략별 자산배분 계산기</div>
+        <div class="hero-subtitle">14가지 자산배분 전략을 비교하고 투자 포트폴리오를 계획하세요</div>
+        <div id="lastUpdated"></div>
+    </div>
+
+    <div class="strategy-list">
+        <div class="loading-wrap">
+            <div class="loader-spin"></div>
+            <div>데이터 로딩 중...</div>
+        </div>
+        <table id="indexTable" style="display:none;">
+            <thead>
+                <tr><th>전략</th><th>보유 자산 및 비중</th></tr>
+            </thead>
+            <tbody id="indexBody"></tbody>
+        </table>
+    </div>
+
+    <footer class="footer">
+        <div>© Rolling Pig. All rights reserved.</div>
+    </footer>
+
+    <script src="js/data-loader.js"></script>
+    <script src="js/engine.js"></script>
+    <script>
+        (async function() {
+            try {
+                const loader = new DataLoader();
+                const { prices, economic } = await loader.loadAll();
+                const engine = new AllocationEngine(prices, economic);
+
+                const updated = prices?.meta?.lastUpdated;
+                if (updated) document.getElementById('lastUpdated').textContent = 'Updated: ' + updated;
+
+                const strategies = [
+                    ['PERM','영구포트폴리오'],['LAA','LAA(이중모멘텀)'],['RAA','RAA(견고한배분)'],
+                    ['GTAA','GTAA(글로벌전술)'],['PAA','PAA(보호형배분)'],['DAA','DAA(방어형배분)'],
+                    ['VAA','VAA(초보수)'],['FAA','FAA(유연한배분)'],['AAA','AAA(적응형배분)'],
+                    ['DUAL','전통듀얼모멘텀'],['CDM','종합듀얼모멘텀'],['ADM','가속듀얼모멘텀'],
+                    ['DYNBOND','채권동적배분']
+                ];
+
+                const tbody = document.getElementById('indexBody');
+                strategies.forEach(([sid, name]) => {
+                    const result = engine.calculate(sid);
+                    const assets = result
+                        .filter(r => r.allocation > 0)
+                        .map(r => r.ticker + ' ' + Math.round(r.allocation*100) + '%')
+                        .join(', ');
+
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = '<td><a href="' + sid.toLowerCase() + '.html">' + name + '</a></td>' +
+                                   '<td>' + (assets || '현금 100%') + '</td>';
+                    tbody.appendChild(tr);
+                });
+
+                document.getElementById('indexTable').style.display = '';
+            } catch (e) {
+                console.error(e);
+                document.getElementById('indexBody').innerHTML = '<tr><td colspan="2" class="error-msg">데이터를 불러오는 중 오류가 발생했습니다.</td></tr>';
+            } finally {
+                document.querySelector('.loading-wrap').style.display = 'none';
+            }
+        })();
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" crossorigin="anonymous"></script>
+</body>
 </html>
