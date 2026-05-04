@@ -6,9 +6,10 @@
     <link rel="icon" href="./favicon.ico" type="image/x-icon">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" href="style.css">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8909533120303262" crossorigin="anonymous"></script>
     <title>자산배분 계산기 - 종합 듀얼모멘텀</title>
 </head>
 <body>
@@ -45,7 +46,19 @@
     <div class="page-header">
         <h1>종합 듀얼모멘텀</h1>
         <h2>Composite Dual Momentum</h2>
-        <div class="page-desc"><p>SPY, HYG, REM, GLD 4개 자산의 복합 모멘텀을 평가하여 모두 양수일 때만 각 25%를 배분하는 전략입니다.</p></div>
+        <div class="page-desc">
+            <ul>
+                    <li>각 자산군에서 둘 중 모멘텀 스코어가 높은 자산에 25% 비중 투자</li>
+                    <li>단, 각 자산군 내 모든 ETF가 미국 초단기채(BIL)보다 모멘텀 스코어가 낮을 시 해당 비중은 현금에 투자</li>
+                    <li>모멘텀 스코어 = 12개월 수익률</li>
+                    <li>자산군#1: SPY/EFA / #2: LQD/HYG / #3: VNQ/REM / #4: TLT/GLD</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="ad-slot">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8909533120303262" data-ad-slot="2705631485" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
     </div>
 
     <div class="input-section">
@@ -57,6 +70,11 @@
             <label>투자금액(USD)</label>
             <input type="text" id="totalBudget" placeholder="예: 10000">
         </div>
+    </div>
+
+    <div class="ad-slot">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8909533120303262" data-ad-slot="2705631485" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
     </div>
 
     <div class="table-section">
@@ -72,10 +90,13 @@
         <div class="table-footnote"></div>
     </div>
 
-    
+    <div class="ad-slot">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8909533120303262" data-ad-slot="2705631485" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
 
     <footer class="footer">
-        <div>© Rolling Pig. All rights reserved.</div>
+        <div>Rolling Pig &copy; All rights reserved.</div>
     </footer>
 
     <div id="hidden-footer">CDM</div>
@@ -97,7 +118,7 @@
                 document.querySelector('.assetTable').style.display = '';
             } catch (e) {
                 console.error(e);
-                document.querySelector('.contentTable').innerHTML = '<tr><td colspan="6" class="error-msg">데이터를 불러오는 중 오류가 발생했습니다. 새로고침 핸 보세요.</td></tr>';
+                document.querySelector('.contentTable').innerHTML = '<tr><td colspan="6" class="error-msg">데이터를 불러오는 중 오류가 발생했습니다. 새로고침해 보세요.</td></tr>';
             } finally {
                 document.querySelector('.loading-wrap').style.display = 'none';
             }
