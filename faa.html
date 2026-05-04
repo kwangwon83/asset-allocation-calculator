@@ -7,210 +7,99 @@
 		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
 		<meta name="google-site-verification" content="_PrI6oJtZolSTBXUs_07NJGIF9m0Kxg3Gtd_P-fDtK4" />
 		<meta name="naver-site-verification" content="55de3af1db6d6b19fd2cf7ca250ebfa96294c71d" />
-		<!-- Google Font -->
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 		<link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet" />
 		<link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap" rel="stylesheet" />
-		
-		<link
-			rel="stylesheet"
-			href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
-			integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
-			crossorigin="anonymous"
-		/>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous" />
 		<link rel="stylesheet" href="style.css" />
-		
-		<script
-			async
-			src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8909533120303262"
-			crossorigin="anonymous"
-		></script>
-		
-		<script async defer src="https://apis.google.com/js/api.js"></script>
-		
+		<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8909533120303262" crossorigin="anonymous"></script>
+		<!-- Standalone engine -->
+		<script src="js/data-loader.js"></script>
+		<script src="js/engine.js"></script>
+		<script src="js/renderer.js"></script>
 		<title>[자산배분 계산기]</title>
 		<div id="hidden-footer">FAA</div>
 	</head>
 	<body>
 		<nav class="navbar fixed-top navbar-dark bg-dark">
 			<a class="navbar-brand" href="index.html">[자산배분 계산기]</a>
-			<button
-				class="navbar-toggler"
-				type="button"
-				data-toggle="collapse"
-				data-target="#navbarNavDropdown"
-				aria-controls="navbarNavDropdown"
-				aria-expanded="false"
-				aria-label="Toggle navigation"
-			>
-				<span class="navbar-toggler-icon"></span>
-			</button>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
 			<div class="collapse navbar-collapse" id="navbarNavDropdown">
 				<ul class="navbar-nav">
-					<li class="nav-item active">
-						<a class="nav-link" href="index.html">Home <span class="sr-only">(current)</span></a>
-					</li>
-					<!-- <li class="nav-item">
-						<a class="nav-link" href="#">Features</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="#">Pricing</a>
-					</li> -->
-					<!-- <li class="nav-item dropdown">
-						<a
-							class="nav-link dropdown-toggle"
-							href="#"
-							id="navbarDropdownMenuLink"
-							data-toggle="dropdown"
-							aria-haspopup="true"
-							aria-expanded="false"
-						> -->
+					<li class="nav-item active"><a class="nav-link" href="index.html">Home</a></li>
 					<li class="nav-item dropdown show">
-						<a
-							class="nav-link dropdown-toggle"
-							href="#"
-							id="navbarDropdownMenuLink"
-							aria-haspopup="true"
-							aria-expanded="true"
-						>
-							<!-- data-toggle="dropdown" -->
-							자산배분 전략
-						</a>
+						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" aria-haspopup="true" aria-expanded="true">자산배분 전략</a>
 						<div class="dropdown-menu show" aria-labelledby="navbarDropdownMenuLink">
-							<a class="dropdown-item" href="dual.html">전통듀얼모멘텀(Dual Momentum)</a>
-							<a class="dropdown-item" href="cdm.html">종합듀얼모멘텀(Composite Dual Momentum)</a>
-							<a class="dropdown-item" href="adm.html">가속듀얼모멘텀(Accelerating Dual Momentum)</a>
-							<a class="dropdown-item" href="perm.html">영구포트폴리오(Permenant Portfolio)</a>
-							<a class="dropdown-item" href="laa.html">LAA(Lethargic)</a>
-							<a class="dropdown-item" href="raa.html">RAA(Resilitent)</a>
-							<a class="dropdown-item" href="gtaa.html">GTAA(Global Tactical)</a>
-							<a class="dropdown-item" href="paa.html">PAA(Protective)</a>
-							<a class="dropdown-item" href="vaa.html">VAA(Vigilant)</a>
-							<a class="dropdown-item" href="faa.html">FAA(Flexible)</a>
-							<a class="dropdown-item" href="aaa.html">AAA(Adaptive)</a>
-							<a class="dropdown-item" href="daa.html">DAA(Defensive)</a>
+							<a class="dropdown-item" href="dual.html">전통듀얼모멘텀</a>
+							<a class="dropdown-item" href="cdm.html">종합듀얼모멘텀</a>
+							<a class="dropdown-item" href="adm.html">가속듀얼모멘텀</a>
+							<a class="dropdown-item" href="perm.html">영구포트폴리오</a>
+							<a class="dropdown-item" href="laa.html">LAA</a>
+							<a class="dropdown-item" href="raa.html">RAA</a>
+							<a class="dropdown-item" href="gtaa.html">GTAA</a>
+							<a class="dropdown-item" href="paa.html">PAA</a>
+							<a class="dropdown-item" href="vaa.html">VAA</a>
+							<a class="dropdown-item" href="faa.html">FAA</a>
+							<a class="dropdown-item" href="aaa.html">AAA</a>
+							<a class="dropdown-item" href="daa.html">DAA</a>
 							<a class="dropdown-item" href="dynbond.html">채권 동적배분</a>
 						</div>
 					</li>
 				</ul>
 			</div>
 		</nav>
-		
+
 		<section class="explain">
-			<h1 align="center">FAA 자산배분</h1>
-			<h2 align="center">(Flexible Asset Allocation)</h2>
+			<h1 align="center">FAA</h1>
+			<h2 align="center">(FAA(Flexible))</h2>
 			<div>
-				<p></p>
 				<ul class="first-level">
-					<li>자산군(7개 자산)의 모멘텀, 변동성, 상관성을 가중평균 평균하여 상위 3개 종목에 투자하는 방법</li>
-					<li>단, 모멘텀 < 0인 종목의 비중은 현금에 투자</li>
-					<ul class="second-level">
-						<li>모멘텀 : 4개월 수익률</li>
-						<li>변동성 : 4개월 일일수익률의 표준편차(standard deviation)</li>
-						<li>상관성 : 하나의 자산과 다른 6개 자산간의 일일수익률의 상관성(correlation)</li>
-						<li>가중평균 : (모멘텀 * 1) + (변동성 * 0.5) + (상관성 * 0.5)</li>
-					</ul>
-					<li><u>자산군</u> : VTI(미국 주식), VEA(선진국 주식), VWO(신흥국 주식), SHY(미국 단기국채), BND(미국 혼합채권), GSG(원자재), VNQ(미국 리츠)</li>
+					<li>FAA란 원자재, 리츠, 현금 3개 자산의 모멘텀에 따라 유연하게 배분하는 전략</li>
 				</ul>
 			</div>
 		</section>
-		
+
 		<div class="input-container">
 			<section class="controlPanel">
-				<p class="input-value">
-					수 수 료(%) :
-					<input
-						type="text"
-						class="feeInput"
-						id="buysellfee"
-						style="text-align: right; padding-right: 10px;"
-						value="0.25"
-					/>
-				</p>
-				<p class="input-value">
-					금 액(USD) :
-					<input
-						type="text"
-						class="budgetInput"
-						id="totalBudget"
-						style="text-align: right; padding-right: 10px;"
-						oninput="allocation_calc()"
-					/>
-				</p>
+				<p class="input-value">수 수 료(%) : <input type="text" class="feeInput" id="buysellfee" style="text-align:right;padding-right:10px;" value="0.25"/></p>
+				<p class="input-value">금 액(USD) : <input type="text" class="budgetInput" id="totalBudget" style="text-align:right;padding-right:10px;" oninput="allocation_calc()"/></p>
 			</section>
 		</div>
-		
+
 		<div class="content-container">
 			<section class="dataTable">
-				<div class="remark">
-					※ 실시간 주가와 다소 차이가 있을 수 있음(5분마다 업데이트, 새로고침 시 적용됨)
-				</div>
-				<div class="loading_space" align="center"><br>
-					<div class="loader"></div>
-				</div>
+				<div class="remark">※ 실시간 주가와 다소 차이가 있을 수 있음</div>
+				<div class="loading_space" align="center"><br><div class="loader"></div></div>
 				<table class="assetTable">
 					<thead class="titleTable"></thead>
 					<tbody class="contentTable"></tbody>
 				</table>
 			</section>
-			
 			<section class="table-footnote"></section>
 		</div>
-		
-		<!-- 카카오애드핏 광고 -->
-		<!-- <div style="margin-top: 10px;">
-			<ins
-				class="kakao_ad_area"
-				style="display: none;"
-				data-ad-unit="DAN-6Blc77ZVQeN8XEvr"
-				data-ad-width="320"
-				data-ad-height="100"
-			></ins>
-			<script
-				type="text/javascript"
-				src="//t1.daumcdn.net/kas/static/ba.min.js"
-				async
-			></script>
-		</div> -->
-		
-		<!-- 유튜브 삽입 -->
-		<div>
-			<h1 class="video-related" align="center"><u>▼ 관련영상 ▼</u></h1>
-		</div>
-		<div class="youtube-container">
-			<iframe src="https://www.youtube.com/embed/WHzE0osdZAs" frameborder="0"></iframe>
-		</div>
-		
-		<!-- Footer -->
+
 		<footer class="footer">
 			<div class="footer-content">
-				<div class="footer-logo">
-					<span class="logo-icon">🐷</span>
-					<span class="logo-text">Rolling Pig</span>
-				</div>
-				<div class="footer-text">
-					© 2022. All rights reserved.
-				</div>
+				<div class="footer-logo"><span class="logo-icon">🐷</span><span class="logo-text">Rolling Pig</span></div>
+				<div class="footer-text">© 2022. All rights reserved.</div>
 			</div>
 		</footer>
-		
-		<script type="text/javascript" src="GShReadAuto.js"></script>
-		
-		<script
-			src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-			integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-			crossorigin="anonymous"
-		></script>
-		<script
-			src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
-			integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-			crossorigin="anonymous"
-		></script>
-		<script
-			src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
-			integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-			crossorigin="anonymous"
-		></script>
+
+		<script>
+			(async function() {{
+				const loader = new DataLoader();
+				const {{ prices, economic }} = await loader.loadAll();
+				const engine = new AllocationEngine(prices, economic);
+				const renderer = new Renderer(engine);
+				const strategy = document.getElementById('hidden-footer').innerText.trim();
+				await renderer.render(strategy);
+				document.querySelector('.loading_space').innerHTML = '';
+			}})();
+		</script>
+
+		<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+		<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 	</body>
 </html>

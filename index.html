@@ -27,7 +27,10 @@
 			crossorigin="anonymous"
 		></script>
 		
-		<script async defer src="https://apis.google.com/js/api.js"></script>
+		<!-- Standalone Allocation Engine (no Google Sheets) -->
+		<script src="js/data-loader.js"></script>
+		<script src="js/engine.js"></script>
+		<script src="js/renderer.js"></script>
 		
 		<title>[자산배분 계산기]</title>
 		<div id="hidden-footer">INDEX</div>
@@ -51,21 +54,6 @@
 					<li class="nav-item active">
 						<a class="nav-link" href="index.html">Home <span class="sr-only">(current)</span></a>
 					</li>
-					<!-- <li class="nav-item">
-						<a class="nav-link" href="#">Features</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="#">Pricing</a>
-					</li> -->
-					<!-- <li class="nav-item dropdown">
-						<a
-							class="nav-link dropdown-toggle"
-							href="#"
-							id="navbarDropdownMenuLink"
-							data-toggle="dropdown"
-							aria-haspopup="true"
-							aria-expanded="false"
-						> -->
 					<li class="nav-item dropdown show">
 						<a
 							class="nav-link dropdown-toggle"
@@ -74,7 +62,6 @@
 							aria-haspopup="true"
 							aria-expanded="true"
 						>
-							<!-- data-toggle="dropdown" -->
 							자산배분 전략
 						</a>
 						<div class="dropdown-menu show" aria-labelledby="navbarDropdownMenuLink">
@@ -102,6 +89,7 @@
 			<div class="hero-content">
 				<h1 class="hero-title">전략별 보유종목 & 비중</h1>
 				<p class="hero-subtitle">다양한 자산배분 전략을 한눈에 확인하고 투자 포트폴리오를 계획하세요</p>
+				<p id="lastUpdated" style="font-size:0.85rem;color:#888;margin-top:8px;"></p>
 			</div>
 		</section>
 		
@@ -133,30 +121,6 @@
 			<section class="table-footnote"></section>
 		</div>
 		
-		<!-- 카카오애드핏 광고 -->
-		<!-- <div style="margin-top: 10px;">
-			<ins
-				class="kakao_ad_area"
-				style="display: none;"
-				data-ad-unit="DAN-6Blc77ZVQeN8XEvr"
-				data-ad-width="320"
-				data-ad-height="100"
-			></ins>
-			<script
-				type="text/javascript"
-				src="//t1.daumcdn.net/kas/static/ba.min.js"
-				async
-			></script>
-		</div> --> 
-		
-		<!-- 유튜브 삽입 -->
-		<!-- <div> 
-			<h1 class="video-related" align="center"><u>▼ 관련영상 ▼</u></h1>
-		</div>
-		<div class="youtube-container">
-			<iframe src="https://www.youtube.com/embed/qCMDtXgi1Hw" frameborder="0"></iframe>
-		</div> -->
-		
 		<!-- Footer -->
 		<footer class="footer">
 			<div class="footer-content">
@@ -170,7 +134,57 @@
 			</div>
 		</footer>
 		
-		<script type="text/javascript" src="GShReadAuto.js"></script>
+		<script>
+			(async function() {
+				const loader = new DataLoader();
+				const { prices, economic } = await loader.loadAll();
+				
+				// Update timestamp
+				const updated = loader.getLastUpdated();
+				if (updated) {
+					document.getElementById('lastUpdated').textContent = 'Updated: ' + updated;
+				}
+				
+				// Render strategy summary table
+				const engine = new AllocationEngine(prices, economic);
+				const renderer = new Renderer(engine);
+				
+				// INDEX page shows all strategies overview
+				const strategies = ['PERM','LAA','RAA','GTAA','PAA','DAA','VAA','FAA','AAA','DUAL','CDM','ADM','DYNBOND'];
+				
+				// Clear and build strategy list
+				const tbody = document.querySelector('.contentTable');
+				tbody.innerHTML = '';
+				
+				strategies.forEach((strat, idx) => {
+					const result = engine.calculate(strat);
+					if (!result || result.length === 0) return;
+					
+					const tr = document.createElement('tr');
+					if (idx % 2 === 0) tr.id = 'even';
+					
+					// Strategy name as link
+					const tdName = document.createElement('td');
+					tdName.style.fontWeight = 'bold';
+					tdName.innerHTML = `<a href="${strat.toLowerCase()}.html">${strat}</a>`;
+					tr.appendChild(tdName);
+					
+					// Assets summary
+					const tdAssets = document.createElement('td');
+					const assetList = result
+						.filter(r => r.allocation > 0)
+						.map(r => r.ticker + '(' + Math.round(r.allocation*100) + '%)')
+						.join(', ');
+					tdAssets.textContent = assetList;
+					tr.appendChild(tdAssets);
+					
+					tbody.appendChild(tr);
+				});
+				
+				// Clear loading
+				document.querySelector('.loading_space').innerHTML = '';
+			})();
+		</script>
 		
 		<script
 			src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
