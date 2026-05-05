@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Daily Price Updater — Yahoo Finance Chart API Edition
+Daily Price Updater - Yahoo Finance Chart API Edition
 
 Purpose
 - Replaces the old Financial Modeling Prep (FMP) dependency.
@@ -35,7 +35,8 @@ from pathlib import Path
 TICKERS = [
     "SPY", "TLT", "GLD", "BIL", "IWD", "QQQ", "IEF", "SHY",
     "IWM", "VWO", "BND", "EFA", "PDBC", "VNQ", "VGK", "EWJ",
-    "EEM", "DBC", "HYG", "LQD", "REM", "TIP"
+    "EEM", "DBC", "HYG", "LQD", "REM", "TIP", "AGG", "SCZ",
+    "BWX", "EMB", "RWX", "VTI", "VEA", "GSG", "IWN"
 ]
 
 OUTPUT_PATH = "data/prices.json"
@@ -126,7 +127,7 @@ def fetch_ticker(symbol, from_date, to_date):
         return None
 
     dates = sorted(price_by_date)
-    print(f"  [{symbol}] {len(dates)} days, ${price_by_date[dates[0]]} → ${price_by_date[dates[-1]]}")
+    print(f"  [{symbol}] {len(dates)} days, ${price_by_date[dates[0]]} -> ${price_by_date[dates[-1]]}")
     return price_by_date
 
 
@@ -174,7 +175,7 @@ def build_aligned_payload(price_maps):
 
 def main():
     print("=" * 60)
-    print("Asset Allocation Calculator — Daily Price Updater (Yahoo)")
+    print("Asset Allocation Calculator - Daily Price Updater (Yahoo)")
     print("=" * 60)
 
     to_date = datetime.now().strftime("%Y-%m-%d")
@@ -197,24 +198,24 @@ def main():
         time.sleep(0.25)
 
     if not price_maps:
-        print("\n❌ No price data fetched. Yahoo may be blocked or unavailable.")
+        print("\nERROR: No price data fetched. Yahoo may be blocked or unavailable.")
         sys.exit(1)
 
     if failed:
-        print(f"\n⚠️ Failed tickers: {', '.join(failed)}")
+        print(f"\nWARNING: Failed tickers: {', '.join(failed)}")
         print("   The output will include only successfully fetched tickers.")
 
     try:
         payload = build_aligned_payload(price_maps)
     except Exception as e:
-        print(f"\n❌ Could not build aligned payload: {e}")
+        print(f"\nERROR: Could not build aligned payload: {e}")
         sys.exit(1)
 
     output_path = Path(OUTPUT_PATH)
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(json.dumps(payload, indent=2, ensure_ascii=False), encoding="utf-8")
 
-    print(f"\n✅ Saved {OUTPUT_PATH}")
+    print(f"\nSaved {OUTPUT_PATH}")
     print(f"   Tickers: {len(price_maps)}/{len(TICKERS)}")
     print(f"   Trading days: {payload['meta']['tradingDays']}")
     print(f"   Date range: {payload['meta']['dateRange']['from']} ~ {payload['meta']['dateRange']['to']}")
