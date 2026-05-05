@@ -187,8 +187,8 @@ class AllocationEngine {
     calcLAA() {
         const flexible = (this.isSP500Uptrend() || this.isUnemploymentAboveAverage()) ? 'QQQ' : 'SHY';
         return this.rowsForUniverse(
-            ['SPY', 'TLT', 'GLD', 'QQQ', 'SHY'],
-            { SPY: 0.25, TLT: 0.25, GLD: 0.25, [flexible]: 0.25 },
+            ['IWD', 'QQQ', 'IEF', 'GLD', 'SHY'],
+            { IWD: 0.25, IEF: 0.25, GLD: 0.25, [flexible]: 0.25 },
             ticker => ['QQQ', 'SHY'].includes(ticker) ? null : this.getMomentumScore(ticker)
         );
     }
@@ -205,7 +205,7 @@ class AllocationEngine {
     }
 
     calcGTAA() {
-        const assets = ['SPY', 'EFA', 'IEF', 'DBC', 'VNQ'];
+        const assets = ['SPY', 'EFA', 'IEF', 'PDBC', 'VNQ'];
         const allocations = {};
         let cash = 0;
         for (const ticker of assets) {
@@ -218,7 +218,7 @@ class AllocationEngine {
     }
 
     calcPAA() {
-        const assets = ['SPY', 'IWM', 'QQQ', 'VGK', 'EWJ', 'EEM', 'VNQ', 'DBC', 'GLD', 'TLT', 'HYG', 'LQD'];
+        const assets = ['SPY', 'IWM', 'QQQ', 'VGK', 'EWJ', 'EEM', 'VNQ', 'PDBC', 'GLD', 'TLT', 'HYG', 'LQD'];
         const scored = this.sortByScoreDesc(this.scoreTickers(assets, ticker => this.getSmaMomentum(ticker, 252)));
         const positive = scored.filter(x => x.score > 0);
         const allocations = {};
@@ -266,7 +266,7 @@ class AllocationEngine {
     }
 
     calcFAA() {
-        const assets = ['VTI', 'VEA', 'VWO', 'SHY', 'BND', 'GSG', 'VNQ'];
+        const assets = ['VTI', 'VEA', 'VWO', 'SHY', 'BND', 'PDBC', 'VNQ'];
         const scored = assets.map(ticker => ({
             ticker,
             momentum: this.getReturn(ticker, 84),
@@ -384,20 +384,12 @@ class AllocationEngine {
         if (nDays < 2) return tickers.map(() => 1 / tickers.length);
         const aligned = returns.map(r => r.slice(r.length - nDays));
         const covariance = this.covarianceMatrix(aligned);
-        let weights = tickers.map(() => 1 / tickers.length);
-        let step = 0.5;
-        for (let iter = 0; iter < 600; iter++) {
-            const gradient = covariance.map(row => 2 * row.reduce((s, v, idx) => s + v * weights[idx], 0));
-            const next = this.projectToSimplex(weights.map((w, idx) => w - step * gradient[idx]));
-            if (this.portfolioVariance(next, covariance) <= this.portfolioVariance(weights, covariance)) {
-                weights = next;
-                step *= 1.01;
-            } else {
-                step *= 0.5;
-            }
-            if (step < 1e-10) break;
+        try {
+            return this.calculateLongOnlyMVP(covariance);
+        } catch (e) {
+            console.error('[AllocationEngine] Long-only MVP failed:', e);
+            return tickers.map(() => 1 / tickers.length);
         }
-        return weights;
     }
 
     covarianceMatrix(returns) {
@@ -417,27 +409,100 @@ class AllocationEngine {
         return matrix;
     }
 
-    portfolioVariance(weights, covariance) {
-        let variance = 0;
-        for (let i = 0; i < weights.length; i++) {
-            for (let j = 0; j < weights.length; j++) {
-                variance += weights[i] * weights[j] * covariance[i][j];
+    invertMatrix(matrix) {
+        const rows = matrix.length;
+        let cols = matrix[0].length;
+        const aug = [];
+
+        for (let i = 0; i < rows; i++) {
+            aug[i] = matrix[i].slice();
+            for (let j = 0; j < rows; j++) {
+                aug[i][cols + j] = (i === j) ? 1 : 0;
             }
         }
-        return variance;
+
+        cols *= 2;
+        for (let k = 0; k < rows; k++) {
+            let pivotRow = k;
+            for (let i = k + 1; i < rows; i++) {
+                if (Math.abs(aug[i][k]) > Math.abs(aug[pivotRow][k])) {
+                    pivotRow = i;
+                }
+            }
+
+            const tmp = aug[pivotRow];
+            aug[pivotRow] = aug[k];
+            aug[k] = tmp;
+
+            const pivot = aug[k][k];
+            if (pivot === 0) throw new Error('Matrix is singular');
+
+            for (let j = k; j < cols; j++) aug[k][j] /= pivot;
+
+            for (let i = 0; i < rows; i++) {
+                if (i !== k) {
+                    const factor = aug[i][k];
+                    for (let j = k; j < cols; j++) {
+                        aug[i][j] -= aug[k][j] * factor;
+                    }
+                }
+            }
+        }
+
+        return aug.map(row => row.slice(rows));
     }
 
-    projectToSimplex(values) {
-        const sorted = values.slice().sort((a, b) => b - a);
-        let sum = 0;
-        let rho = 0;
-        for (let i = 0; i < sorted.length; i++) {
-            sum += sorted[i];
-            const theta = (sum - 1) / (i + 1);
-            if (sorted[i] - theta > 0) rho = i + 1;
+    matrixMultiply(a, b) {
+        const rowsA = a.length;
+        const colsA = a[0].length;
+        const rowsB = b.length;
+        const colsB = b[0].length;
+        if (colsA !== rowsB) throw new Error('Matrix dimensions mismatch for multiplication');
+
+        const out = [];
+        for (let i = 0; i < rowsA; i++) {
+            out[i] = [];
+            for (let j = 0; j < colsB; j++) {
+                out[i][j] = 0;
+                for (let k = 0; k < colsA; k++) out[i][j] += a[i][k] * b[k][j];
+            }
         }
-        const theta = (sorted.slice(0, rho).reduce((a, b) => a + b, 0) - 1) / rho;
-        return values.map(v => Math.max(v - theta, 0));
+        return out;
+    }
+
+    dot(a, b) {
+        if (a.length !== b.length) throw new Error('Vector dimensions mismatch for dot product');
+        return a.reduce((sum, value, idx) => sum + value * b[idx], 0);
+    }
+
+    computeSubsetMVP(covariance, active) {
+        const subCov = active.map(i => active.map(j => covariance[i][j]));
+        const invCov = this.invertMatrix(subCov);
+        const ones = new Array(active.length).fill(1);
+        const invCovOnes = this.matrixMultiply(invCov, ones.map(x => [x]));
+        const invCovOnesFlat = invCovOnes.map(row => row[0]);
+        const denom = this.dot(ones, invCovOnesFlat);
+        if (denom === 0) throw new Error('Denominator is zero');
+        return invCovOnesFlat.map(x => x / denom);
+    }
+
+    calculateLongOnlyMVP(covariance) {
+        const active = covariance.map((_, idx) => idx);
+
+        while (active.length > 0) {
+            const weights = this.computeSubsetMVP(covariance, active);
+            const minWeight = Math.min(...weights);
+
+            if (minWeight >= 0) {
+                const fullWeights = new Array(covariance.length).fill(0);
+                active.forEach((assetIdx, idx) => { fullWeights[assetIdx] = weights[idx]; });
+                return fullWeights;
+            }
+
+            active.splice(weights.indexOf(minWeight), 1);
+        }
+
+        return new Array(covariance.length).fill(1 / covariance.length);
     }
 
     getRemark(ticker) {
@@ -472,7 +537,6 @@ class AllocationEngine {
             RWX: 'RWX : SPDR Dow Jones International Real Estate ETF',
             VTI: 'VTI : Vanguard Total Stock Market ETF',
             VEA: 'VEA : Vanguard FTSE Developed Markets ETF',
-            GSG: 'GSG : iShares S&P GSCI Commodity-Indexed Trust',
             USD: 'USD : US Dollar'
         };
         return remarks[ticker] || ticker;
@@ -487,7 +551,7 @@ class AllocationEngine {
             RWX: '국제 리츠', IEF: '미국 중기채', TLT: '미국 장기채', SHY: '미국 단기국채',
             BND: '미국 종합채권', AGG: '미국 혼합채권', HYG: '미국 하이일드 채권',
             LQD: '미국 회사채', TIP: '미국 물가연동채', BWX: '국제 채권', EMB: '신흥국 채권',
-            GLD: '금', PDBC: '원자재', DBC: '원자재', GSG: '원자재',
+            GLD: '금', PDBC: '원자재', DBC: '원자재',
             BIL: '초단기채권', USD: '현금'
         };
         return sectors[ticker] || '기타';
@@ -497,7 +561,7 @@ class AllocationEngine {
         if (['SPY', 'IWD', 'QQQ', 'IWM', 'IWN', 'SCZ', 'VTI', 'VGK', 'EWJ', 'EEM', 'VWO', 'EFA', 'VEA'].includes(ticker)) return '주식';
         if (['VNQ', 'REM', 'RWX'].includes(ticker)) return '리츠';
         if (['IEF', 'TLT', 'SHY', 'BND', 'AGG', 'HYG', 'LQD', 'TIP', 'BWX', 'EMB', 'BIL'].includes(ticker)) return '채권';
-        if (['GLD', 'PDBC', 'DBC', 'GSG'].includes(ticker)) return '원자재';
+        if (['GLD', 'PDBC', 'DBC'].includes(ticker)) return '원자재';
         if (ticker === 'USD') return '현금';
         return '기타';
     }

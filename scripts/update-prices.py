@@ -36,7 +36,7 @@ TICKERS = [
     "SPY", "TLT", "GLD", "BIL", "IWD", "QQQ", "IEF", "SHY",
     "IWM", "VWO", "BND", "EFA", "PDBC", "VNQ", "VGK", "EWJ",
     "EEM", "DBC", "HYG", "LQD", "REM", "TIP", "AGG", "SCZ",
-    "BWX", "EMB", "RWX", "VTI", "VEA", "GSG", "IWN"
+    "BWX", "EMB", "RWX", "VTI", "VEA", "IWN"
 ]
 
 OUTPUT_PATH = "data/prices.json"
