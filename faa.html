@@ -6,7 +6,7 @@
     <link rel="icon" href="./favicon.ico" type="image/x-icon">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" href="style.css">
     <title>자산배분 계산기 - FAA</title>
@@ -41,11 +41,31 @@
             </ul>
         </div>
     </nav>
+    <button class="sidebar-toggle" type="button" aria-label="전략 메뉴 열기" aria-controls="sideStrategyMenu" aria-expanded="false">☰</button>
+    <aside id="sideStrategyMenu" class="side-strategy-menu">
+        <div class="side-menu-title">전략 메뉴</div>
+        <a href="index.html">Home</a>
+        <a href="dual.html">전통듀얼모멘텀</a>
+        <a href="cdm.html">종합듀얼모멘텀</a>
+        <a href="adm.html">가속듀얼모멘텀</a>
+        <a href="perm.html">영구포트폴리오</a>
+        <a href="laa.html">LAA</a>
+        <a href="raa.html">RAA</a>
+        <a href="gtaa.html">GTAA</a>
+        <a href="paa.html">PAA</a>
+        <a href="vaa.html">VAA</a>
+        <a href="faa.html">FAA</a>
+        <a href="aaa.html">AAA</a>
+        <a href="daa.html">DAA</a>
+        <a href="dynbond.html">채권동적배분</a>
+    </aside>
+    <div class="side-overlay"></div>
+
 
     <div class="page-header">
         <h1>FAA</h1>
         <h2>Flexible Asset Allocation</h2>
-        <div class="page-desc"><p>원자재, 리츠, 현금 3개 자산의 모멘텀에 따라 유연하게 비중을 조절하는 전략입니다.</p></div>
+        <div class="page-desc"><ul><li>자산군(7개 자산)의 모멘텀, 변동성, 상관성을 가중평균 평균하여 상위 3개 종목에 투자하는 방법</li><li>단, 모멘텀 < 0인 종목의 비중은 현금에 투자</li><ul class="second-level"><li>모멘텀 : 4개월 수익률</li><li>변동성 : 4개월 일일수익률의 표준편차(standard deviation)</li><li>상관성 : 하나의 자산과 다른 6개 자산간의 일일수익률의 상관성(correlation)</li><li>가중평균 : (모멘텀 * 1) + (변동성 * 0.5) + (상관성 * 0.5)</li></ul><li><u>자산군</u> : VTI(미국 주식), VEA(선진국 주식), VWO(신흥국 주식), SHY(미국 단기국채), BND(미국 혼합채권), GSG(원자재), VNQ(미국 리츠)</li></ul></div>
     </div>
 
     <div class="input-section">
@@ -103,5 +123,34 @@
             }
         })();
     </script>
+
+    <script>
+        (function () {
+            var toggle = document.querySelector('.sidebar-toggle');
+            var menu = document.getElementById('sideStrategyMenu');
+            var overlay = document.querySelector('.side-overlay');
+            if (!toggle || !menu || !overlay) return;
+
+            function closeMenu() {
+                document.body.classList.remove('side-open');
+                toggle.setAttribute('aria-expanded', 'false');
+            }
+
+            toggle.addEventListener('click', function () {
+                var opened = document.body.classList.toggle('side-open');
+                toggle.setAttribute('aria-expanded', opened ? 'true' : 'false');
+            });
+
+            overlay.addEventListener('click', closeMenu);
+            menu.querySelectorAll('a').forEach(function (a) {
+                a.addEventListener('click', closeMenu);
+            });
+
+            window.addEventListener('resize', function () {
+                if (window.innerWidth >= 992) closeMenu();
+            });
+        })();
+    </script>
+
 </body>
 </html>

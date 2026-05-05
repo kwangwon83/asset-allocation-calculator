@@ -6,7 +6,7 @@
     <link rel="icon" href="./favicon.ico" type="image/x-icon">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" href="style.css">
     <title>자산배분 계산기 - AAA</title>
@@ -41,11 +41,39 @@
             </ul>
         </div>
     </nav>
+    <button class="sidebar-toggle" type="button" aria-label="전략 메뉴 열기" aria-controls="sideStrategyMenu" aria-expanded="false">☰</button>
+    <aside id="sideStrategyMenu" class="side-strategy-menu">
+        <div class="side-menu-title">전략 메뉴</div>
+        <a href="index.html">Home</a>
+        <a href="dual.html">전통듀얼모멘텀</a>
+        <a href="cdm.html">종합듀얼모멘텀</a>
+        <a href="adm.html">가속듀얼모멘텀</a>
+        <a href="perm.html">영구포트폴리오</a>
+        <a href="laa.html">LAA</a>
+        <a href="raa.html">RAA</a>
+        <a href="gtaa.html">GTAA</a>
+        <a href="paa.html">PAA</a>
+        <a href="vaa.html">VAA</a>
+        <a href="faa.html">FAA</a>
+        <a href="aaa.html">AAA</a>
+        <a href="daa.html">DAA</a>
+        <a href="dynbond.html">채권동적배분</a>
+    </aside>
+    <div class="side-overlay"></div>
+
 
     <div class="page-header">
         <h1>AAA</h1>
         <h2>Adaptive Asset Allocation</h2>
-        <div class="page-desc"><p>가속 모멘텀을 기반으로 4개 자산에 적응형으로 비중을 분배하는 전략입니다.</p></div>
+        <div class="page-desc"><ul>
+<li>모멘텀 0 이상인 자산에 대해 마코비츠의 최소분산 포트폴리오 이론에 따라 자산을 배분하는 전략</li>
+<ul class="second-level">
+<li>모멘텀 : 6개월 수익률</li>
+<li>배분비중 : 마코비츠 최소분산 포트폴리오 이론에 따름<br>
+* <a href="https://portfoliooptimizer.io">https://portfoliooptimizer.io</a>의 API 사용</li>
+</ul>
+<li><u>자산군</u> : SPY(미국 대형주), VGK(유럽 주식), EWJ(일본 주식), EEM(신흥국 주식), VNQ(미국 리츠), RWX(국제 리츠), IEF(미국 중기채), TLT(미국 장기채), GLD(금), DBC(원자재)</li>
+</ul></div>
     </div>
 
     <div class="input-section">
@@ -103,5 +131,34 @@
             }
         })();
     </script>
+
+    <script>
+        (function () {
+            var toggle = document.querySelector('.sidebar-toggle');
+            var menu = document.getElementById('sideStrategyMenu');
+            var overlay = document.querySelector('.side-overlay');
+            if (!toggle || !menu || !overlay) return;
+
+            function closeMenu() {
+                document.body.classList.remove('side-open');
+                toggle.setAttribute('aria-expanded', 'false');
+            }
+
+            toggle.addEventListener('click', function () {
+                var opened = document.body.classList.toggle('side-open');
+                toggle.setAttribute('aria-expanded', opened ? 'true' : 'false');
+            });
+
+            overlay.addEventListener('click', closeMenu);
+            menu.querySelectorAll('a').forEach(function (a) {
+                a.addEventListener('click', closeMenu);
+            });
+
+            window.addEventListener('resize', function () {
+                if (window.innerWidth >= 992) closeMenu();
+            });
+        })();
+    </script>
+
 </body>
 </html>

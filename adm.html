@@ -6,7 +6,7 @@
     <link rel="icon" href="./favicon.ico" type="image/x-icon">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" href="style.css">
     <title>자산배분 계산기 - 가속 듀얼모멘텀</title>
@@ -41,11 +41,39 @@
             </ul>
         </div>
     </nav>
+    <button class="sidebar-toggle" type="button" aria-label="전략 메뉴 열기" aria-controls="sideStrategyMenu" aria-expanded="false">☰</button>
+    <aside id="sideStrategyMenu" class="side-strategy-menu">
+        <div class="side-menu-title">전략 메뉴</div>
+        <a href="index.html">Home</a>
+        <a href="dual.html">전통듀얼모멘텀</a>
+        <a href="cdm.html">종합듀얼모멘텀</a>
+        <a href="adm.html">가속듀얼모멘텀</a>
+        <a href="perm.html">영구포트폴리오</a>
+        <a href="laa.html">LAA</a>
+        <a href="raa.html">RAA</a>
+        <a href="gtaa.html">GTAA</a>
+        <a href="paa.html">PAA</a>
+        <a href="vaa.html">VAA</a>
+        <a href="faa.html">FAA</a>
+        <a href="aaa.html">AAA</a>
+        <a href="daa.html">DAA</a>
+        <a href="dynbond.html">채권동적배분</a>
+    </aside>
+    <div class="side-overlay"></div>
+
 
     <div class="page-header">
         <h1>가속 듀얼모멘텀</h1>
         <h2>Accelerating Dual Momentum</h2>
-        <div class="page-desc"><p>SPY의 가속 모멘텀을 측정하여 양수일 때만 주식에 100% 투자하고, 음수면 현금으로 전환하는 공격적 전략입니다.</p></div>
+        <div class="page-desc"><ul>
+<li>주식자산 중 모멘텀 스코어가 0보다 큰 상위 1개 자산에 투자</li>
+<ul class="second-level">
+<li>주식자산의 모멘텀 스코어가 모두 0보다 작은 경우, 채권자산 중 모멘텀 스코어가 높은 자산에 투자<br>
+* 모멘텀 스코어 = 평균(1개월 수익률, 3개월 수익률, 6개월 수익률)</li>
+</ul>
+<li><u>주식자산</u> : 미국 대형주(SPY), 전세계 소형주(SCZ)<br></li>
+<li><u>채권자산</u> : 미국 장기채(TLT), 미국 물가연동채(TIP)<br><br></li>
+</ul></div>
     </div>
 
     <div class="input-section">
@@ -103,5 +131,34 @@
             }
         })();
     </script>
+
+    <script>
+        (function () {
+            var toggle = document.querySelector('.sidebar-toggle');
+            var menu = document.getElementById('sideStrategyMenu');
+            var overlay = document.querySelector('.side-overlay');
+            if (!toggle || !menu || !overlay) return;
+
+            function closeMenu() {
+                document.body.classList.remove('side-open');
+                toggle.setAttribute('aria-expanded', 'false');
+            }
+
+            toggle.addEventListener('click', function () {
+                var opened = document.body.classList.toggle('side-open');
+                toggle.setAttribute('aria-expanded', opened ? 'true' : 'false');
+            });
+
+            overlay.addEventListener('click', closeMenu);
+            menu.querySelectorAll('a').forEach(function (a) {
+                a.addEventListener('click', closeMenu);
+            });
+
+            window.addEventListener('resize', function () {
+                if (window.innerWidth >= 992) closeMenu();
+            });
+        })();
+    </script>
+
 </body>
 </html>

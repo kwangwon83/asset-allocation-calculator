@@ -6,7 +6,7 @@
     <link rel="icon" href="./favicon.ico" type="image/x-icon">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" href="style.css">
     <title>자산배분 계산기 - RAA</title>
@@ -41,11 +41,31 @@
             </ul>
         </div>
     </nav>
+    <button class="sidebar-toggle" type="button" aria-label="전략 메뉴 열기" aria-controls="sideStrategyMenu" aria-expanded="false">☰</button>
+    <aside id="sideStrategyMenu" class="side-strategy-menu">
+        <div class="side-menu-title">전략 메뉴</div>
+        <a href="index.html">Home</a>
+        <a href="dual.html">전통듀얼모멘텀</a>
+        <a href="cdm.html">종합듀얼모멘텀</a>
+        <a href="adm.html">가속듀얼모멘텀</a>
+        <a href="perm.html">영구포트폴리오</a>
+        <a href="laa.html">LAA</a>
+        <a href="raa.html">RAA</a>
+        <a href="gtaa.html">GTAA</a>
+        <a href="paa.html">PAA</a>
+        <a href="vaa.html">VAA</a>
+        <a href="faa.html">FAA</a>
+        <a href="aaa.html">AAA</a>
+        <a href="daa.html">DAA</a>
+        <a href="dynbond.html">채권동적배분</a>
+    </aside>
+    <div class="side-overlay"></div>
+
 
     <div class="page-header">
         <h1>RAA</h1>
         <h2>Resilient Asset Allocation</h2>
-        <div class="page-desc"><p>각 자산별 1/3/6/12개월 모멘텀 스코어와 실업률을 조합하여 동적으로 자산을 배분하는 전략입니다.</p></div>
+        <div class="page-desc"><ul><li>LAA 자산배분 전략과 유사 Mr. Keller의 자산배분 전략</li><li>현재 실업률과 12개월전 실업률을 비교하여 투자자산군을 결정</li><li>현재 실업률 < 12개월전 실업률(호황기) : 고정자산(5개)에 각 20%를 배분</li><li>현재 실업률 > 12개월전 실업률(불황기) : 카나리아 자산군의 모멘텀 스코어에 따라 방어자산으로 이동 여부 결정</li><ul class="second-level"><li>모멘텀 스코어 = (1개월 수익률 * 12) + (3개월 수익률 * 4) + (6개월 수익률 * 2) + (12개월 수익률 * 1)</li><li>카나라이 자산군의 모멘텀 스코어가 하나라도 0 이하이면 채권(IEF, TLT)에 각 50%씩 배분</li><li>카나라이 자산군의 모멘텀 스코어가 모두 0 이상이면 고정자산(5개)에 각 20%를 배분</li></ul><li><u>고정자산</u> : QQQ(나스닥), IWN(미국 소형가치), IEF(미국 중기채), TLT(미국 장기채), GLD(금)</li><li><u>방어자산</u> : IEF(미국 중기채), TLT(미국 장기채)</li><li><u>카나리아 자산</u> : VWO(신흥국 주식), BND(미국 종합채권), 미국 실업률</li></ul></div>
     </div>
 
     <div class="input-section">
@@ -103,5 +123,34 @@
             }
         })();
     </script>
+
+    <script>
+        (function () {
+            var toggle = document.querySelector('.sidebar-toggle');
+            var menu = document.getElementById('sideStrategyMenu');
+            var overlay = document.querySelector('.side-overlay');
+            if (!toggle || !menu || !overlay) return;
+
+            function closeMenu() {
+                document.body.classList.remove('side-open');
+                toggle.setAttribute('aria-expanded', 'false');
+            }
+
+            toggle.addEventListener('click', function () {
+                var opened = document.body.classList.toggle('side-open');
+                toggle.setAttribute('aria-expanded', opened ? 'true' : 'false');
+            });
+
+            overlay.addEventListener('click', closeMenu);
+            menu.querySelectorAll('a').forEach(function (a) {
+                a.addEventListener('click', closeMenu);
+            });
+
+            window.addEventListener('resize', function () {
+                if (window.innerWidth >= 992) closeMenu();
+            });
+        })();
+    </script>
+
 </body>
 </html>
