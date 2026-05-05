@@ -1,50 +1,261 @@
 {
-  "lastUpdated": "2025-01-02",
-  "source": "FRED (Federal Reserve Economic Data)",
+  "lastUpdated": "2026-05-06",
+  "source": "BLS (LNS14000000) and Yahoo Finance (SPY proxy)",
   "unemployment": [
-    {"date": "2022-01-01", "value": 4.0},
-    {"date": "2022-02-01", "value": 3.8},
-    {"date": "2022-03-01", "value": 3.6},
-    {"date": "2022-04-01", "value": 3.6},
-    {"date": "2022-05-01", "value": 3.6},
-    {"date": "2022-06-01", "value": 3.6},
-    {"date": "2022-07-01", "value": 3.5},
-    {"date": "2022-08-01", "value": 3.7},
-    {"date": "2022-09-01", "value": 3.5},
-    {"date": "2022-10-01", "value": 3.7},
-    {"date": "2022-11-01", "value": 3.7},
-    {"date": "2022-12-01", "value": 3.5},
-    {"date": "2023-01-01", "value": 3.4},
-    {"date": "2023-02-01", "value": 3.6},
-    {"date": "2023-03-01", "value": 3.5},
-    {"date": "2023-04-01", "value": 3.4},
-    {"date": "2023-05-01", "value": 3.7},
-    {"date": "2023-06-01", "value": 3.6},
-    {"date": "2023-07-01", "value": 3.5},
-    {"date": "2023-08-01", "value": 3.8},
-    {"date": "2023-09-01", "value": 3.8},
-    {"date": "2023-10-01", "value": 3.9},
-    {"date": "2023-11-01", "value": 3.7},
-    {"date": "2023-12-01", "value": 3.7},
-    {"date": "2024-01-01", "value": 3.7},
-    {"date": "2024-02-01", "value": 3.9},
-    {"date": "2024-03-01", "value": 3.8},
-    {"date": "2024-04-01", "value": 3.9},
-    {"date": "2024-05-01", "value": 4.0},
-    {"date": "2024-06-01", "value": 4.1},
-    {"date": "2024-07-01", "value": 4.3},
-    {"date": "2024-08-01", "value": 4.2},
-    {"date": "2024-09-01", "value": 4.1},
-    {"date": "2024-10-01", "value": 4.1},
-    {"date": "2024-11-01", "value": 4.2},
-    {"date": "2024-12-01", "value": 4.1},
-    {"date": "2025-01-01", "value": 4.0}
+    {
+      "date": "2021-01-01",
+      "value": 6.4
+    },
+    {
+      "date": "2021-02-01",
+      "value": 6.2
+    },
+    {
+      "date": "2021-03-01",
+      "value": 6.1
+    },
+    {
+      "date": "2021-04-01",
+      "value": 6.1
+    },
+    {
+      "date": "2021-05-01",
+      "value": 5.8
+    },
+    {
+      "date": "2021-06-01",
+      "value": 5.9
+    },
+    {
+      "date": "2021-07-01",
+      "value": 5.4
+    },
+    {
+      "date": "2021-08-01",
+      "value": 5.1
+    },
+    {
+      "date": "2021-09-01",
+      "value": 4.7
+    },
+    {
+      "date": "2021-10-01",
+      "value": 4.5
+    },
+    {
+      "date": "2021-11-01",
+      "value": 4.1
+    },
+    {
+      "date": "2021-12-01",
+      "value": 3.9
+    },
+    {
+      "date": "2022-01-01",
+      "value": 4.0
+    },
+    {
+      "date": "2022-02-01",
+      "value": 3.9
+    },
+    {
+      "date": "2022-03-01",
+      "value": 3.7
+    },
+    {
+      "date": "2022-04-01",
+      "value": 3.7
+    },
+    {
+      "date": "2022-05-01",
+      "value": 3.6
+    },
+    {
+      "date": "2022-06-01",
+      "value": 3.6
+    },
+    {
+      "date": "2022-07-01",
+      "value": 3.5
+    },
+    {
+      "date": "2022-08-01",
+      "value": 3.6
+    },
+    {
+      "date": "2022-09-01",
+      "value": 3.5
+    },
+    {
+      "date": "2022-10-01",
+      "value": 3.6
+    },
+    {
+      "date": "2022-11-01",
+      "value": 3.6
+    },
+    {
+      "date": "2022-12-01",
+      "value": 3.5
+    },
+    {
+      "date": "2023-01-01",
+      "value": 3.5
+    },
+    {
+      "date": "2023-02-01",
+      "value": 3.6
+    },
+    {
+      "date": "2023-03-01",
+      "value": 3.5
+    },
+    {
+      "date": "2023-04-01",
+      "value": 3.4
+    },
+    {
+      "date": "2023-05-01",
+      "value": 3.6
+    },
+    {
+      "date": "2023-06-01",
+      "value": 3.6
+    },
+    {
+      "date": "2023-07-01",
+      "value": 3.5
+    },
+    {
+      "date": "2023-08-01",
+      "value": 3.7
+    },
+    {
+      "date": "2023-09-01",
+      "value": 3.7
+    },
+    {
+      "date": "2023-10-01",
+      "value": 3.9
+    },
+    {
+      "date": "2023-11-01",
+      "value": 3.7
+    },
+    {
+      "date": "2023-12-01",
+      "value": 3.8
+    },
+    {
+      "date": "2024-01-01",
+      "value": 3.7
+    },
+    {
+      "date": "2024-02-01",
+      "value": 3.9
+    },
+    {
+      "date": "2024-03-01",
+      "value": 3.9
+    },
+    {
+      "date": "2024-04-01",
+      "value": 3.9
+    },
+    {
+      "date": "2024-05-01",
+      "value": 3.9
+    },
+    {
+      "date": "2024-06-01",
+      "value": 4.1
+    },
+    {
+      "date": "2024-07-01",
+      "value": 4.2
+    },
+    {
+      "date": "2024-08-01",
+      "value": 4.2
+    },
+    {
+      "date": "2024-09-01",
+      "value": 4.1
+    },
+    {
+      "date": "2024-10-01",
+      "value": 4.1
+    },
+    {
+      "date": "2024-11-01",
+      "value": 4.2
+    },
+    {
+      "date": "2024-12-01",
+      "value": 4.1
+    },
+    {
+      "date": "2025-01-01",
+      "value": 4.0
+    },
+    {
+      "date": "2025-02-01",
+      "value": 4.2
+    },
+    {
+      "date": "2025-03-01",
+      "value": 4.2
+    },
+    {
+      "date": "2025-04-01",
+      "value": 4.2
+    },
+    {
+      "date": "2025-05-01",
+      "value": 4.3
+    },
+    {
+      "date": "2025-06-01",
+      "value": 4.1
+    },
+    {
+      "date": "2025-07-01",
+      "value": 4.3
+    },
+    {
+      "date": "2025-08-01",
+      "value": 4.3
+    },
+    {
+      "date": "2025-09-01",
+      "value": 4.4
+    },
+    {
+      "date": "2025-11-01",
+      "value": 4.5
+    },
+    {
+      "date": "2025-12-01",
+      "value": 4.4
+    },
+    {
+      "date": "2026-01-01",
+      "value": 4.3
+    },
+    {
+      "date": "2026-02-01",
+      "value": 4.4
+    },
+    {
+      "date": "2026-03-01",
+      "value": 4.3
+    }
   ],
-  "sp500_ma200": 5600,
-  "sp500_last": 5900,
+  "sp500_ma200": 668.9212,
+  "sp500_last": 723.77,
   "notes": {
-    "unemployment_source": "FRED: UNRATE (Civilian Unemployment Rate)",
-    "sp500_source": "Calculated from SPY daily closes",
-    "update_frequency": "Monthly for unemployment, Daily for SP500"
+    "unemployment_source": "BLS: LNS14000000 (Civilian Unemployment Rate)",
+    "sp500_source": "Calculated from SPY daily adjusted closes",
+    "update_frequency": "Monthly for unemployment, Daily for SPY prices"
   }
 }

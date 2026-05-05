@@ -40,11 +40,14 @@ TICKERS = [
 ]
 
 OUTPUT_PATH = "data/prices.json"
+ECONOMIC_OUTPUT_PATH = "data/economic.json"
 TRADING_DAYS = 252
 LOOKBACK_DAYS = 370
 USE_ADJUSTED_CLOSE = True
 
 YAHOO_CHART_URL = "https://query1.finance.yahoo.com/v8/finance/chart/{symbol}"
+BLS_TIMESERIES_URL = "https://api.bls.gov/publicAPI/v2/timeseries/data/"
+BLS_UNRATE_SERIES_ID = "LNS14000000"
 
 
 def _http_get_json(url, timeout=30):
@@ -57,6 +60,42 @@ def _http_get_json(url, timeout=30):
                 "Chrome/122.0 Safari/537.36"
             ),
             "Accept": "application/json,text/plain,*/*",
+        },
+    )
+    with urllib.request.urlopen(req, timeout=timeout) as resp:
+        return json.loads(resp.read().decode("utf-8"))
+
+
+def _http_get_text(url, timeout=30):
+    req = urllib.request.Request(
+        url,
+        headers={
+            "User-Agent": (
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                "AppleWebKit/537.36 (KHTML, like Gecko) "
+                "Chrome/122.0 Safari/537.36"
+            ),
+            "Accept": "text/csv,text/plain,*/*",
+        },
+    )
+    with urllib.request.urlopen(req, timeout=timeout) as resp:
+        return resp.read().decode("utf-8")
+
+
+def _http_post_json(url, payload, timeout=30):
+    body = json.dumps(payload).encode("utf-8")
+    req = urllib.request.Request(
+        url,
+        data=body,
+        method="POST",
+        headers={
+            "User-Agent": (
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                "AppleWebKit/537.36 (KHTML, like Gecko) "
+                "Chrome/122.0 Safari/537.36"
+            ),
+            "Accept": "application/json,text/plain,*/*",
+            "Content-Type": "application/json",
         },
     )
     with urllib.request.urlopen(req, timeout=timeout) as resp:
@@ -173,6 +212,67 @@ def build_aligned_payload(price_maps):
     return payload
 
 
+def calculate_sma(values, period):
+    if len(values) < period:
+        return None
+    return sum(values[-period:]) / period
+
+
+def fetch_unemployment():
+    current_year = datetime.now().year
+    payload = {
+        "seriesid": [BLS_UNRATE_SERIES_ID],
+        "startyear": str(current_year - 5),
+        "endyear": str(current_year),
+    }
+    data = _http_post_json(BLS_TIMESERIES_URL, payload, timeout=60)
+    if data.get("status") != "REQUEST_SUCCEEDED":
+        raise RuntimeError(f"BLS API request failed: {data.get('message')}")
+
+    series = (data.get("Results", {}).get("series") or [{}])[0]
+    rows = series.get("data") or []
+    unemployment_by_date = {}
+    for row in rows:
+        period = row.get("period", "")
+        value = row.get("value")
+        if not period.startswith("M") or not value or value == "-":
+            continue
+        month = int(period[1:])
+        date = f"{int(row['year']):04d}-{month:02d}-01"
+        unemployment_by_date[date] = float(value)
+
+    unemployment = [
+        {"date": date, "value": unemployment_by_date[date]}
+        for date in sorted(unemployment_by_date)
+    ]
+    if len(unemployment) < 13:
+        raise RuntimeError("BLS unemployment series returned fewer than 13 observations.")
+
+    return unemployment
+
+
+def build_economic_payload(prices_payload):
+    unemployment = fetch_unemployment()
+    spy_prices = prices_payload.get("SPY") or []
+    sp500_last = spy_prices[-1] if spy_prices else None
+    sp500_ma200 = calculate_sma(spy_prices, 200)
+    today = datetime.now().strftime("%Y-%m-%d")
+
+    payload = {
+        "lastUpdated": today,
+        "source": "BLS (LNS14000000) and Yahoo Finance (SPY proxy)",
+        "unemployment": unemployment,
+        "sp500_ma200": round(sp500_ma200, 4) if sp500_ma200 is not None else None,
+        "sp500_last": sp500_last,
+        "notes": {
+            "unemployment_source": "BLS: LNS14000000 (Civilian Unemployment Rate)",
+            "sp500_source": "Calculated from SPY daily adjusted closes",
+            "update_frequency": "Monthly for unemployment, Daily for SPY prices"
+        }
+    }
+    return payload
+
+
 def main():
     print("=" * 60)
     print("Asset Allocation Calculator - Daily Price Updater (Yahoo)")
@@ -215,11 +315,28 @@ def main():
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(json.dumps(payload, indent=2, ensure_ascii=False), encoding="utf-8")
 
+    try:
+        economic_payload = build_economic_payload(payload)
+    except Exception as e:
+        print(f"\nWARNING: Could not update {ECONOMIC_OUTPUT_PATH}: {e}")
+        economic_payload = None
+
+    if economic_payload:
+        economic_path = Path(ECONOMIC_OUTPUT_PATH)
+        economic_path.parent.mkdir(parents=True, exist_ok=True)
+        economic_path.write_text(json.dumps(economic_payload, indent=2, ensure_ascii=False), encoding="utf-8")
+
     print(f"\nSaved {OUTPUT_PATH}")
     print(f"   Tickers: {len(price_maps)}/{len(TICKERS)}")
     print(f"   Trading days: {payload['meta']['tradingDays']}")
     print(f"   Date range: {payload['meta']['dateRange']['from']} ~ {payload['meta']['dateRange']['to']}")
     print(f"   Date: {payload['meta']['lastUpdated']}")
+    if economic_payload:
+        latest_unemployment = economic_payload["unemployment"][-1]
+        print(f"\nSaved {ECONOMIC_OUTPUT_PATH}")
+        print(f"   UNRATE: {latest_unemployment['date']} = {latest_unemployment['value']}%")
+        print(f"   SPY last: {economic_payload['sp500_last']}")
+        print(f"   SPY SMA200: {economic_payload['sp500_ma200']}")
 
 
 if __name__ == "__main__":

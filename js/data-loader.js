@@ -6,7 +6,7 @@ class DataLoader {
     constructor() {
         this.prices = null;
         this.economic = null;
-        this.cacheKey = 'aac_cache_v4';
+        this.cacheKey = 'aac_cache_v5';
         this.maxCacheAge = 3600000; // 1 hour in ms
     }
 
