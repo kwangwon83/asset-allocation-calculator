@@ -233,7 +233,7 @@ class AllocationEngine {
     }
 
     calcDAA() {
-        const offensive = ['SPY', 'IWM', 'QQQ', 'VGK', 'EWJ', 'EEM', 'VNQ', 'DBC', 'GLD', 'TLT', 'HYG', 'LQD'];
+        const offensive = ['SPY', 'IWM', 'QQQ', 'VGK', 'EWJ', 'EEM', 'VNQ', 'PDBC', 'GLD', 'TLT', 'HYG', 'LQD'];
         const defensive = ['SHY', 'IEF', 'LQD'];
         const canary = ['VWO', 'BND'];
         const canaryScored = this.scoreTickers(canary, this.getWeightedMomentumScore);
@@ -288,7 +288,7 @@ class AllocationEngine {
     }
 
     calcAAA() {
-        const assets = ['SPY', 'VGK', 'EWJ', 'EEM', 'VNQ', 'RWX', 'IEF', 'TLT', 'GLD', 'DBC'];
+        const assets = ['SPY', 'VGK', 'EWJ', 'EEM', 'VNQ', 'RWX', 'IEF', 'TLT', 'GLD', 'PDBC'];
         const candidates = this.scoreTickers(assets, ticker => this.getReturn(ticker, 126)).filter(x => x.score >= 0);
         const allocations = {};
         if (candidates.length) {
@@ -525,7 +525,6 @@ class AllocationEngine {
             VGK: 'VGK : Vanguard European Stock Index Fund',
             EWJ: 'EWJ : iShares MSCI Japan ETF',
             EEM: 'EEM : iShares MSCI Emerging Markets ETF',
-            DBC: 'DBC : Invesco DB Commodity Index Tracking Fund',
             HYG: 'HYG : iShares iBoxx $ High Yield Corporate Bond ETF',
             LQD: 'LQD : iShares iBoxx $ Investment Grade Corporate Bond ETF',
             REM: 'REM : iShares Mortgage Real Estate Capped ETF',
@@ -551,7 +550,7 @@ class AllocationEngine {
             RWX: '국제 리츠', IEF: '미국 중기채', TLT: '미국 장기채', SHY: '미국 단기국채',
             BND: '미국 종합채권', AGG: '미국 혼합채권', HYG: '미국 하이일드 채권',
             LQD: '미국 회사채', TIP: '미국 물가연동채', BWX: '국제 채권', EMB: '신흥국 채권',
-            GLD: '금', PDBC: '원자재', DBC: '원자재',
+            GLD: '금', PDBC: '원자재',
             BIL: '초단기채권', USD: '현금'
         };
         return sectors[ticker] || '기타';
@@ -561,7 +560,7 @@ class AllocationEngine {
         if (['SPY', 'IWD', 'QQQ', 'IWM', 'IWN', 'SCZ', 'VTI', 'VGK', 'EWJ', 'EEM', 'VWO', 'EFA', 'VEA'].includes(ticker)) return '주식';
         if (['VNQ', 'REM', 'RWX'].includes(ticker)) return '리츠';
         if (['IEF', 'TLT', 'SHY', 'BND', 'AGG', 'HYG', 'LQD', 'TIP', 'BWX', 'EMB', 'BIL'].includes(ticker)) return '채권';
-        if (['GLD', 'PDBC', 'DBC'].includes(ticker)) return '원자재';
+        if (['GLD', 'PDBC'].includes(ticker)) return '원자재';
         if (ticker === 'USD') return '현금';
         return '기타';
     }
