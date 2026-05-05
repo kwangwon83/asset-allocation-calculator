@@ -42,6 +42,26 @@
             </ul>
         </div>
     </nav>
+    <button class="sidebar-toggle" type="button" aria-label="전략 메뉴 열기" aria-controls="sideStrategyMenu" aria-expanded="false">☰</button>
+    <aside id="sideStrategyMenu" class="side-strategy-menu">
+        <div class="side-menu-title">전략 메뉴</div>
+        <a href="index.html">Home</a>
+        <a href="dual.html">전통듀얼모멘텀</a>
+        <a href="cdm.html">종합듀얼모멘텀</a>
+        <a href="adm.html">가속듀얼모멘텀</a>
+        <a href="perm.html">영구포트폴리오</a>
+        <a href="laa.html">LAA</a>
+        <a href="raa.html">RAA</a>
+        <a href="gtaa.html">GTAA</a>
+        <a href="paa.html">PAA</a>
+        <a href="vaa.html">VAA</a>
+        <a href="faa.html">FAA</a>
+        <a href="aaa.html">AAA</a>
+        <a href="daa.html">DAA</a>
+        <a href="dynbond.html">채권동적배분</a>
+    </aside>
+    <div class="side-overlay"></div>
+
 
     <div class="page-header">
         <h1>종합 듀얼모멘텀</h1>
@@ -117,5 +137,34 @@
             }
         })();
     </script>
+
+    <script>
+        (function () {
+            var toggle = document.querySelector('.sidebar-toggle');
+            var menu = document.getElementById('sideStrategyMenu');
+            var overlay = document.querySelector('.side-overlay');
+            if (!toggle || !menu || !overlay) return;
+
+            function closeMenu() {
+                document.body.classList.remove('side-open');
+                toggle.setAttribute('aria-expanded', 'false');
+            }
+
+            toggle.addEventListener('click', function () {
+                var opened = document.body.classList.toggle('side-open');
+                toggle.setAttribute('aria-expanded', opened ? 'true' : 'false');
+            });
+
+            overlay.addEventListener('click', closeMenu);
+            menu.querySelectorAll('a').forEach(function (a) {
+                a.addEventListener('click', closeMenu);
+            });
+
+            window.addEventListener('resize', function () {
+                if (window.innerWidth >= 992) closeMenu();
+            });
+        })();
+    </script>
+
 </body>
 </html>
