@@ -4,6 +4,8 @@
 class Renderer {
     constructor(engine) {
         this.engine = engine;
+        this.calculateFn = null;
+        this.boundInputs = { budget: null, fee: null };
     }
 
     async render(strategy) {
@@ -18,7 +20,7 @@ class Renderer {
         }
 
         // Clear
-        tableHead.innerHTML = '';
+        if (tableHead) tableHead.innerHTML = '';
         tableBody.innerHTML = '';
         if (footnote) footnote.innerHTML = '';
 
@@ -119,40 +121,57 @@ class Renderer {
         const feeInput = document.getElementById('buysellfee');
         if (!budgetInput) return;
 
-        const calculate = () => {
-            const budget = parseFloat(budgetInput.value.replace(/,/g, '')) || 0;
-            const fee = parseFloat(feeInput?.value) || 0;
+        if (!this.calculateFn) {
+            this.calculateFn = () => {
+                const budget = parseFloat(budgetInput.value.replace(/,/g, '')) || 0;
+                const fee = parseFloat(feeInput?.value) || 0;
 
-            const stocks = document.getElementsByClassName('cell-stocks');
-            const prices = document.getElementsByClassName('cell-price');
-            const allocs = document.getElementsByClassName('cell-allocation');
-            const tickers = document.getElementsByClassName('cell-ticker');
+                const stocks = document.getElementsByClassName('cell-stocks');
+                const prices = document.getElementsByClassName('cell-price');
+                const allocs = document.getElementsByClassName('cell-allocation');
+                const tickers = document.getElementsByClassName('cell-ticker');
 
-            for (let i = 0; i < stocks.length; i++) {
-                const ticker = tickers[i]?.textContent.trim();
-                const priceText = prices[i]?.textContent.trim();
-                const allocText = allocs[i]?.textContent.trim();
+                for (let i = 0; i < stocks.length; i++) {
+                    const ticker = tickers[i]?.textContent.trim();
+                    const priceText = prices[i]?.textContent.trim();
+                    const allocText = allocs[i]?.textContent.trim();
 
-                if (!ticker || ticker === 'USD' || allocText === '-' || priceText === '-') {
-                    stocks[i].textContent = '-'
-                    continue;
+                    if (!ticker || ticker === 'USD' || allocText === '-' || priceText === '-') {
+                        stocks[i].textContent = '-';
+                        continue;
+                    }
+
+                    const price = parseFloat(priceText);
+                    const alloc = parseFloat(allocText.replace('%', '')) / 100;
+
+                    if (isNaN(price) || isNaN(alloc) || price <= 0 || budget <= 0) {
+                        stocks[i].textContent = '-';
+                        continue;
+                    }
+
+                    const qty = Math.floor(budget * alloc / (price * (1 + fee / 100)));
+                    stocks[i].textContent = qty.toLocaleString();
                 }
+            };
+        }
 
-                const price = parseFloat(priceText);
-                const alloc = parseFloat(allocText.replace('%', '')) / 100;
-
-                if (isNaN(price) || isNaN(alloc) || price <= 0 || budget <= 0) {
-                    stocks[i].textContent = '-';
-                    continue;
-                }
-
-                const qty = Math.floor(budget * alloc / (price * (1 + fee / 100)));
-                stocks[i].textContent = qty.toLocaleString();
+        if (this.boundInputs.budget !== budgetInput) {
+            if (this.boundInputs.budget && this.calculateFn) {
+                this.boundInputs.budget.removeEventListener('input', this.calculateFn);
             }
-        };
+            budgetInput.addEventListener('input', this.calculateFn);
+            this.boundInputs.budget = budgetInput;
+        }
 
-        budgetInput.addEventListener('input', calculate);
-        if (feeInput) feeInput.addEventListener('input', calculate);
+        if (this.boundInputs.fee !== feeInput) {
+            if (this.boundInputs.fee && this.calculateFn) {
+                this.boundInputs.fee.removeEventListener('input', this.calculateFn);
+            }
+            if (feeInput) feeInput.addEventListener('input', this.calculateFn);
+            this.boundInputs.fee = feeInput;
+        }
+
+        this.calculateFn();
     }
 
     updateTimestamp() {
