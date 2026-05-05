@@ -67,7 +67,6 @@
         <div class="hero-subtitle">14가지 자산배분 전략을 비교하고 투자 포트폴리오를 계획하세요</div>
         <div id="lastUpdated"></div>
     </div>
-
     <div class="strategy-list">
         <div class="loading-wrap">
             <div class="loader-spin"></div>
@@ -98,11 +97,19 @@
                 if (updated) document.getElementById('lastUpdated').textContent = 'Updated: ' + updated;
 
                 const strategies = [
-                    ['PERM','영구포트폴리오'],['LAA','LAA(이중모멘텀)'],['RAA','RAA(견고한배분)'],
-                    ['GTAA','GTAA(글로벌전술)'],['PAA','PAA(보호형배분)'],['DAA','DAA(방어형배분)'],
-                    ['VAA','VAA(초보수)'],['FAA','FAA(유연한배분)'],['AAA','AAA(적응형배분)'],
-                    ['DUAL','전통듀얼모멘텀'],['CDM','종합듀얼모멘텀'],['ADM','가속듀얼모멘텀'],
-                    ['DYNBOND','채권동적배분']
+                    ['PERM', 'Permanent Portfolio'],
+                    ['LAA', 'LAA (Lethargic Asset Allocation)'],
+                    ['RAA', 'RAA (Resilient Asset Allocation)'],
+                    ['GTAA', 'GTAA (Global Tactical Asset Allocation)'],
+                    ['PAA', 'PAA (Protective Asset Allocation)'],
+                    ['DAA', 'DAA (Defensive Asset Allocation)'],
+                    ['VAA', 'VAA (Vigilant Asset Allocation)'],
+                    ['FAA', 'FAA (Flexible Asset Allocation)'],
+                    ['AAA', 'AAA (Adaptive Asset Allocation)'],
+                    ['DUAL', 'Dual Momentum'],
+                    ['CDM', 'CDM (Composite Dual Momentum)'],
+                    ['ADM', 'ADM (Accelerating Dual Momentum)'],
+                    ['DYNBOND', 'Dynamic Bond Allocation']
                 ];
 
                 const tbody = document.getElementById('indexBody');
