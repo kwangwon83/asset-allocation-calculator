@@ -65,15 +65,7 @@
     <div class="page-header">
         <h1>AAA</h1>
         <h2>Adaptive Asset Allocation</h2>
-        <div class="page-desc">
-<span class="desc-line">모멘텀 0 이상인 자산에 대해 마코비츠의 최소분산 포트폴리오 이론에 따라 자산을 배분하는 전략</span>
-
-<span class="desc-line">모멘텀 : 6개월 수익률</span>
-<span class="desc-line">배분비중 : 마코비츠 최소분산 포트폴리오 이론에 따름<br>
-* <a href="https://portfoliooptimizer.io">https://portfoliooptimizer.io</a>의 API 사용</span>
-
-<span class="desc-line"><u>자산군</u> : SPY(미국 대형주), VGK(유럽 주식), EWJ(일본 주식), EEM(신흥국 주식), VNQ(미국 리츠), RWX(국제 리츠), IEF(미국 중기채), TLT(미국 장기채), GLD(금), PDBC(원자재)</span>
-</div>
+        <div class="page-desc"><span class="desc-line">GestaltU 및 ReSolve Asset Management의 Adaptive Asset Allocation 아이디어를 바탕으로, 모멘텀과 최소분산 최적화를 결합한 전략입니다.</span><span class="desc-line">모멘텀 0 이상인 자산에 대해 마코비츠의 최소분산 포트폴리오 이론에 따라 자산을 배분하는 전략</span><span class="desc-line">모멘텀 : 6개월 수익률</span><span class="desc-line">배분비중 : 126일 수익률 공분산 행렬을 사용해 롱온리 최소분산 포트폴리오로 계산<br>* 음수 비중이 나오면 해당 자산을 제외하고 다시 계산</span><span class="desc-line"><u>자산군</u> : SPY(미국 대형주), VGK(유럽 주식), EWJ(일본 주식), EEM(신흥국 주식), VNQ(미국 리츠), RWX(국제 리츠), IEF(미국 중기채), TLT(미국 장기채), GLD(금), PDBC(원자재)</span><span class="desc-line">추세가 양호한 자산만 후보로 삼되, 최종 비중은 포트폴리오 전체 변동성을 낮추는 방향으로 결정합니다.</span><span class="desc-line">리밸런싱 기준 : 월 1회 점검</span></div>
     </div>
 
     <div class="input-section">

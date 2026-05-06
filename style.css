@@ -209,6 +209,25 @@ body {
   font-size: 0.78rem;
   line-height: 1.55;
 }
+.decision-ticker-button {
+  display: inline-flex;
+  align-items: center;
+  margin: 0 0.08rem;
+  padding: 0.02rem 0.24rem;
+  border: 1px solid #bfdbfe;
+  border-radius: 4px;
+  background: #eff6ff;
+  color: var(--primary-dark);
+  font: inherit;
+  font-weight: 800;
+  line-height: 1.35;
+  cursor: pointer;
+}
+.decision-ticker-button:hover,
+.decision-ticker-button:focus {
+  background: #dbeafe;
+  outline: none;
+}
 .price-chart-panel {
   margin-top: 1rem;
   padding: 1rem;

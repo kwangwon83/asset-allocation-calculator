@@ -165,7 +165,7 @@ class Renderer {
             head.className = 'decision-item-head';
 
             const name = document.createElement('strong');
-            name.textContent = item.title;
+            this.appendTextWithTickerButtons(name, item.title);
             head.appendChild(name);
 
             if (item.badge) {
@@ -177,7 +177,7 @@ class Renderer {
 
             const body = document.createElement('div');
             body.className = 'decision-item-body';
-            body.textContent = item.body;
+            this.appendTextWithTickerButtons(body, item.body);
 
             card.appendChild(head);
             card.appendChild(body);
@@ -447,6 +447,35 @@ class Renderer {
 
     decisionItem(title, selected, body, badge) {
         return { title, selected: Boolean(selected), body, badge };
+    }
+
+    appendTextWithTickerButtons(target, text) {
+        const source = String(text || '');
+        const tickerPattern = /\b[A-Z]{2,5}\b/g;
+        let lastIndex = 0;
+        let match;
+
+        while ((match = tickerPattern.exec(source)) !== null) {
+            const ticker = match[0];
+            if (!this.hasPriceSeries(ticker)) continue;
+
+            if (match.index > lastIndex) {
+                target.appendChild(document.createTextNode(source.slice(lastIndex, match.index)));
+            }
+
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'decision-ticker-button';
+            button.textContent = ticker;
+            button.title = ticker + ' 1년 가격 추이 보기';
+            button.addEventListener('click', () => this.renderPriceChart(ticker));
+            target.appendChild(button);
+            lastIndex = match.index + ticker.length;
+        }
+
+        if (lastIndex < source.length) {
+            target.appendChild(document.createTextNode(source.slice(lastIndex)));
+        }
     }
 
     scoreItems(tickers, scoreFn) {
