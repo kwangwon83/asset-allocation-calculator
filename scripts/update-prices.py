@@ -257,7 +257,9 @@ def fetch_unemployment():
 
 def fetch_t10y3m_spread():
     try:
-        text = _http_get_text(FRED_T10Y3M_CSV_URL, timeout=15)
+        start = (datetime.now() - timedelta(days=540)).strftime("%Y-%m-%d")
+        url = f"{FRED_T10Y3M_CSV_URL}&cosd={start}"
+        text = _http_get_text(url, timeout=30)
         latest = None
         for line in text.splitlines()[1:]:
             if not line.strip():
@@ -329,7 +331,7 @@ def build_economic_payload(prices_payload):
             "unemployment_source": "BLS: LNS14000000 (Civilian Unemployment Rate)",
             "sp500_source": "Calculated from SPY daily adjusted closes",
             "sp500_dividend_yield_source": SP500_DIVIDEND_YIELD_URL,
-            "t10y3m_source": "FRED: T10Y3M (10-Year Treasury Constant Maturity Minus 3-Month Treasury Constant Maturity)",
+            "t10y3m_source": "FRED: T10Y3M (fallback: Yahoo Finance ^TNX - ^IRX proxy)",
             "update_frequency": "Monthly for unemployment, Daily for SPY prices and DGA risk indicators"
         }
     }

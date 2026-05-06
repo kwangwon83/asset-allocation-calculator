@@ -267,7 +267,7 @@
     "unemployment_source": "BLS: LNS14000000 (Civilian Unemployment Rate)",
     "sp500_source": "Calculated from SPY daily adjusted closes",
     "sp500_dividend_yield_source": "https://us500.com/tools/data/sp500-dividend-yield",
-    "t10y3m_source": "FRED: T10Y3M (10-Year Treasury Constant Maturity Minus 3-Month Treasury Constant Maturity)",
+    "t10y3m_source": "FRED: T10Y3M (fallback: Yahoo Finance ^TNX - ^IRX proxy)",
     "update_frequency": "Monthly for unemployment, Daily for SPY prices and DGA risk indicators"
   }
 }
