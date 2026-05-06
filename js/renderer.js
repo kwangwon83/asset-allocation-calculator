@@ -41,6 +41,7 @@ class Renderer {
 
         this.renderHeader(tableHead);
         this.renderRows(tableBody, footnote, data);
+        this.renderDecisionExplanation(strategy, data);
         this.bindCalculation();
         this.updateTimestamp();
         this.preparePriceChart(data);
@@ -131,6 +132,363 @@ class Renderer {
                 footnote.appendChild(div);
             }
         });
+    }
+
+    renderDecisionExplanation(strategy, data) {
+        const panel = this.ensureDecisionPanel();
+        const explanation = this.buildDecisionExplanation(String(strategy || '').toUpperCase(), data);
+        if (!explanation) {
+            panel.style.display = 'none';
+            return;
+        }
+
+        panel.style.display = '';
+        panel.innerHTML = '';
+
+        const title = document.createElement('div');
+        title.className = 'decision-title';
+        title.textContent = '선정 근거';
+        panel.appendChild(title);
+
+        const summary = document.createElement('div');
+        summary.className = 'decision-summary';
+        summary.textContent = explanation.summary;
+        panel.appendChild(summary);
+
+        const grid = document.createElement('div');
+        grid.className = 'decision-grid';
+        explanation.items.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'decision-item' + (item.selected ? ' selected' : '');
+
+            const head = document.createElement('div');
+            head.className = 'decision-item-head';
+
+            const name = document.createElement('strong');
+            name.textContent = item.title;
+            head.appendChild(name);
+
+            if (item.badge) {
+                const badge = document.createElement('span');
+                badge.className = 'decision-badge';
+                badge.textContent = item.badge;
+                head.appendChild(badge);
+            }
+
+            const body = document.createElement('div');
+            body.className = 'decision-item-body';
+            body.textContent = item.body;
+
+            card.appendChild(head);
+            card.appendChild(body);
+            grid.appendChild(card);
+        });
+        panel.appendChild(grid);
+    }
+
+    ensureDecisionPanel() {
+        let panel = document.querySelector('.decision-panel');
+        if (panel) return panel;
+
+        const tableSection = document.querySelector('.table-section');
+        panel = document.createElement('div');
+        panel.className = 'decision-panel';
+
+        const chartPanel = document.querySelector('.price-chart-panel');
+        if (chartPanel) tableSection.insertBefore(panel, chartPanel);
+        else tableSection.appendChild(panel);
+        return panel;
+    }
+
+    buildDecisionExplanation(strategy, data) {
+        const builders = {
+            PERM: () => this.explainPermanentPortfolio(data),
+            LAA: () => this.explainLAA(data),
+            RAA: () => this.explainRAA(data),
+            GTAA: () => this.explainGTAA(data),
+            PAA: () => this.explainPAA(data),
+            DAA: () => this.explainDAA(data),
+            VAA: () => this.explainVAA(data),
+            FAA: () => this.explainFAA(data),
+            AAA: () => this.explainAAA(data),
+            DUAL: () => this.explainDual(data),
+            CDM: () => this.explainCDM(data),
+            ADM: () => this.explainADM(data),
+            DYNBOND: () => this.explainDynamicBond(data)
+        };
+        return builders[strategy] ? builders[strategy]() : this.explainGeneric(data);
+    }
+
+    explainPermanentPortfolio(data) {
+        return {
+            summary: '영구 포트폴리오는 시장 신호로 자산을 고르는 전략이 아니라, 네 자산을 항상 같은 비중으로 보유합니다.',
+            items: data.map(row => this.decisionItem(
+                row.ticker,
+                row.allocation > 0,
+                `${this.fmtAlloc(row.allocation)} 고정 배분입니다.`,
+                row.allocation > 0 ? '선정' : '제외'
+            ))
+        };
+    }
+
+    explainLAA(data) {
+        const spy = this.engine.getCurrentPrice('SPY');
+        const spySma = this.engine.getSMA('SPY', 200);
+        const uptrend = this.engine.isSP500Uptrend();
+        const unemployment = this.engine.economic?.unemployment || [];
+        const current = unemployment.length ? unemployment[unemployment.length - 1].value : null;
+        const avg12m = unemployment.length >= 13
+            ? unemployment.slice(unemployment.length - 13, unemployment.length - 1).reduce((s, x) => s + x.value, 0) / 12
+            : null;
+        const unemploymentHigh = current !== null && avg12m !== null && current > avg12m;
+        const selected = this.selectedTickers(data).join(', ') || '없음';
+        const flexible = data.find(row => ['QQQ', 'SHY'].includes(row.ticker) && row.allocation > 0)?.ticker || 'SHY';
+
+        return {
+            summary: `S&P500과 실업률 조건을 확인한 뒤 고정자산 IWD, IEF, GLD에 25.0%씩 배분하고, 유연자산은 ${flexible}로 선택했습니다. 현재 선정 자산은 ${selected}입니다.`,
+            items: [
+                this.decisionItem('S&P500 추세', uptrend, `SPY 현재가 ${this.fmtPrice(spy)}, 200일 이동평균 ${this.fmtPrice(spySma)}로 ${uptrend ? '상승장' : '하락장'}으로 판단했습니다.`, uptrend ? '상승장' : '하락장'),
+                this.decisionItem('실업률 조건', unemploymentHigh, `현재 실업률 ${this.fmtPlain(current)}%, 최근 12개월 평균 ${this.fmtPlain(avg12m)}%로 ${unemploymentHigh ? '실업률 조건이 충족되었습니다' : '실업률 조건이 충족되지 않았습니다'}.`, unemploymentHigh ? '조건 충족' : '조건 미충족'),
+                this.decisionItem(flexible, true, `${uptrend || unemploymentHigh ? '상승장 또는 실업률 조건이 충족되어' : '두 조건이 모두 충족되지 않아'} 유연자산 25.0%를 ${flexible}에 배분했습니다.`, '선정')
+            ]
+        };
+    }
+
+    explainRAA(data) {
+        const unemployment = this.engine.getUnemploymentCurrentAndPast();
+        const expansion = unemployment ? unemployment.current < unemployment.past12m : false;
+        const canary = this.sortedScores(['VWO', 'BND'], ticker => this.engine.getWeightedMomentumScore(ticker));
+        const canaryPositive = canary.length === 2 && canary.every(x => x.score > 0);
+        const selected = this.selectedTickers(data).join(', ') || '없음';
+        const signal = expansion || canaryPositive;
+
+        return {
+            summary: `${signal ? '위험자산 보유 조건' : '방어 조건'}으로 판단해 ${selected}에 배분했습니다.`,
+            items: [
+                this.decisionItem('실업률 사이클', expansion, `현재 실업률 ${this.fmtPlain(unemployment?.current)}%, 12개월 전 ${this.fmtPlain(unemployment?.past12m)}%로 ${expansion ? '확장 국면' : '확장 국면이 아님'}으로 보았습니다.`, expansion ? '확장' : '방어'),
+                ...canary.map(x => this.decisionItem(x.ticker, x.score > 0, `카나리아 모멘텀 스코어는 ${this.fmtPct(x.score)}입니다.`, x.score > 0 ? '양호' : '주의')),
+                ...this.selectedRows(data).map(row => this.decisionItem(row.ticker, true, `최종 배분비중은 ${this.fmtAlloc(row.allocation)}입니다.`, '선정'))
+            ]
+        };
+    }
+
+    explainGTAA(data) {
+        const assets = ['SPY', 'EFA', 'IEF', 'PDBC', 'VNQ'];
+        const scores = this.scoreItems(assets, ticker => this.engine.getSmaMomentum(ticker, 210));
+        const cash = data.find(row => row.ticker === 'USD')?.allocation || 0;
+        return {
+            summary: '각 자산의 10개월 이동평균 대비 위치를 확인해 양수인 자산에는 20.0%씩, 음수인 몫은 현금으로 배분했습니다.',
+            items: [
+                ...scores.map(x => this.decisionItem(x.ticker, x.score > 0, `10개월 SMA 모멘텀은 ${this.fmtPct(x.score)}이고 최종 배분은 ${this.fmtAlloc(this.allocOf(data, x.ticker))}입니다.`, x.score > 0 ? '선정' : '현금 전환')),
+                this.decisionItem('USD', cash > 0, `모멘텀이 음수인 자산 몫이 ${this.fmtAlloc(cash)}만큼 현금으로 이동했습니다.`, cash > 0 ? '보유' : '없음')
+            ]
+        };
+    }
+
+    explainPAA(data) {
+        const assets = ['SPY', 'IWM', 'QQQ', 'VGK', 'EWJ', 'EEM', 'VNQ', 'PDBC', 'GLD', 'TLT', 'HYG', 'LQD'];
+        const scored = this.engine.sortByScoreDesc(this.scoreItems(assets, ticker => this.engine.getSmaMomentum(ticker, 252)));
+        const positive = scored.filter(x => x.score > 0);
+        const selected = this.selectedTickers(data).join(', ') || '없음';
+        return {
+            summary: `12개월 이동평균 기준 양수 자산은 ${positive.length}개입니다. 규칙에 따라 최종 선정 자산은 ${selected}입니다.`,
+            items: [
+                this.decisionItem('양수 자산 수', positive.length > 6, `${positive.length}개가 양수입니다. ${positive.length <= 6 ? '6개 이하라 IEF 100.0%로 방어 배분했습니다.' : `상위 ${positive.length - 6}개 위험자산을 선택했습니다.`}`, positive.length > 6 ? '공격' : '방어'),
+                ...scored.slice(0, 8).map(x => this.decisionItem(x.ticker, this.allocOf(data, x.ticker) > 0, `12개월 SMA 모멘텀은 ${this.fmtPct(x.score)}, 최종 배분은 ${this.fmtAlloc(this.allocOf(data, x.ticker))}입니다.`, this.allocOf(data, x.ticker) > 0 ? '선정' : '제외')),
+                this.decisionItem('IEF', this.allocOf(data, 'IEF') > 0, `방어 배분으로 IEF에 ${this.fmtAlloc(this.allocOf(data, 'IEF'))}가 배정되었습니다.`, this.allocOf(data, 'IEF') > 0 ? '선정' : '없음')
+            ]
+        };
+    }
+
+    explainDAA(data) {
+        const offensive = ['SPY', 'IWM', 'QQQ', 'VGK', 'EWJ', 'EEM', 'VNQ', 'PDBC', 'GLD', 'TLT', 'HYG', 'LQD'];
+        const defensive = ['SHY', 'IEF', 'LQD'];
+        const canary = this.scoreItems(['VWO', 'BND'], ticker => this.engine.getWeightedMomentumScore(ticker));
+        const canaryPositive = canary.length === 2 && canary.every(x => x.score >= 0);
+        const pool = canaryPositive ? offensive : defensive;
+        const ranked = this.engine.sortByScoreDesc(this.scoreItems(pool, ticker => this.engine.getWeightedMomentumScore(ticker)));
+        return {
+            summary: `카나리아 자산 ${canary.map(x => `${x.ticker} ${this.fmtPct(x.score)}`).join(', ')} 기준으로 ${canaryPositive ? '공격 모드' : '방어 모드'}를 선택했습니다.`,
+            items: [
+                ...canary.map(x => this.decisionItem(x.ticker, x.score >= 0, `카나리아 모멘텀 스코어는 ${this.fmtPct(x.score)}입니다.`, x.score >= 0 ? '양호' : '주의')),
+                ...ranked.slice(0, 4).map(x => this.decisionItem(x.ticker, this.allocOf(data, x.ticker) > 0, `선택 후보 내 모멘텀 스코어는 ${this.fmtPct(x.score)}, 최종 배분은 ${this.fmtAlloc(this.allocOf(data, x.ticker))}입니다.`, this.allocOf(data, x.ticker) > 0 ? '선정' : '후보'))
+            ]
+        };
+    }
+
+    explainVAA(data) {
+        const offensive = ['SPY', 'EFA', 'EEM', 'AGG'];
+        const defensive = ['LQD', 'SHY', 'IEF'];
+        const offensiveScores = this.scoreItems(offensive, ticker => this.engine.getWeightedMomentumScore(ticker));
+        const allPositive = offensiveScores.length === offensive.length && offensiveScores.every(x => x.score >= 0);
+        const pool = allPositive ? offensive : defensive;
+        const ranked = this.engine.sortByScoreDesc(this.scoreItems(pool, ticker => this.engine.getWeightedMomentumScore(ticker)));
+        const selected = this.selectedTickers(data).join(', ') || '없음';
+        return {
+            summary: `공격자산 모멘텀이 모두 양수인지 확인한 뒤 ${allPositive ? '공격자산' : '방어자산'} 중 최고 점수인 ${selected}에 100.0% 배분했습니다.`,
+            items: [
+                ...offensiveScores.map(x => this.decisionItem(x.ticker, x.score >= 0, `공격자산 모멘텀 스코어는 ${this.fmtPct(x.score)}입니다.`, x.score >= 0 ? '양수' : '음수')),
+                ...ranked.slice(0, 3).map(x => this.decisionItem(x.ticker, this.allocOf(data, x.ticker) > 0, `선택 풀에서의 모멘텀 스코어는 ${this.fmtPct(x.score)}입니다.`, this.allocOf(data, x.ticker) > 0 ? '선정' : '후보'))
+            ]
+        };
+    }
+
+    explainFAA(data) {
+        const assets = ['VTI', 'VEA', 'VWO', 'SHY', 'BND', 'PDBC', 'VNQ'];
+        const scored = assets.map(ticker => ({
+            ticker,
+            momentum: this.engine.getReturn(ticker, 84),
+            volatility: this.engine.getVolatility(ticker, 84),
+            correlation: this.engine.getAverageCorrelation(ticker, assets, 84),
+            price: this.engine.getCurrentPrice(ticker)
+        })).filter(x => x.momentum !== null && x.volatility !== null && x.correlation !== null && x.price !== null);
+        const ranked = this.engine.addCompositeRanks(scored, [
+            { key: 'momentum', descending: true, weight: 1 },
+            { key: 'volatility', descending: false, weight: 0.5 },
+            { key: 'correlation', descending: false, weight: 0.5 }
+        ]).sort((a, b) => a.composite - b.composite);
+        return {
+            summary: '4개월 모멘텀, 변동성, 상관관계를 함께 평가했습니다. 종합순위 점수가 낮을수록 우수하며, 상위 3개 중 모멘텀이 양수인 자산만 편입했습니다.',
+            items: ranked.slice(0, 5).map(x => this.decisionItem(
+                x.ticker,
+                this.allocOf(data, x.ticker) > 0,
+                `4개월 모멘텀 ${this.fmtPct(x.momentum)}, 변동성 ${this.fmtPct(x.volatility)}, 평균상관 ${this.fmtPlain(x.correlation)}, 종합순위 ${this.fmtPlain(x.composite)}점입니다. 최종 배분은 ${this.fmtAlloc(this.allocOf(data, x.ticker))}입니다.`,
+                this.allocOf(data, x.ticker) > 0 ? '선정' : (x.momentum > 0 ? '후보' : '현금 전환')
+            ))
+        };
+    }
+
+    explainAAA(data) {
+        const assets = ['SPY', 'VGK', 'EWJ', 'EEM', 'VNQ', 'RWX', 'IEF', 'TLT', 'GLD', 'PDBC'];
+        const scored = this.engine.sortByScoreDesc(this.scoreItems(assets, ticker => this.engine.getReturn(ticker, 126)));
+        const candidates = scored.filter(x => x.score >= 0);
+        return {
+            summary: `6개월 모멘텀이 0.0% 이상인 후보 ${candidates.length}개를 먼저 고르고, 그 후보 안에서 롱온리 최소분산 포트폴리오 비중을 계산했습니다.`,
+            items: scored.map(x => this.decisionItem(
+                x.ticker,
+                this.allocOf(data, x.ticker) > 0,
+                `6개월 수익률은 ${this.fmtPct(x.score)}, 최소분산 계산 후 최종 배분은 ${this.fmtAlloc(this.allocOf(data, x.ticker))}입니다.`,
+                this.allocOf(data, x.ticker) > 0 ? '선정' : (x.score >= 0 ? '후보' : '제외')
+            ))
+        };
+    }
+
+    explainDual(data) {
+        const spy = this.engine.getReturn('SPY', 252);
+        const efa = this.engine.getReturn('EFA', 252);
+        const bil = this.engine.getReturn('BIL', 252);
+        const selected = this.selectedTickers(data).join(', ') || '없음';
+        const riskOn = spy !== null && bil !== null && spy > bil;
+        return {
+            summary: `SPY 12개월 수익률 ${this.fmtPct(spy)}와 BIL ${this.fmtPct(bil)}를 비교해 ${riskOn ? '위험자산 구간' : '채권 방어 구간'}으로 판단했고, 최종적으로 ${selected}에 100.0% 배분했습니다.`,
+            items: [
+                this.decisionItem('SPY', riskOn && spy >= efa, `12개월 모멘텀 스코어는 ${this.fmtPct(spy)}입니다.`, this.allocOf(data, 'SPY') > 0 ? '선정' : '비교'),
+                this.decisionItem('EFA', riskOn && efa > spy, `12개월 모멘텀 스코어는 ${this.fmtPct(efa)}입니다.`, this.allocOf(data, 'EFA') > 0 ? '선정' : '비교'),
+                this.decisionItem('BIL', false, `현금성 기준자산의 12개월 모멘텀 스코어는 ${this.fmtPct(bil)}입니다.`, '기준'),
+                this.decisionItem('AGG', this.allocOf(data, 'AGG') > 0, `${riskOn ? 'SPY가 BIL보다 높아 AGG는 선택하지 않았습니다.' : 'SPY가 BIL보다 높지 않아 AGG를 선택했습니다.'}`, this.allocOf(data, 'AGG') > 0 ? '선정' : '제외')
+            ]
+        };
+    }
+
+    explainCDM(data) {
+        const groups = [['SPY', 'EFA'], ['LQD', 'HYG'], ['VNQ', 'REM'], ['TLT', 'GLD']];
+        const bil = this.engine.getReturn('BIL', 252);
+        const items = groups.map(group => {
+            const ranked = this.engine.sortByScoreDesc(this.scoreItems(group, ticker => this.engine.getReturn(ticker, 252)));
+            const best = ranked[0];
+            const selected = best && best.score > bil ? best.ticker : 'BIL';
+            return this.decisionItem(
+                group.join('/'),
+                selected !== 'BIL',
+                `${group.map(t => `${t} ${this.fmtPct(this.engine.getReturn(t, 252))}`).join(', ')}이고 BIL은 ${this.fmtPct(bil)}입니다. 그래서 ${selected}에 25.0%를 배정했습니다.`,
+                selected
+            );
+        });
+        return {
+            summary: '각 자산군 쌍에서 12개월 모멘텀이 가장 높은 자산을 고르고, 그 값이 BIL보다 낮으면 BIL로 방어 배분했습니다.',
+            items
+        };
+    }
+
+    explainADM(data) {
+        const stocks = this.engine.sortByScoreDesc(this.scoreItems(['SPY', 'SCZ'], ticker => this.engine.getMomentumScore(ticker, [21, 63, 126])));
+        const bonds = this.engine.sortByScoreDesc(this.scoreItems(['TLT', 'TIP'], ticker => this.engine.getMomentumScore(ticker, [21, 63, 126])));
+        const bestStock = stocks[0];
+        const selected = this.selectedTickers(data).join(', ') || '없음';
+        return {
+            summary: `주식 후보의 1/3/6개월 평균 모멘텀을 먼저 확인했습니다. 최고 주식 점수가 ${this.fmtPct(bestStock?.score)}라서 최종적으로 ${selected}에 100.0% 배분했습니다.`,
+            items: [
+                ...stocks.map(x => this.decisionItem(x.ticker, this.allocOf(data, x.ticker) > 0, `1/3/6개월 평균 모멘텀은 ${this.fmtPct(x.score)}입니다.`, this.allocOf(data, x.ticker) > 0 ? '선정' : '주식 후보')),
+                ...bonds.map(x => this.decisionItem(x.ticker, this.allocOf(data, x.ticker) > 0, `주식 최고 점수가 양수가 아닐 때 사용할 채권 후보이며 모멘텀은 ${this.fmtPct(x.score)}입니다.`, this.allocOf(data, x.ticker) > 0 ? '선정' : '채권 후보'))
+            ]
+        };
+    }
+
+    explainDynamicBond(data) {
+        const bonds = ['SHY', 'IEF', 'TLT', 'TIP', 'LQD', 'HYG', 'BWX', 'EMB'];
+        const scored = this.engine.sortByScoreDesc(this.scoreItems(bonds, ticker => this.engine.getReturn(ticker, 126)));
+        const top3 = scored.slice(0, 3);
+        return {
+            summary: '채권 ETF의 6개월 수익률을 비교해 상위 3개를 고르고, 수익률이 양수인 경우에만 33.3%씩 배분했습니다.',
+            items: [
+                ...top3.map(x => this.decisionItem(x.ticker, this.allocOf(data, x.ticker) > 0, `6개월 수익률은 ${this.fmtPct(x.score)}, 최종 배분은 ${this.fmtAlloc(this.allocOf(data, x.ticker))}입니다.`, this.allocOf(data, x.ticker) > 0 ? '선정' : '현금 전환')),
+                this.decisionItem('USD', this.allocOf(data, 'USD') > 0, `상위 3개 중 음수 모멘텀 몫은 ${this.fmtAlloc(this.allocOf(data, 'USD'))}만큼 현금으로 이동했습니다.`, this.allocOf(data, 'USD') > 0 ? '보유' : '없음')
+            ]
+        };
+    }
+
+    explainGeneric(data) {
+        const selected = this.selectedRows(data);
+        return {
+            summary: `현재 계산 결과 기준으로 ${selected.map(row => row.ticker).join(', ') || '선정 자산 없음'}에 배분했습니다.`,
+            items: data.map(row => this.decisionItem(row.ticker, row.allocation > 0, `최종 배분비중은 ${this.fmtAlloc(row.allocation)}입니다.`, row.allocation > 0 ? '선정' : '제외'))
+        };
+    }
+
+    decisionItem(title, selected, body, badge) {
+        return { title, selected: Boolean(selected), body, badge };
+    }
+
+    scoreItems(tickers, scoreFn) {
+        return tickers.map(ticker => ({
+            ticker,
+            score: scoreFn(ticker)
+        })).filter(x => x.score !== null && x.score !== undefined && !Number.isNaN(x.score));
+    }
+
+    sortedScores(tickers, scoreFn) {
+        return this.engine.sortByScoreDesc(this.scoreItems(tickers, scoreFn));
+    }
+
+    selectedRows(data) {
+        return data.filter(row => row.allocation > 0);
+    }
+
+    selectedTickers(data) {
+        return this.selectedRows(data).map(row => row.ticker);
+    }
+
+    allocOf(data, ticker) {
+        return data.find(row => row.ticker === ticker)?.allocation || 0;
+    }
+
+    fmtAlloc(value) {
+        return this.fmtPct(value || 0);
+    }
+
+    fmtPct(value) {
+        if (value === null || value === undefined || Number.isNaN(value)) return '-';
+        return (value * 100).toFixed(1) + '%';
+    }
+
+    fmtPlain(value) {
+        if (value === null || value === undefined || Number.isNaN(value)) return '-';
+        return Number(value).toFixed(1);
+    }
+
+    fmtPrice(value) {
+        if (value === null || value === undefined || Number.isNaN(value)) return '-';
+        return Number(value).toFixed(1);
     }
 
     preparePriceChart(data) {
