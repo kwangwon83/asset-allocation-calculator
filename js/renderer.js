@@ -41,6 +41,7 @@ class Renderer {
 
         this.renderHeader(tableHead);
         this.renderRows(tableBody, footnote, data);
+        this.prepareFootnoteToggle(footnote);
         this.renderDecisionExplanation(strategy, data);
         this.bindCalculation();
         this.updateTimestamp();
@@ -125,13 +126,55 @@ class Renderer {
 
             tableBody.appendChild(tr);
 
-            if (row.remark && footnote) {
+            if (row.remark && footnote && !footnote.querySelector(`[data-ticker="${row.ticker}"]`)) {
                 const div = document.createElement('div');
                 div.className = 'remark';
-                div.textContent = row.remark;
+                div.dataset.ticker = row.ticker;
+                const ticker = document.createElement('strong');
+                ticker.textContent = row.ticker;
+                div.appendChild(ticker);
+                div.appendChild(document.createTextNode(' : ' + row.remark));
                 footnote.appendChild(div);
             }
         });
+    }
+
+    prepareFootnoteToggle(footnote) {
+        if (!footnote) return;
+
+        let wrapper = document.querySelector('.footnote-wrap');
+        let toggle = document.querySelector('.footnote-toggle');
+        const tableSection = document.querySelector('.table-section');
+
+        if (!wrapper) {
+            wrapper = document.createElement('div');
+            wrapper.className = 'footnote-wrap';
+            tableSection.insertBefore(wrapper, footnote);
+            wrapper.appendChild(footnote);
+        }
+
+        if (!toggle) {
+            toggle = document.createElement('button');
+            toggle.type = 'button';
+            toggle.className = 'footnote-toggle';
+            wrapper.insertBefore(toggle, footnote);
+        }
+
+        const hasRemarks = footnote.children.length > 0;
+        wrapper.style.display = hasRemarks ? '' : 'none';
+        footnote.hidden = true;
+        toggle.textContent = '종목 설명 보기';
+        toggle.setAttribute('aria-expanded', 'false');
+
+        if (toggle.dataset.bound !== 'true') {
+            toggle.addEventListener('click', () => {
+                const isHidden = footnote.hidden;
+                footnote.hidden = !isHidden;
+                toggle.textContent = isHidden ? '종목 설명 숨기기' : '종목 설명 보기';
+                toggle.setAttribute('aria-expanded', String(isHidden));
+            });
+            toggle.dataset.bound = 'true';
+        }
     }
 
     renderDecisionExplanation(strategy, data) {

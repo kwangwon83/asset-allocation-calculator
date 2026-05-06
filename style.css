@@ -141,8 +141,50 @@ body {
 }
 .cell-price,.cell-stocks { font-family: 'Roboto Mono', 'Courier New', monospace; font-weight:600; }
 .cell-allocation { font-weight:700; color:var(--success); }
-.table-footnote { margin-top:0.5rem; padding:0.5rem 0.75rem; background:#fafbfc; border-radius:var(--radius); font-size:0.75rem; color:var(--text-muted); }
-.table-footnote:empty { display:none; }
+.footnote-wrap {
+  margin-top: 0.55rem;
+  text-align: left;
+}
+.footnote-toggle {
+  padding: 0.32rem 0.62rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: #fff;
+  color: var(--text-secondary);
+  font-size: 0.76rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.footnote-toggle:hover,
+.footnote-toggle:focus {
+  background: #f8fafc;
+  color: var(--text);
+  outline: none;
+}
+.table-footnote {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.65rem;
+  margin-top: 0.45rem;
+  padding: 0.5rem 0.75rem;
+  background: #fafbfc;
+  border-radius: var(--radius);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  line-height: 1.55;
+}
+.table-footnote[hidden],
+.table-footnote:empty {
+  display: none;
+}
+.table-footnote .remark {
+  display: inline;
+  white-space: nowrap;
+}
+.table-footnote .remark strong {
+  color: var(--text);
+  font-weight: 800;
+}
 .decision-panel {
   margin-top: 1rem;
   padding: 1rem;
