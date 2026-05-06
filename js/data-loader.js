@@ -86,7 +86,7 @@ class DataLoader {
                 IWM: [200.0], VWO: [42.0], BND: [72.0], EFA: [70.0],
                 PDBC: [18.0], VNQ: [85.0], VGK: [58.0], EWJ: [55.0],
                 EEM: [42.0], DBC: [22.0], HYG: [78.0], LQD: [108.0],
-                REM: [32.0], TIP: [110.0]
+                REM: [32.0], TIP: [110.0], SCHD: [80.0]
             },
             economic: {
                 lastUpdated: new Date().toISOString().split('T')[0],
@@ -99,7 +99,9 @@ class DataLoader {
                     { date: '2024-11-01', value: 4.2 }, { date: '2024-12-01', value: 4.1 },
                     { date: '2025-01-01', value: 4.0 }
                 ],
-                sp500_ma200: 5600
+                sp500_ma200: 5600,
+                sp500_dividend_yield: { date: '2025-01-01', value: 1.5, threshold: 1.6 },
+                t10y3m_spread: { date: '2025-01-01', value: 0.0 }
             }
         };
     }

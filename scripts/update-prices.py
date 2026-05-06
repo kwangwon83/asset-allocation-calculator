@@ -24,11 +24,13 @@ Notes
 
 import json
 import os
+import re
 import sys
 import time
 import urllib.error
 import urllib.parse
 import urllib.request
+from html import unescape
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
@@ -36,7 +38,7 @@ TICKERS = [
     "SPY", "TLT", "GLD", "BIL", "IWD", "QQQ", "IEF", "SHY",
     "IWM", "VWO", "BND", "EFA", "PDBC", "VNQ", "VGK", "EWJ",
     "EEM", "HYG", "LQD", "REM", "TIP", "AGG", "SCZ",
-    "BWX", "EMB", "RWX", "VTI", "VEA", "IWN"
+    "BWX", "EMB", "RWX", "VTI", "VEA", "IWN", "SCHD"
 ]
 
 OUTPUT_PATH = "data/prices.json"
@@ -48,6 +50,8 @@ USE_ADJUSTED_CLOSE = True
 YAHOO_CHART_URL = "https://query1.finance.yahoo.com/v8/finance/chart/{symbol}"
 BLS_TIMESERIES_URL = "https://api.bls.gov/publicAPI/v2/timeseries/data/"
 BLS_UNRATE_SERIES_ID = "LNS14000000"
+FRED_T10Y3M_CSV_URL = "https://fred.stlouisfed.org/graph/fredgraph.csv?id=T10Y3M"
+SP500_DIVIDEND_YIELD_URL = "https://us500.com/tools/data/sp500-dividend-yield"
 
 
 def _http_get_json(url, timeout=30):
@@ -251,8 +255,63 @@ def fetch_unemployment():
     return unemployment
 
 
+def fetch_t10y3m_spread():
+    try:
+        text = _http_get_text(FRED_T10Y3M_CSV_URL, timeout=15)
+        latest = None
+        for line in text.splitlines()[1:]:
+            if not line.strip():
+                continue
+            date, value = line.split(",", 1)
+            if value.strip() == ".":
+                continue
+            latest = {"date": date, "value": float(value), "source": "FRED T10Y3M"}
+        if latest:
+            return latest
+    except Exception as e:
+        print(f"  [T10Y3M] FRED fetch failed, using Yahoo yield proxy: {e}")
+
+    tnx = fetch_latest_yahoo_close("^TNX")
+    irx = fetch_latest_yahoo_close("^IRX")
+    return {
+        "date": tnx["date"],
+        "value": round(tnx["value"] - irx["value"], 4),
+        "source": "Yahoo Finance ^TNX - ^IRX proxy"
+    }
+
+
+def fetch_latest_yahoo_close(symbol):
+    to_date = datetime.now().strftime("%Y-%m-%d")
+    from_date = (datetime.now() - timedelta(days=30)).strftime("%Y-%m-%d")
+    prices = fetch_ticker(symbol, from_date, to_date)
+    if not prices:
+        raise RuntimeError(f"Could not fetch Yahoo proxy ticker {symbol}.")
+    date = sorted(prices)[-1]
+    return {"date": date, "value": prices[date]}
+
+
+def fetch_sp500_dividend_yield():
+    text = unescape(_http_get_text(SP500_DIVIDEND_YIELD_URL, timeout=30)).replace("<!-- -->", "")
+    marker = "Current S&P 500 Dividend Yield"
+    idx = text.find(marker)
+    if idx < 0:
+        raise RuntimeError("Could not find S&P 500 dividend yield marker.")
+    snippet = text[idx:idx + 700]
+    value_match = re.search(r"([0-9]+(?:\.[0-9]+)?)\s*%", snippet)
+    if not value_match:
+        raise RuntimeError("Could not parse S&P 500 dividend yield value.")
+    date_match = re.search(r"Updated\s+([A-Za-z]+\s+\d{1,2},\s+\d{4})", snippet)
+    return {
+        "date": date_match.group(1) if date_match else datetime.now().strftime("%Y-%m-%d"),
+        "value": float(value_match.group(1)),
+        "threshold": 1.6
+    }
+
+
 def build_economic_payload(prices_payload):
     unemployment = fetch_unemployment()
+    t10y3m = fetch_t10y3m_spread()
+    sp500_dividend_yield = fetch_sp500_dividend_yield()
     spy_prices = prices_payload.get("SPY") or []
     sp500_last = spy_prices[-1] if spy_prices else None
     sp500_ma200 = calculate_sma(spy_prices, 200)
@@ -260,14 +319,18 @@ def build_economic_payload(prices_payload):
 
     payload = {
         "lastUpdated": today,
-        "source": "BLS (LNS14000000) and Yahoo Finance (SPY proxy)",
+        "source": "BLS (LNS14000000), Yahoo Finance (SPY proxy), FRED (T10Y3M), US500.com",
         "unemployment": unemployment,
         "sp500_ma200": round(sp500_ma200, 4) if sp500_ma200 is not None else None,
         "sp500_last": sp500_last,
+        "sp500_dividend_yield": sp500_dividend_yield,
+        "t10y3m_spread": t10y3m,
         "notes": {
             "unemployment_source": "BLS: LNS14000000 (Civilian Unemployment Rate)",
             "sp500_source": "Calculated from SPY daily adjusted closes",
-            "update_frequency": "Monthly for unemployment, Daily for SPY prices"
+            "sp500_dividend_yield_source": SP500_DIVIDEND_YIELD_URL,
+            "t10y3m_source": "FRED: T10Y3M (10-Year Treasury Constant Maturity Minus 3-Month Treasury Constant Maturity)",
+            "update_frequency": "Monthly for unemployment, Daily for SPY prices and DGA risk indicators"
         }
     }
     return payload
@@ -337,6 +400,8 @@ def main():
         print(f"   UNRATE: {latest_unemployment['date']} = {latest_unemployment['value']}%")
         print(f"   SPY last: {economic_payload['sp500_last']}")
         print(f"   SPY SMA200: {economic_payload['sp500_ma200']}")
+        print(f"   S&P 500 dividend yield: {economic_payload['sp500_dividend_yield']['value']}%")
+        print(f"   T10Y3M spread: {economic_payload['t10y3m_spread']['value']}%")
 
 
 if __name__ == "__main__":

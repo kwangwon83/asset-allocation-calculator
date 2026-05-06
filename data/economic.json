@@ -1,6 +1,6 @@
 {
   "lastUpdated": "2026-05-06",
-  "source": "BLS (LNS14000000) and Yahoo Finance (SPY proxy)",
+  "source": "BLS (LNS14000000), Yahoo Finance (SPY proxy), FRED (T10Y3M), US500.com",
   "unemployment": [
     {
       "date": "2021-01-01",
@@ -253,9 +253,21 @@
   ],
   "sp500_ma200": 668.9212,
   "sp500_last": 723.77,
+  "sp500_dividend_yield": {
+    "date": "May 5, 2026",
+    "value": 1.08,
+    "threshold": 1.6
+  },
+  "t10y3m_spread": {
+    "date": "2026-05-05",
+    "value": 0.82,
+    "source": "Yahoo Finance ^TNX - ^IRX proxy"
+  },
   "notes": {
     "unemployment_source": "BLS: LNS14000000 (Civilian Unemployment Rate)",
     "sp500_source": "Calculated from SPY daily adjusted closes",
-    "update_frequency": "Monthly for unemployment, Daily for SPY prices"
+    "sp500_dividend_yield_source": "https://us500.com/tools/data/sp500-dividend-yield",
+    "t10y3m_source": "FRED: T10Y3M (10-Year Treasury Constant Maturity Minus 3-Month Treasury Constant Maturity)",
+    "update_frequency": "Monthly for unemployment, Daily for SPY prices and DGA risk indicators"
   }
 }

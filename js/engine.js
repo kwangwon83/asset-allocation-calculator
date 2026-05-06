@@ -360,6 +360,40 @@ class AllocationEngine {
         return this.rowsForUniverse([...bonds, 'USD'], allocations, ticker => ticker === 'USD' ? null : this.getReturn(ticker, 126));
     }
 
+    calcDGA() {
+        const offensive = ['QQQ', 'SCHD'];
+        const defensive = ['BIL', 'TLT', 'PDBC'];
+        const canaryScore = this.getSmaMomentum('TIP', 252);
+        const dividendYield = this.economic?.sp500_dividend_yield?.value;
+        const yieldSpread = this.economic?.t10y3m_spread?.value;
+        const riskOff = (
+            (canaryScore !== null && canaryScore < 0) ||
+            (typeof dividendYield === 'number' && dividendYield < 1.6) ||
+            (typeof yieldSpread === 'number' && yieldSpread < -0.5)
+        );
+        const allocations = {};
+
+        if (riskOff) {
+            const selected = this.sortByScoreDesc(this.scoreTickers(defensive, ticker => this.getSmaMomentum(ticker, 126)))[0];
+            if (selected && selected.score > 0) allocations[selected.ticker] = 1.0;
+            else allocations.USD = 1.0;
+        } else {
+            const selected = this.sortByScoreDesc(this.scoreTickers(offensive, ticker => this.getMomentumScore(ticker, [21, 63, 126, 189, 252])))[0];
+            if (selected) allocations[selected.ticker] = 1.0;
+            else allocations.USD = 1.0;
+        }
+
+        const universe = [...offensive, ...defensive, 'TIP'];
+        if (allocations.USD) universe.push('USD');
+        return this.rowsForUniverse(universe, allocations, ticker => {
+            if (ticker === 'USD') return null;
+            if (offensive.includes(ticker)) return this.getMomentumScore(ticker, [21, 63, 126, 189, 252]);
+            if (defensive.includes(ticker)) return this.getSmaMomentum(ticker, 126);
+            if (ticker === 'TIP') return this.getSmaMomentum(ticker, 252);
+            return null;
+        });
+    }
+
     // ====== PORTFOLIO HELPERS ======
 
     addCompositeRanks(items, specs) {
@@ -531,6 +565,7 @@ class AllocationEngine {
             TIP: 'TIP : iShares TIPS Bond ETF',
             AGG: 'AGG : iShares Core U.S. Aggregate Bond ETF',
             SCZ: 'SCZ : iShares MSCI EAFE Small-Cap ETF',
+            SCHD: 'SCHD : Schwab U.S. Dividend Equity ETF',
             BWX: 'BWX : SPDR Bloomberg International Treasury Bond ETF',
             EMB: 'EMB : iShares J.P. Morgan USD Emerging Markets Bond ETF',
             RWX: 'RWX : SPDR Dow Jones International Real Estate ETF',
@@ -545,6 +580,7 @@ class AllocationEngine {
         const sectors = {
             SPY: '미국 대형주', IWD: '미국 대형가치주', QQQ: '나스닥', IWM: '미국 소형주',
             IWN: '미국 소형가치주', SCZ: '전세계 소형주', VTI: '미국 주식',
+            SCHD: '미국 고배당주',
             VGK: '유럽 주식', EWJ: '일본 주식', EEM: '신흥국 주식', VWO: '신흥국 주식',
             EFA: '선진국 주식', VEA: '선진국 주식', VNQ: '미국 리츠', REM: '모기지 리츠',
             RWX: '국제 리츠', IEF: '미국 중기채', TLT: '미국 장기채', SHY: '미국 단기국채',
@@ -557,7 +593,7 @@ class AllocationEngine {
     }
 
     getCategory(ticker) {
-        if (['SPY', 'IWD', 'QQQ', 'IWM', 'IWN', 'SCZ', 'VTI', 'VGK', 'EWJ', 'EEM', 'VWO', 'EFA', 'VEA'].includes(ticker)) return '주식';
+        if (['SPY', 'IWD', 'QQQ', 'IWM', 'IWN', 'SCZ', 'VTI', 'VGK', 'EWJ', 'EEM', 'VWO', 'EFA', 'VEA', 'SCHD'].includes(ticker)) return '주식';
         if (['VNQ', 'REM', 'RWX'].includes(ticker)) return '리츠';
         if (['IEF', 'TLT', 'SHY', 'BND', 'AGG', 'HYG', 'LQD', 'TIP', 'BWX', 'EMB', 'BIL'].includes(ticker)) return '채권';
         if (['GLD', 'PDBC'].includes(ticker)) return '원자재';
@@ -579,6 +615,7 @@ class AllocationEngine {
             DUAL: this.calcDUAL,
             CDM: this.calcCDM,
             ADM: this.calcADM,
+            DGA: this.calcDGA,
             DYNBOND: this.calcDYNBOND
         };
         const calc = calculators[strategy];

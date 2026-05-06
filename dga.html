@@ -9,7 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" href="style.css">
-    <title>자산배분 계산기</title>
+    <title>???? ??? - DGA</title>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
@@ -19,7 +19,7 @@
         </button>
         <div class="collapse navbar-collapse" id="navMenu">
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item active"><a class="nav-link" href="index.html">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">전략</a>
                     <div class="dropdown-menu dropdown-menu-right">
@@ -64,83 +64,67 @@
     <div class="side-overlay"></div>
 
 
-    <div class="hero-section">
-        <div class="hero-title">전략별 자산배분 계산기</div>
-        <div class="hero-subtitle">15가지 자산배분 전략을 비교하고 투자 포트폴리오를 계획하세요</div>
-        <div id="lastUpdated"></div>
+    <div class="page-header">
+        <h1>DGA</h1>
+        <h2>Dividend Growth Allocation</h2>
+        <div class="page-desc"><span class="desc-line">Paul Choi의 Dividend & Growth Allocation 전략으로, 성장주(QQQ)와 배당성장주(SCHD)를 공격자산으로 사용하고 여러 위험회피 조건이 켜지면 방어자산으로 이동합니다.</span><span class="desc-line">공격자산 QQQ, SCHD의 모멘텀 스코어를 계산해 더 높은 자산에 투자<br>* 모멘텀 스코어 = 평균(1개월, 3개월, 6개월, 9개월, 12개월 수익률)</span><span class="desc-line">아래 위험회피 조건 중 하나라도 충족하면 방어자산으로 이동</span><span class="desc-line"><u>위험회피 조건</u> : TIP 가격이 12개월 평균가격보다 낮음, S&P500 배당수익률이 1.6% 미만, 10년-3개월 금리차가 -0.5%p 미만</span><span class="desc-line">방어자산으로 이동할 때는 BIL, TLT, PDBC 중 6개월 평균가격 대비 점수가 가장 높은 자산에 투자하되, 그 점수도 0 이하이면 현금 보유</span><span class="desc-line"><u>공격자산</u> : QQQ(나스닥), SCHD(미국 고배당)</span><span class="desc-line"><u>방어자산</u> : BIL(초단기채권), TLT(미국 장기국채), PDBC(원자재)</span><span class="desc-line"><u>카나리아 자산</u> : TIP(미국 물가연동채)</span><span class="desc-line">리밸런싱 기준 : 월 1회 점검</span></div>
     </div>
-    <div class="strategy-list">
+
+    <div class="input-section">
+        <div class="input-row">
+            <label>수수료(%)</label>
+            <input type="text" id="buysellfee" value="0.25">
+        </div>
+        <div class="input-row">
+            <label>투자금액(USD)</label>
+            <input type="text" id="totalBudget" placeholder="예: 10000">
+        </div>
+    </div>
+
+    <div class="table-section">
+        <div class="table-remark">※ 실시간 주가와 다소 차이가 있을 수 있습니다</div>
         <div class="loading-wrap">
             <div class="loader-spin"></div>
             <div>데이터 로딩 중...</div>
         </div>
-        <table id="indexTable" style="display:none;">
-            <thead>
-                <tr><th>전략</th><th>보유 자산 및 비중</th></tr>
-            </thead>
-            <tbody id="indexBody"></tbody>
+        <table class="assetTable" style="display:none;">
+            <thead class="titleTable"></thead>
+            <tbody class="contentTable"></tbody>
         </table>
+        <div class="table-footnote"></div>
     </div>
+
+    
 
     <footer class="footer">
         <div>© Rolling Pig. All rights reserved.</div>
     </footer>
 
+    <div id="hidden-footer">DGA</div>
+
     <script src="js/data-loader.js"></script>
     <script src="js/engine.js"></script>
+    <script src="js/renderer.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" crossorigin="anonymous"></script>
     <script>
         (async function() {
             try {
                 const loader = new DataLoader();
                 const { prices, economic } = await loader.loadAll();
                 const engine = new AllocationEngine(prices, economic);
-
-                const updated = prices?.meta?.lastUpdated;
-                if (updated) document.getElementById('lastUpdated').textContent = 'Updated: ' + updated;
-
-                const strategies = [
-                    ['DUAL', '전통듀얼모멘텀'],
-                    ['CDM', '종합듀얼모멘텀'],
-                    ['ADM', '가속듀얼모멘텀'],
-                    ['PERM', '영구포트폴리오'],
-                    ['LAA', 'LAA'],
-                    ['RAA', 'RAA'],
-                    ['GTAA', 'GTAA'],
-                    ['PAA', 'PAA'],
-                    ['VAA', 'VAA'],
-                    ['FAA', 'FAA'],
-                    ['AAA', 'AAA'],
-                    ['DAA', 'DAA'],
-                    ['DGA', 'DGA'],
-                    ['DYNBOND', '채권동적배분']
-                ];
-
-                const tbody = document.getElementById('indexBody');
-                strategies.forEach(([sid, name]) => {
-                    const result = engine.calculate(sid);
-                    const assets = result
-                        .filter(r => r.allocation > 0)
-                        .map(r => r.ticker + ' ' + Math.round(r.allocation*100) + '%')
-                        .join(', ');
-
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = '<td><a href="' + sid.toLowerCase() + '.html">' + name + '</a></td>' +
-                                   '<td>' + (assets || '현금 100%') + '</td>';
-                    tbody.appendChild(tr);
-                });
-
-                document.getElementById('indexTable').style.display = '';
+                const renderer = new Renderer(engine);
+                const strategy = document.getElementById('hidden-footer').textContent.trim();
+                await renderer.render(strategy);
+                document.querySelector('.assetTable').style.display = '';
             } catch (e) {
                 console.error(e);
-                document.getElementById('indexBody').innerHTML = '<tr><td colspan="2" class="error-msg">데이터를 불러오는 중 오류가 발생했습니다.</td></tr>';
+                document.querySelector('.contentTable').innerHTML = '<tr><td colspan="6" class="error-msg">데이터를 불러오는 중 오류가 발생했습니다. 새로고침 핸 보세요.</td></tr>';
             } finally {
                 document.querySelector('.loading-wrap').style.display = 'none';
             }
         })();
     </script>
-
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" crossorigin="anonymous"></script>
 
     <script>
         (function () {

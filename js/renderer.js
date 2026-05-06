@@ -257,6 +257,7 @@ class Renderer {
             DUAL: () => this.explainDual(data),
             CDM: () => this.explainCDM(data),
             ADM: () => this.explainADM(data),
+            DGA: () => this.explainDGA(data),
             DYNBOND: () => this.explainDynamicBond(data)
         };
         return builders[strategy] ? builders[strategy]() : this.explainGeneric(data);
@@ -476,6 +477,33 @@ class Renderer {
             items: [
                 ...top3.map(x => this.decisionItem(x.ticker, this.allocOf(data, x.ticker) > 0, `6개월 수익률은 ${this.fmtPct(x.score)}, 최종 배분은 ${this.fmtAlloc(this.allocOf(data, x.ticker))}입니다.`, this.allocOf(data, x.ticker) > 0 ? '선정' : '현금 전환')),
                 this.decisionItem('USD', this.allocOf(data, 'USD') > 0, `상위 3개 중 음수 모멘텀 몫은 ${this.fmtAlloc(this.allocOf(data, 'USD'))}만큼 현금으로 이동했습니다.`, this.allocOf(data, 'USD') > 0 ? '보유' : '없음')
+            ]
+        };
+    }
+
+    explainDGA(data) {
+        const offensive = this.engine.sortByScoreDesc(this.scoreItems(['QQQ', 'SCHD'], ticker => this.engine.getMomentumScore(ticker, [21, 63, 126, 189, 252])));
+        const defensive = this.engine.sortByScoreDesc(this.scoreItems(['BIL', 'TLT', 'PDBC'], ticker => this.engine.getSmaMomentum(ticker, 126)));
+        const tipScore = this.engine.getSmaMomentum('TIP', 252);
+        const dividendYield = this.engine.economic?.sp500_dividend_yield?.value;
+        const yieldSpread = this.engine.economic?.t10y3m_spread?.value;
+        const riskSignals = [
+            { name: 'TIP 12개월 평균', active: tipScore !== null && tipScore < 0, text: `TIP 12개월 평균 대비 모멘텀은 ${this.fmtPct(tipScore)}입니다.` },
+            { name: 'S&P500 배당수익률', active: typeof dividendYield === 'number' && dividendYield < 1.6, text: `S&P500 배당수익률은 ${this.fmtPlain(dividendYield)}%이고 기준은 1.6%입니다.` },
+            { name: '10년-3개월 금리차', active: typeof yieldSpread === 'number' && yieldSpread < -0.5, text: `10년-3개월 금리차는 ${this.fmtPlain(yieldSpread)}%p이고 기준은 -0.5%p입니다.` }
+        ];
+        const riskOff = riskSignals.some(x => x.active);
+        const selected = this.selectedTickers(data).join(', ') || '없음';
+        return {
+            summary: `${riskOff ? '위험회피 조건이 충족되어 방어자산' : '위험회피 조건이 충족되지 않아 공격자산'} 중 ${selected}에 100.0% 배분했습니다.`,
+            items: [
+                ...riskSignals.map(x => this.decisionItem(x.name, x.active, x.text, x.active ? '위험 신호' : '통과')),
+                ...(riskOff ? defensive : offensive).map(x => this.decisionItem(
+                    x.ticker,
+                    this.allocOf(data, x.ticker) > 0,
+                    `${riskOff ? '6개월 평균가격 대비 점수' : '1/3/6/9/12개월 평균 모멘텀'}은 ${this.fmtPct(x.score)}이고 최종 배분은 ${this.fmtAlloc(this.allocOf(data, x.ticker))}입니다.`,
+                    this.allocOf(data, x.ticker) > 0 ? '선정' : '후보'
+                ))
             ]
         };
     }
