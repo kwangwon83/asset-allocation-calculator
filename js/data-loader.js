@@ -6,7 +6,7 @@ class DataLoader {
     constructor() {
         this.prices = null;
         this.economic = null;
-        this.cacheKey = 'aac_cache_v5';
+        this.cacheKey = 'aac_cache_v6';
         this.maxCacheAge = 3600000; // 1 hour in ms
     }
 
@@ -17,30 +17,33 @@ class DataLoader {
                 return { prices: this.prices, economic: this.economic };
             }
 
-            // Try localStorage cache
-            const cached = this.loadFromCache();
-            if (cached) {
-                this.prices = cached.prices;
-                this.economic = cached.economic;
-                return cached;
+            try {
+                // Always ask for the latest JSON first. GitHub Actions can update
+                // data files while the app is open, and stale localStorage would
+                // otherwise hide the new prices for up to an hour.
+                const version = Date.now();
+                const [pricesRes, economicRes] = await Promise.all([
+                    fetch('./data/prices.json?v=' + version, { cache: 'no-store' }),
+                    fetch('./data/economic.json?v=' + version, { cache: 'no-store' })
+                ]);
+
+                if (!pricesRes.ok) throw new Error('Failed to load prices.json');
+                if (!economicRes.ok) throw new Error('Failed to load economic.json');
+
+                this.prices = await pricesRes.json();
+                this.economic = await economicRes.json();
+
+                this.saveToCache();
+                return { prices: this.prices, economic: this.economic };
+            } catch (networkErr) {
+                const cached = this.loadFromCache();
+                if (cached) {
+                    this.prices = cached.prices;
+                    this.economic = cached.economic;
+                    return cached;
+                }
+                throw networkErr;
             }
-
-            // Load from JSON files
-            const [pricesRes, economicRes] = await Promise.all([
-                fetch('./data/prices.json'),
-                fetch('./data/economic.json')
-            ]);
-
-            if (!pricesRes.ok) throw new Error('Failed to load prices.json');
-            if (!economicRes.ok) throw new Error('Failed to load economic.json');
-
-            this.prices = await pricesRes.json();
-            this.economic = await economicRes.json();
-
-            // Save to cache
-            this.saveToCache();
-
-            return { prices: this.prices, economic: this.economic };
         } catch (err) {
             console.error('DataLoader error:', err);
             // Return minimal fallback data for demo
