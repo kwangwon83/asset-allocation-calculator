@@ -194,7 +194,9 @@ def build_aligned_payload(price_maps):
     if len(aligned_dates) < 10:
         raise RuntimeError(f"Only {len(aligned_dates)} common trading dates found.")
 
-    today = datetime.now().strftime("%Y-%m-%d")
+    KST = timezone(timedelta(hours=9))
+    today = datetime.now(KST).strftime("%Y-%m-%d")
+  
     payload = {
         "meta": {
             "lastUpdated": today,
@@ -317,7 +319,9 @@ def build_economic_payload(prices_payload):
     spy_prices = prices_payload.get("SPY") or []
     sp500_last = spy_prices[-1] if spy_prices else None
     sp500_ma200 = calculate_sma(spy_prices, 200)
-    today = datetime.now().strftime("%Y-%m-%d")
+
+    KST = timezone(timedelta(hours=9))
+    today = datetime.now(KST).strftime("%Y-%m-%d")
 
     payload = {
         "lastUpdated": today,
