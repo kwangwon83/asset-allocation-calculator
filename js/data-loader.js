@@ -12,6 +12,8 @@ class DataLoader {
         this.economic = null;
         this.cacheKey = 'aac_cache_v6';
         this.maxCacheAge = 3600000; // 1 hour in ms
+        this.defaultRemotePricesUrl = 'https://raw.githubusercontent.com/kwangwon83/asset-allocation-calculator/refs/heads/main/data/prices.json';
+        this.defaultRemoteEconomicUrl = 'https://raw.githubusercontent.com/kwangwon83/asset-allocation-calculator/refs/heads/main/data/economic.json';
     }
 
     async loadAll() {
@@ -26,20 +28,19 @@ class DataLoader {
                 // data files while the app is open, and stale localStorage would
                 // otherwise hide the new prices for up to an hour.
                 const version = Date.now();
-                const dataBaseUrl = this.getDataBaseUrl();
-                const sourceCandidates = dataBaseUrl ? [dataBaseUrl, './data'] : ['./data'];
+                const sourceCandidates = this.getSourceCandidates();
                 let loaded = null;
                 let lastError = null;
 
-                for (const sourceBase of sourceCandidates) {
+                for (const source of sourceCandidates) {
                     try {
                         const [pricesRes, economicRes] = await Promise.all([
-                            fetch(`${sourceBase}/prices.json?v=${version}`, { cache: 'no-store' }),
-                            fetch(`${sourceBase}/economic.json?v=${version}`, { cache: 'no-store' })
+                            fetch(`${source.pricesUrl}?v=${version}`, { cache: 'no-store' }),
+                            fetch(`${source.economicUrl}?v=${version}`, { cache: 'no-store' })
                         ]);
 
-                        if (!pricesRes.ok) throw new Error(`Failed to load prices.json from ${sourceBase}`);
-                        if (!economicRes.ok) throw new Error(`Failed to load economic.json from ${sourceBase}`);
+                        if (!pricesRes.ok) throw new Error(`Failed to load prices.json from ${source.label}`);
+                        if (!economicRes.ok) throw new Error(`Failed to load economic.json from ${source.label}`);
 
                         loaded = {
                             prices: await pricesRes.json(),
@@ -72,6 +73,33 @@ class DataLoader {
             // Return minimal fallback data for demo
             return this.getFallbackData();
         }
+    }
+
+    getSourceCandidates() {
+        const candidates = [];
+        const dataBaseUrl = this.getDataBaseUrl();
+
+        if (dataBaseUrl) {
+            candidates.push({
+                label: dataBaseUrl,
+                pricesUrl: `${dataBaseUrl}/prices.json`,
+                economicUrl: `${dataBaseUrl}/economic.json`
+            });
+        } else {
+            candidates.push({
+                label: 'default-remote',
+                pricesUrl: this.defaultRemotePricesUrl,
+                economicUrl: this.defaultRemoteEconomicUrl
+            });
+        }
+
+        candidates.push({
+            label: './data',
+            pricesUrl: './data/prices.json',
+            economicUrl: './data/economic.json'
+        });
+
+        return candidates;
     }
 
     getDataBaseUrl() {
