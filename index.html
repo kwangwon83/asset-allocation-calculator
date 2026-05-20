@@ -95,7 +95,7 @@
                 const { prices, economic } = await loader.loadAll();
                 const engine = new AllocationEngine(prices, economic);
 
-                const updated = prices?.meta?.lastUpdated;
+                const updated = prices?.meta?.lastUpdated || economic?.lastUpdated;
                 if (updated) document.getElementById('lastUpdated').textContent = 'Updated: ' + updated;
 
                 const strategies = [

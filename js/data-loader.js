@@ -1,6 +1,10 @@
 /**
- * Data Loader - loads price and economic data from local JSON files
- * No Google Sheets dependency
+ * Data Loader - loads price and economic data.
+ *
+ * Default source is local ./data/*.json so local/dev still works.
+ * To avoid Netlify production deploys on daily data updates, set
+ * `window.AAC_DATA_BASE_URL` (for example to the same repo's GitHub
+ * Pages URL on a data-only branch) and keep changing JSON out of main.
  */
 class DataLoader {
     constructor() {
@@ -22,16 +26,35 @@ class DataLoader {
                 // data files while the app is open, and stale localStorage would
                 // otherwise hide the new prices for up to an hour.
                 const version = Date.now();
-                const [pricesRes, economicRes] = await Promise.all([
-                    fetch('./data/prices.json?v=' + version, { cache: 'no-store' }),
-                    fetch('./data/economic.json?v=' + version, { cache: 'no-store' })
-                ]);
+                const dataBaseUrl = this.getDataBaseUrl();
+                const sourceCandidates = dataBaseUrl ? [dataBaseUrl, './data'] : ['./data'];
+                let loaded = null;
+                let lastError = null;
 
-                if (!pricesRes.ok) throw new Error('Failed to load prices.json');
-                if (!economicRes.ok) throw new Error('Failed to load economic.json');
+                for (const sourceBase of sourceCandidates) {
+                    try {
+                        const [pricesRes, economicRes] = await Promise.all([
+                            fetch(`${sourceBase}/prices.json?v=${version}`, { cache: 'no-store' }),
+                            fetch(`${sourceBase}/economic.json?v=${version}`, { cache: 'no-store' })
+                        ]);
 
-                this.prices = await pricesRes.json();
-                this.economic = await economicRes.json();
+                        if (!pricesRes.ok) throw new Error(`Failed to load prices.json from ${sourceBase}`);
+                        if (!economicRes.ok) throw new Error(`Failed to load economic.json from ${sourceBase}`);
+
+                        loaded = {
+                            prices: await pricesRes.json(),
+                            economic: await economicRes.json()
+                        };
+                        break;
+                    } catch (err) {
+                        lastError = err;
+                    }
+                }
+
+                if (!loaded) throw lastError || new Error('Failed to load data sources');
+
+                this.prices = loaded.prices;
+                this.economic = loaded.economic;
 
                 this.saveToCache();
                 return { prices: this.prices, economic: this.economic };
@@ -49,6 +72,11 @@ class DataLoader {
             // Return minimal fallback data for demo
             return this.getFallbackData();
         }
+    }
+
+    getDataBaseUrl() {
+        if (typeof window === 'undefined' || !window.AAC_DATA_BASE_URL) return null;
+        return String(window.AAC_DATA_BASE_URL).replace(/\/$/, '');
     }
 
     loadFromCache() {
