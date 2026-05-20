@@ -26,21 +26,35 @@ class DataLoader {
                 // data files while the app is open, and stale localStorage would
                 // otherwise hide the new prices for up to an hour.
                 const version = Date.now();
-                const dataBaseUrl =
-                    (typeof window !== 'undefined' && window.AAC_DATA_BASE_URL)
-                        ? String(window.AAC_DATA_BASE_URL).replace(/\/$/, '')
-                        : './data';
+                const dataBaseUrl = this.getDataBaseUrl();
+                const sourceCandidates = dataBaseUrl ? [dataBaseUrl, './data'] : ['./data'];
+                let loaded = null;
+                let lastError = null;
 
-                const [pricesRes, economicRes] = await Promise.all([
-                    fetch(`${dataBaseUrl}/prices.json?v=${version}`, { cache: 'no-store' }),
-                    fetch(`${dataBaseUrl}/economic.json?v=${version}`, { cache: 'no-store' })
-                ]);
+                for (const sourceBase of sourceCandidates) {
+                    try {
+                        const [pricesRes, economicRes] = await Promise.all([
+                            fetch(`${sourceBase}/prices.json?v=${version}`, { cache: 'no-store' }),
+                            fetch(`${sourceBase}/economic.json?v=${version}`, { cache: 'no-store' })
+                        ]);
 
-                if (!pricesRes.ok) throw new Error('Failed to load prices.json');
-                if (!economicRes.ok) throw new Error('Failed to load economic.json');
+                        if (!pricesRes.ok) throw new Error(`Failed to load prices.json from ${sourceBase}`);
+                        if (!economicRes.ok) throw new Error(`Failed to load economic.json from ${sourceBase}`);
 
-                this.prices = await pricesRes.json();
-                this.economic = await economicRes.json();
+                        loaded = {
+                            prices: await pricesRes.json(),
+                            economic: await economicRes.json()
+                        };
+                        break;
+                    } catch (err) {
+                        lastError = err;
+                    }
+                }
+
+                if (!loaded) throw lastError || new Error('Failed to load data sources');
+
+                this.prices = loaded.prices;
+                this.economic = loaded.economic;
 
                 this.saveToCache();
                 return { prices: this.prices, economic: this.economic };
@@ -58,6 +72,11 @@ class DataLoader {
             // Return minimal fallback data for demo
             return this.getFallbackData();
         }
+    }
+
+    getDataBaseUrl() {
+        if (typeof window === 'undefined' || !window.AAC_DATA_BASE_URL) return null;
+        return String(window.AAC_DATA_BASE_URL).replace(/\/$/, '');
     }
 
     loadFromCache() {
