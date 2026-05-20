@@ -1,6 +1,10 @@
 /**
- * Data Loader - loads price and economic data from local JSON files
- * No Google Sheets dependency
+ * Data Loader - loads price and economic data.
+ *
+ * Default source is local ./data/*.json so local/dev still works.
+ * To avoid Netlify production deploys on daily data updates, set
+ * `window.AAC_DATA_BASE_URL` (for example to the same repo's GitHub
+ * Pages URL on a data-only branch) and keep changing JSON out of main.
  */
 class DataLoader {
     constructor() {
@@ -22,9 +26,14 @@ class DataLoader {
                 // data files while the app is open, and stale localStorage would
                 // otherwise hide the new prices for up to an hour.
                 const version = Date.now();
+                const dataBaseUrl =
+                    (typeof window !== 'undefined' && window.AAC_DATA_BASE_URL)
+                        ? String(window.AAC_DATA_BASE_URL).replace(/\/$/, '')
+                        : './data';
+
                 const [pricesRes, economicRes] = await Promise.all([
-                    fetch('./data/prices.json?v=' + version, { cache: 'no-store' }),
-                    fetch('./data/economic.json?v=' + version, { cache: 'no-store' })
+                    fetch(`${dataBaseUrl}/prices.json?v=${version}`, { cache: 'no-store' }),
+                    fetch(`${dataBaseUrl}/economic.json?v=${version}`, { cache: 'no-store' })
                 ]);
 
                 if (!pricesRes.ok) throw new Error('Failed to load prices.json');
