@@ -258,8 +258,8 @@
   "sp500_ma200": 674.4809,
   "sp500_last": 733.73,
   "sp500_dividend_yield": {
-    "date": "May 18, 2026",
-    "value": 1.06,
+    "date": "May 19, 2026",
+    "value": 1.07,
     "threshold": 1.6
   },
   "t10y3m_spread": {
