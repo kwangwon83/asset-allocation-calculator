@@ -12,8 +12,14 @@ class DataLoader {
         this.economic = null;
         this.cacheKey = 'aac_cache_v6';
         this.maxCacheAge = 3600000; // 1 hour in ms
-        this.defaultRemotePricesUrl = 'https://raw.githubusercontent.com/kwangwon83/asset-allocation-calculator/refs/heads/main/data/prices.json';
-        this.defaultRemoteEconomicUrl = 'https://raw.githubusercontent.com/kwangwon83/asset-allocation-calculator/refs/heads/main/data/economic.json';
+        this.defaultRemotePricesUrl = this.getConfiguredUrl('AAC_REMOTE_PRICES_URL', 'https://raw.githubusercontent.com/kwangwon83/asset-allocation-calculator/refs/heads/main/data/prices.json');
+        this.defaultRemoteEconomicUrl = this.getConfiguredUrl('AAC_REMOTE_ECONOMIC_URL', 'https://raw.githubusercontent.com/kwangwon83/asset-allocation-calculator/refs/heads/main/data/economic.json');
+    }
+
+
+    getConfiguredUrl(key, fallback) {
+        if (typeof window === 'undefined' || !window[key]) return fallback;
+        return String(window[key]);
     }
 
     async loadAll() {
