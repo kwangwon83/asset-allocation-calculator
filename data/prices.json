@@ -1,6 +1,6 @@
 {
   "meta": {
-    "lastUpdated": "2026-05-25",
+    "lastUpdated": "2026-05-26",
     "source": "Yahoo Finance chart endpoint",
     "description": "Daily adjusted closing prices for asset allocation calculator",
     "tradingDays": 252,
@@ -1340,7 +1340,7 @@
     578.19,
     577.74,
     575.2,
-    574.98,
+    574.97,
     567.17,
     563.81,
     561.2,
@@ -6201,9 +6201,9 @@
     92.38,
     92.42,
     92.3,
-    92.27,
+    92.26,
     92.31,
-    92.27,
+    92.26,
     91.86,
     92.49,
     92.45,
