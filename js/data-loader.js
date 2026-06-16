@@ -1,10 +1,10 @@
 /**
  * Data Loader - loads price and economic data.
  *
- * Default source is local ./data/*.json so local/dev still works.
- * To avoid Netlify production deploys on daily data updates, set
- * `window.AAC_DATA_BASE_URL` (for example to the same repo's GitHub
- * Pages URL on a data-only branch) and keep changing JSON out of main.
+ * Default remote source is the repository's data branch so production
+ * does not read daily-changing JSON from main. Local ./data/*.json is
+ * still kept as a final fallback for local/dev use. Set
+ * `window.AAC_DATA_BASE_URL` to override the remote base URL.
  */
 class DataLoader {
     constructor() {
@@ -12,8 +12,8 @@ class DataLoader {
         this.economic = null;
         this.cacheKey = 'aac_cache_v6';
         this.maxCacheAge = 3600000; // 1 hour in ms
-        this.defaultRemotePricesUrl = this.getConfiguredUrl('AAC_REMOTE_PRICES_URL', 'https://raw.githubusercontent.com/kwangwon83/asset-allocation-calculator/refs/heads/main/data/prices.json');
-        this.defaultRemoteEconomicUrl = this.getConfiguredUrl('AAC_REMOTE_ECONOMIC_URL', 'https://raw.githubusercontent.com/kwangwon83/asset-allocation-calculator/refs/heads/main/data/economic.json');
+        this.defaultRemotePricesUrl = this.getConfiguredUrl('AAC_REMOTE_PRICES_URL', 'https://raw.githubusercontent.com/kwangwon83/asset-allocation-calculator/refs/heads/data/data/prices.json');
+        this.defaultRemoteEconomicUrl = this.getConfiguredUrl('AAC_REMOTE_ECONOMIC_URL', 'https://raw.githubusercontent.com/kwangwon83/asset-allocation-calculator/refs/heads/data/data/economic.json');
     }
 
 
