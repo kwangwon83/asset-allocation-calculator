@@ -124,7 +124,8 @@
                 document.querySelector('.assetTable').style.display = '';
             } catch (e) {
                 console.error(e);
-                document.querySelector('.contentTable').innerHTML = '<tr><td colspan="6" class="error-msg">데이터를 불러오는 중 오류가 발생했습니다. 새로고침 핸 보세요.</td></tr>';
+                document.querySelector('.contentTable').innerHTML = '<tr><td colspan="6" class="error-msg">데이터를 불러오지 못했습니다. 잠시 후 새로고침해 주세요.</td></tr>';
+                document.querySelector('.assetTable').style.display = '';
             } finally {
                 document.querySelector('.loading-wrap').style.display = 'none';
             }

@@ -134,7 +134,8 @@
                 document.getElementById('indexTable').style.display = '';
             } catch (e) {
                 console.error(e);
-                document.getElementById('indexBody').innerHTML = '<tr><td colspan="2" class="error-msg">데이터를 불러오는 중 오류가 발생했습니다.</td></tr>';
+                document.getElementById('indexBody').innerHTML = '<tr><td colspan="2" class="error-msg">데이터를 불러오지 못했습니다. 잠시 후 새로고침해 주세요.</td></tr>';
+                document.getElementById('indexTable').style.display = '';
             } finally {
                 document.querySelector('.loading-wrap').style.display = 'none';
             }

@@ -56,7 +56,7 @@ To watch some usage guides, visit [https://help.goorm.io/en/goormide](https://he
 - `main`: Netlify가 감시하는 사이트 코드(HTML/CSS/JS)
 - `data`(또는 `gh-pages`): 매일 갱신되는 JSON 데이터 전용 브랜치
 
-이 프로젝트의 `js/data-loader.js`는 `window.AAC_DATA_BASE_URL`이 있으면 해당 URL에서 JSON을 먼저 가져오고, 실패 시 기존 `./data`로 자동 폴백합니다.
+이 프로젝트의 `js/data-loader.js`는 `window.AAC_DATA_BASE_URL`이 있으면 해당 URL에서 JSON을 가져옵니다. 데이터 로딩에 실패하면 오래된 `./data`로 폴백하지 않고, 웹페이지에 오류 문구를 표시합니다.
 
 예시(HTML `<head>`에서 `data-loader.js`보다 먼저 선언):
 
