@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-19",
+  "lastUpdated": "2026-06-22",
   "source": "BLS (LNS14000000), Yahoo Finance (SPY proxy), FRED (T10Y3M), US500.com",
   "unemployment": [
     {
@@ -259,10 +259,10 @@
       "value": 4.3
     }
   ],
-  "sp500_ma200": 686.2412,
+  "sp500_ma200": 684.4871,
   "sp500_last": 746.74,
   "sp500_dividend_yield": {
-    "date": "June 17, 2026",
+    "date": "June 18, 2026",
     "value": 1.05,
     "threshold": 1.6
   },
