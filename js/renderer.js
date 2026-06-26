@@ -9,6 +9,14 @@ class Renderer {
         this.chart = { ticker: null };
     }
 
+    getCurrency(ticker) {
+        return ticker && ticker.endsWith('.KS') ? 'KRW' : 'USD';
+    }
+
+    getPortfolioCurrency(data) {
+        return data.some(row => this.getCurrency(row.ticker) === 'KRW') ? 'KRW' : 'USD';
+    }
+
     async render(strategy) {
         this.enhanceDescription();
 
@@ -39,7 +47,7 @@ class Renderer {
             return;
         }
 
-        this.renderHeader(tableHead);
+        this.renderHeader(tableHead, this.getPortfolioCurrency(data));
         this.renderRows(tableBody, footnote, data);
         this.prepareFootnoteToggle(footnote);
         this.renderDecisionExplanation(strategy, data);
@@ -66,9 +74,9 @@ class Renderer {
         desc.dataset.enhanced = 'true';
     }
 
-    renderHeader(tableHead) {
+    renderHeader(tableHead, currency = 'USD') {
         if (!tableHead) return;
-        const headers = ['구분', '자산/섹터', '티커', '주가(USD)', '배분비중(%)', '배분수량(주)'];
+        const headers = ['구분', '자산/섹터', '티커', `주가(${currency})`, '배분비중(%)', '배분수량(주)'];
         const tr = document.createElement('tr');
         headers.forEach(h => {
             const th = document.createElement('th');
@@ -662,7 +670,8 @@ class Renderer {
         const dateRange = this.engine.prices?.meta?.dateRange;
         const rangeText = dateRange ? dateRange.from + ' ~ ' + dateRange.to : '최근 ' + series.length + '거래일';
 
-        meta.innerHTML = '<strong>' + ticker + '</strong> <span>' + last.toFixed(2) + ' USD</span> <span class="' +
+        const currency = this.getCurrency(ticker);
+        meta.innerHTML = '<strong>' + ticker + '</strong> <span>' + last.toFixed(2) + ' ' + currency + '</span> <span class="' +
             (change >= 0 ? 'chart-up' : 'chart-down') + '">' + (change >= 0 ? '+' : '') + (change * 100).toFixed(2) + '%</span>';
 
         const grid = [];
@@ -709,7 +718,7 @@ class Renderer {
             tooltip.style.opacity = '1';
             tooltip.style.left = Math.min(Math.max(screenX, 72), rect.width - 72) + 'px';
             tooltip.style.top = Math.max(screenY - 48, 12) + 'px';
-            tooltip.innerHTML = '<strong>' + ticker + '</strong><span>' + point.price.toFixed(2) + ' USD</span><small>' + (point.idx + 1) + ' / ' + series.length + ' 거래일</small>';
+            tooltip.innerHTML = '<strong>' + ticker + '</strong><span>' + point.price.toFixed(2) + ' ' + currency + '</span><small>' + (point.idx + 1) + ' / ' + series.length + ' 거래일</small>';
         };
 
         canvas.onmousemove = showPoint;

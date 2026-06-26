@@ -184,6 +184,20 @@ class AllocationEngine {
         );
     }
 
+    calcKORETF() {
+        return this.rowsForUniverse(
+            ['363580.KS', '360750.KS', '411060.KS', '365780.KS', '284430.KS', '272580.KS'],
+            {
+                '363580.KS': 0.175,
+                '360750.KS': 0.25,
+                '411060.KS': 0.20,
+                '365780.KS': 0.10,
+                '284430.KS': 0.175,
+                '272580.KS': 0.10
+            }
+        );
+    }
+
     calcLAA() {
         const flexible = (this.isSP500Uptrend() || this.isUnemploymentAboveAverage()) ? 'QQQ' : 'SHY';
         return this.rowsForUniverse(
@@ -571,6 +585,12 @@ class AllocationEngine {
             RWX: 'RWX : SPDR Dow Jones International Real Estate ETF',
             VTI: 'VTI : Vanguard Total Stock Market ETF',
             VEA: 'VEA : Vanguard FTSE Developed Markets ETF',
+            '363580.KS': '363580.KS : KIWOOM 200TR',
+            '360750.KS': '360750.KS : TIGER 미국S&P500',
+            '411060.KS': '411060.KS : ACE KRX금현물',
+            '365780.KS': '365780.KS : ACE 국고채10년',
+            '284430.KS': '284430.KS : KODEX 200미국채혼합',
+            '272580.KS': '272580.KS : TIGER 단기채권액티브',
             USD: 'USD : US Dollar'
         };
         return remarks[ticker] || ticker;
@@ -587,16 +607,20 @@ class AllocationEngine {
             BND: '미국 종합채권', AGG: '미국 혼합채권', HYG: '미국 하이일드 채권',
             LQD: '미국 회사채', TIP: '미국 물가연동채', BWX: '국제 채권', EMB: '신흥국 채권',
             GLD: '금', PDBC: '원자재',
-            BIL: '초단기채권', USD: '현금'
+            BIL: '초단기채권',
+            '363580.KS': '국내 주식', '360750.KS': '미국 주식', '411060.KS': '금',
+            '365780.KS': '국고채', '284430.KS': '주식/채권 혼합', '272580.KS': '단기채권',
+            USD: '현금'
         };
         return sectors[ticker] || '기타';
     }
 
     getCategory(ticker) {
-        if (['SPY', 'IWD', 'QQQ', 'IWM', 'IWN', 'SCZ', 'VTI', 'VGK', 'EWJ', 'EEM', 'VWO', 'EFA', 'VEA', 'SCHD'].includes(ticker)) return '주식';
+        if (['SPY', 'IWD', 'QQQ', 'IWM', 'IWN', 'SCZ', 'VTI', 'VGK', 'EWJ', 'EEM', 'VWO', 'EFA', 'VEA', 'SCHD', '363580.KS', '360750.KS'].includes(ticker)) return '주식';
         if (['VNQ', 'REM', 'RWX'].includes(ticker)) return '리츠';
-        if (['IEF', 'TLT', 'SHY', 'BND', 'AGG', 'HYG', 'LQD', 'TIP', 'BWX', 'EMB', 'BIL'].includes(ticker)) return '채권';
-        if (['GLD', 'PDBC'].includes(ticker)) return '원자재';
+        if (['IEF', 'TLT', 'SHY', 'BND', 'AGG', 'HYG', 'LQD', 'TIP', 'BWX', 'EMB', 'BIL', '365780.KS', '272580.KS'].includes(ticker)) return '채권';
+        if (['GLD', 'PDBC', '411060.KS'].includes(ticker)) return '원자재';
+        if (ticker === '284430.KS') return '혼합';
         if (ticker === 'USD') return '현금';
         return '기타';
     }
@@ -604,6 +628,7 @@ class AllocationEngine {
     calculate(strategy) {
         const calculators = {
             PERM: this.calcPERM,
+            KORETF: this.calcKORETF,
             LAA: this.calcLAA,
             RAA: this.calcRAA,
             GTAA: this.calcGTAA,

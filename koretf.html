@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" href="style.css">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8909533120303262" crossorigin="anonymous"></script>
-    <title>자산배분 계산기 - 가속 듀얼모멘텀</title>
+    <title>자산배분 계산기 - 한국 ETF 정적배분</title>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
@@ -68,9 +68,9 @@
 
 
     <div class="page-header">
-        <h1>가속 듀얼모멘텀</h1>
-        <h2>Accelerating Dual Momentum</h2>
-        <div class="page-desc"><span class="desc-line">EngineeredPortfolio.com에서 소개된 가속 듀얼 모멘텀 전략으로, 주식 상승기에는 강한 주식자산을 선택하고 약세기에는 채권으로 방어합니다.</span><span class="desc-line">주식자산 중 모멘텀 스코어가 0보다 큰 상위 1개 자산에 투자</span><span class="desc-line">주식자산의 모멘텀 스코어가 모두 0보다 작은 경우, 채권자산 중 모멘텀 스코어가 높은 자산에 투자<br>* 모멘텀 스코어 = 평균(1개월 수익률, 3개월 수익률, 6개월 수익률)</span><span class="desc-line"><u>주식자산</u> : 미국 대형주(SPY), 전세계 소형주(SCZ)</span><span class="desc-line"><u>채권자산</u> : 미국 장기채(TLT), 미국 물가연동채(TIP)</span><span class="desc-line">상대적으로 공격적인 전략이며, 강세장 수익 참여와 약세장 방어를 동시에 목표로 합니다.</span><span class="desc-line">리밸런싱 기준 : 월 1회 점검</span></div>
+        <h1>한국 ETF 정적배분</h1>
+        <h2>Korea ETF Static Allocation</h2>
+        <div class="page-desc"><span class="desc-line">국내 상장 ETF로 구성한 정적 자산배분 전략입니다.</span><span class="desc-line">국내 주식, 미국 주식, 금, 국고채, 혼합형, 단기채 ETF를 정해진 비중으로 보유하고 주기적으로 리밸런싱합니다.</span><span class="desc-line"><u>자산군</u> : KIWOOM 200TR(17.5%), TIGER 미국S&amp;P500(25.0%), ACE KRX금현물(20.0%), ACE 국고채10년(10.0%), KODEX 200미국채혼합(17.5%), TIGER 단기채권액티브(10.0%)</span><span class="desc-line">Yahoo Finance에서는 국내 상장 종목 코드를 <strong>종목코드.KS</strong> 형식으로 조회합니다.</span></div>
     </div>
 
     <div class="input-section">
@@ -79,7 +79,7 @@
             <input type="text" id="buysellfee" value="0.25">
         </div>
         <div class="input-row">
-            <label>투자금액(USD)</label>
+            <label>투자금액(KRW)</label>
             <input type="text" id="totalBudget" placeholder="예: 10000">
         </div>
     </div>
@@ -97,13 +97,11 @@
         <div class="table-footnote"></div>
     </div>
 
-    
-
     <footer class="footer">
         <div>© Rolling Pig. All rights reserved.</div>
     </footer>
 
-    <div id="hidden-footer">ADM</div>
+    <div id="hidden-footer">KORETF</div>
 
     <script>window.AAC_DATA_BASE_URL = window.AAC_DATA_BASE_URL || 'https://raw.githubusercontent.com/kwangwon83/asset-allocation-calculator/refs/heads/data/data';</script>
     <script src="js/data-loader.js"></script>
