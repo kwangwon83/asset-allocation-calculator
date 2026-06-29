@@ -18,6 +18,14 @@ class Renderer {
         return data.some(row => this.getCurrency(row.ticker) === 'KRW') ? 'KRW' : 'USD';
     }
 
+    getCurrency(ticker) {
+        return ticker && ticker.endsWith('.KS') ? 'KRW' : 'USD';
+    }
+
+    getPortfolioCurrency(data) {
+        return data.some(row => this.getCurrency(row.ticker) === 'KRW') ? 'KRW' : 'USD';
+    }
+
     async render(strategy) {
         this.currentStrategy = String(strategy || '').toUpperCase();
         this.enhanceDescription();
