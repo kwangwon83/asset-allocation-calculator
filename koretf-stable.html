@@ -6,11 +6,11 @@
     <link rel="icon" href="./favicon.ico" type="image/x-icon">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" href="style.css">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8909533120303262" crossorigin="anonymous"></script>
-    <title>자산배분 계산기 - PAA</title>
+    <title>자산배분 계산기 - 한국 ETF 정적배분 - 안정형</title>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
@@ -72,9 +72,9 @@
 
 
     <div class="page-header">
-        <h1>PAA</h1>
-        <h2>Protective Asset Allocation</h2>
-        <div class="page-desc"><span class="desc-line">Protective Asset Allocation은 여러 자산의 상승/하락 추세 개수를 함께 보며, 하락 추세가 많아질수록 방어자산 비중을 높이는 보수적인 동적 자산배분 전략입니다.</span><span class="desc-line">PAA는 12개의 투자자산군과 1개의 현금성자산으로 구분</span><span class="desc-line">투자자산군 중 모멘텀 스코어 > 0인 자산이 6개 이하일 경우 100% 현금성자산 보유</span><span class="desc-line">투자자산군 중 모멘텀 스코어 > 0인 자산이 6개를 초과하는 수만큼 상위 모멘텀 스코어 자산에 16.7% 배분하고 나머지는 현금성자산 보유</span><span class="desc-line">예를 들어, 투자자산군 중 모멘텀 스코어 > 0인 자산이 8개인 경우, 투자자산군 중 상위 2개 모멘텀 스코어 자산에 각각 16.7% 배분하고, 나머지 66.6%는 현금성자산 보유<br>* 모멘텀 스코어 = (가격 / 12개월 이동평균) - 1</span><span class="desc-line"><u>투자자산군</u> : SPY(미국 대형주), IWM(미국 소형주), QQQ(나스닥), VGK(유럽 주식), EWJ(일본 주식), EEM(신흥국 주식), VNQ(미국 리츠), PDBC(원자재), GLD(금), TLT(미국 장기채), HYG(하이일드 채권), LQD(미국 회사채)</span><span class="desc-line"><u>현금성자산</u> : IEF(미국 중기국채)</span><span class="desc-line">리밸런싱 기준 : 월 1회 점검</span></div>
+        <h1>한국 ETF 정적배분 - 안정형</h1>
+        <h2>Korea ETF Static Allocation</h2>
+        <div class="page-desc"><span class="desc-line">국내 상장 ETF로 구성한 안정형 정적 자산배분 전략입니다.</span><span class="desc-line">위험자산과 안전자산을 투자성향별 목표 비중으로 보유하고 주기적으로 리밸런싱합니다.</span><span class="desc-line"><u>안정형 목표비중</u> : 한국 주식 20.5%, 미국 주식(UH) 12.5%, 금(UH) 5.0%, 한국 국채 20.0%, 미국 국채(UH) 12.0%, 현금성 자산 30.0%</span><span class="desc-line"><u>사용 ETF</u> : KIWOOM 200TR, TIGER 미국S&amp;P 500, ACE KRX금현물, ACE 국고채10년, KODEX 200미국채혼합, TIGER 단기채권액티브</span><span class="desc-line">Yahoo Finance에서는 국내 상장 종목 코드를 <strong>종목코드.KS</strong> 형식으로 조회합니다.</span></div>
     </div>
 
     <div class="input-section">
@@ -83,7 +83,7 @@
             <input type="text" id="buysellfee" value="0.25">
         </div>
         <div class="input-row">
-            <label>투자금액(USD)</label>
+            <label>투자금액(KRW)</label>
             <input type="text" id="totalBudget" placeholder="예: 10000">
         </div>
     </div>
@@ -101,13 +101,11 @@
         <div class="table-footnote"></div>
     </div>
 
-    
-
     <footer class="footer">
-        <div>Rolling Pig &copy; All rights reserved.</div>
+        <div>© Rolling Pig. All rights reserved.</div>
     </footer>
 
-    <div id="hidden-footer">PAA</div>
+    <div id="hidden-footer">KORETF_STABLE</div>
 
     <script>window.AAC_DATA_BASE_URL = window.AAC_DATA_BASE_URL || 'https://raw.githubusercontent.com/kwangwon83/asset-allocation-calculator/refs/heads/data/data';</script>
     <script src="js/data-loader.js"></script>

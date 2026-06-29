@@ -7,9 +7,19 @@ class Renderer {
         this.calculateFn = null;
         this.boundInputs = { budget: null, fee: null };
         this.chart = { ticker: null };
+        this.currentStrategy = '';
+    }
+
+    getCurrency(ticker) {
+        return ticker && ticker.endsWith('.KS') ? 'KRW' : 'USD';
+    }
+
+    getPortfolioCurrency(data) {
+        return data.some(row => this.getCurrency(row.ticker) === 'KRW') ? 'KRW' : 'USD';
     }
 
     async render(strategy) {
+        this.currentStrategy = String(strategy || '').toUpperCase();
         this.enhanceDescription();
 
         const tableBody = document.querySelector('.contentTable');
@@ -39,8 +49,8 @@ class Renderer {
             return;
         }
 
-        this.renderHeader(tableHead);
-        this.renderRows(tableBody, footnote, data);
+        this.renderHeader(tableHead, this.getPortfolioCurrency(data), this.currentStrategy);
+        this.renderRows(tableBody, footnote, data, this.currentStrategy);
         this.prepareFootnoteToggle(footnote);
         this.renderDecisionExplanation(strategy, data);
         this.bindCalculation();
@@ -66,9 +76,18 @@ class Renderer {
         desc.dataset.enhanced = 'true';
     }
 
-    renderHeader(tableHead) {
+    isKoreaEtfStrategy(strategy = this.currentStrategy) {
+        return String(strategy || '').toUpperCase().startsWith('KORETF');
+    }
+
+    getAssetLabel(row) {
+        return this.isKoreaEtfStrategy() && row.displayName ? row.displayName : row.ticker;
+    }
+
+    renderHeader(tableHead, currency = 'USD', strategy = this.currentStrategy) {
         if (!tableHead) return;
-        const headers = ['구분', '자산/섹터', '티커', '주가(USD)', '배분비중(%)', '배분수량(주)'];
+        const tickerHeader = this.isKoreaEtfStrategy(strategy) ? '종목명' : '티커';
+        const headers = ['구분', '자산/섹터', tickerHeader, `주가(${currency})`, '배분비중(%)', '배분수량(주)'];
         const tr = document.createElement('tr');
         headers.forEach(h => {
             const th = document.createElement('th');
@@ -78,7 +97,7 @@ class Renderer {
         tableHead.appendChild(tr);
     }
 
-    renderRows(tableBody, footnote, data) {
+    renderRows(tableBody, footnote, data, strategy = this.currentStrategy) {
         let prevCategory = '';
         data.forEach((row, idx) => {
             const tr = document.createElement('tr');
@@ -102,8 +121,10 @@ class Renderer {
             const tickerButton = document.createElement('button');
             tickerButton.type = 'button';
             tickerButton.className = 'ticker-button';
-            tickerButton.textContent = row.ticker;
-            tickerButton.title = row.ticker + ' 1년 가격 그래프 보기';
+            const assetLabel = this.isKoreaEtfStrategy(strategy) && row.displayName ? row.displayName : row.ticker;
+            tickerButton.textContent = assetLabel;
+            tickerButton.dataset.ticker = row.ticker;
+            tickerButton.title = assetLabel + ' 1년 가격 그래프 보기';
             tickerButton.addEventListener('click', () => this.renderPriceChart(row.ticker));
             tdTick.appendChild(tickerButton);
             tr.appendChild(tdTick);
@@ -133,7 +154,8 @@ class Renderer {
                 const ticker = document.createElement('strong');
                 ticker.textContent = row.ticker;
                 div.appendChild(ticker);
-                div.appendChild(document.createTextNode(' : ' + row.remark));
+                const remark = String(row.remark || '').replace(new RegExp('^' + row.ticker.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\s*:\\s*'), '');
+                div.appendChild(document.createTextNode(' : ' + remark));
                 footnote.appendChild(div);
             }
         });
@@ -208,7 +230,11 @@ class Renderer {
             head.className = 'decision-item-head';
 
             const name = document.createElement('strong');
-            this.appendTextWithTickerButtons(name, item.title);
+            if (item.ticker && this.hasPriceSeries(item.ticker)) {
+                name.appendChild(this.createTickerButton(item.title, item.ticker));
+            } else {
+                this.appendTextWithTickerButtons(name, item.title);
+            }
             head.appendChild(name);
 
             if (item.badge) {
@@ -258,7 +284,11 @@ class Renderer {
             CDM: () => this.explainCDM(data),
             ADM: () => this.explainADM(data),
             DGA: () => this.explainDGA(data),
-            DYNBOND: () => this.explainDynamicBond(data)
+            DYNBOND: () => this.explainDynamicBond(data),
+            KORETF: () => this.explainKoreaEtf(data),
+            KORETF_STABLE: () => this.explainKoreaEtf(data),
+            KORETF_NEUTRAL: () => this.explainKoreaEtf(data),
+            KORETF_GROWTH: () => this.explainKoreaEtf(data)
         };
         return builders[strategy] ? builders[strategy]() : this.explainGeneric(data);
     }
@@ -508,6 +538,20 @@ class Renderer {
         };
     }
 
+    explainKoreaEtf(data) {
+        const selected = this.selectedRows(data);
+        return {
+            summary: `한국 ETF 정적배분은 시장 신호로 종목을 고르지 않고, 투자성향별 목표 비중대로 ${selected.map(row => row.displayName || row.ticker).join(', ')}에 고정 배분합니다.`,
+            items: data.map(row => this.decisionItem(
+                row.displayName || row.ticker,
+                row.allocation > 0,
+                `${row.sector} 자산에 ${this.fmtAlloc(row.allocation)} 고정 배분입니다.`,
+                row.allocation > 0 ? '선정' : '제외',
+                row.ticker
+            ))
+        };
+    }
+
     explainGeneric(data) {
         const selected = this.selectedRows(data);
         return {
@@ -516,8 +560,8 @@ class Renderer {
         };
     }
 
-    decisionItem(title, selected, body, badge) {
-        return { title, selected: Boolean(selected), body, badge };
+    decisionItem(title, selected, body, badge, ticker = null) {
+        return { title, selected: Boolean(selected), body, badge, ticker };
     }
 
     appendTextWithTickerButtons(target, text) {
@@ -534,19 +578,23 @@ class Renderer {
                 target.appendChild(document.createTextNode(source.slice(lastIndex, match.index)));
             }
 
-            const button = document.createElement('button');
-            button.type = 'button';
-            button.className = 'decision-ticker-button';
-            button.textContent = ticker;
-            button.title = ticker + ' 1년 가격 추이 보기';
-            button.addEventListener('click', () => this.renderPriceChart(ticker));
-            target.appendChild(button);
+            target.appendChild(this.createTickerButton(ticker, ticker));
             lastIndex = match.index + ticker.length;
         }
 
         if (lastIndex < source.length) {
             target.appendChild(document.createTextNode(source.slice(lastIndex)));
         }
+    }
+
+    createTickerButton(label, ticker) {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'decision-ticker-button';
+        button.textContent = label;
+        button.title = label + ' 1년 가격 추이 보기';
+        button.addEventListener('click', () => this.renderPriceChart(ticker));
+        return button;
     }
 
     scoreItems(tickers, scoreFn) {
@@ -662,7 +710,8 @@ class Renderer {
         const dateRange = this.engine.prices?.meta?.dateRange;
         const rangeText = dateRange ? dateRange.from + ' ~ ' + dateRange.to : '최근 ' + series.length + '거래일';
 
-        meta.innerHTML = '<strong>' + ticker + '</strong> <span>' + last.toFixed(2) + ' USD</span> <span class="' +
+        const currency = this.getCurrency(ticker);
+        meta.innerHTML = '<strong>' + ticker + '</strong> <span>' + last.toFixed(2) + ' ' + currency + '</span> <span class="' +
             (change >= 0 ? 'chart-up' : 'chart-down') + '">' + (change >= 0 ? '+' : '') + (change * 100).toFixed(2) + '%</span>';
 
         const grid = [];
@@ -709,7 +758,7 @@ class Renderer {
             tooltip.style.opacity = '1';
             tooltip.style.left = Math.min(Math.max(screenX, 72), rect.width - 72) + 'px';
             tooltip.style.top = Math.max(screenY - 48, 12) + 'px';
-            tooltip.innerHTML = '<strong>' + ticker + '</strong><span>' + point.price.toFixed(2) + ' USD</span><small>' + (point.idx + 1) + ' / ' + series.length + ' 거래일</small>';
+            tooltip.innerHTML = '<strong>' + ticker + '</strong><span>' + point.price.toFixed(2) + ' ' + currency + '</span><small>' + (point.idx + 1) + ' / ' + series.length + ' 거래일</small>';
         };
 
         canvas.onmousemove = showPoint;
@@ -727,6 +776,7 @@ class Renderer {
 
         if (!this.calculateFn) {
             this.calculateFn = () => {
+                this.formatBudgetInput(budgetInput);
                 const budget = parseFloat(budgetInput.value.replace(/,/g, '')) || 0;
                 const fee = parseFloat(feeInput?.value) || 0;
                 const stocks = document.getElementsByClassName('cell-stocks');
@@ -735,7 +785,7 @@ class Renderer {
                 const tickers = document.getElementsByClassName('ticker-button');
 
                 for (let i = 0; i < stocks.length; i++) {
-                    const ticker = tickers[i]?.textContent.trim();
+                    const ticker = tickers[i]?.dataset.ticker || tickers[i]?.textContent.trim();
                     const priceText = prices[i]?.textContent.trim();
                     const allocText = allocs[i]?.textContent.trim();
 
@@ -770,6 +820,19 @@ class Renderer {
         }
 
         this.calculateFn();
+    }
+
+    formatBudgetInput(input) {
+        if (!input) return;
+        const raw = input.value.replace(/,/g, '').replace(/[^0-9.]/g, '');
+        if (!raw) {
+            input.value = '';
+            return;
+        }
+        const parts = raw.split('.');
+        const intPart = parts[0] || '0';
+        const decimalPart = parts.length > 1 ? '.' + parts.slice(1).join('') : '';
+        input.value = Number(intPart).toLocaleString() + decimalPart;
     }
 
     updateTimestamp() {
