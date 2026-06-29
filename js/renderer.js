@@ -18,14 +18,6 @@ class Renderer {
         return data.some(row => this.getCurrency(row.ticker) === 'KRW') ? 'KRW' : 'USD';
     }
 
-    getCurrency(ticker) {
-        return ticker && ticker.endsWith('.KS') ? 'KRW' : 'USD';
-    }
-
-    getPortfolioCurrency(data) {
-        return data.some(row => this.getCurrency(row.ticker) === 'KRW') ? 'KRW' : 'USD';
-    }
-
     async render(strategy) {
         this.currentStrategy = String(strategy || '').toUpperCase();
         this.enhanceDescription();
@@ -105,6 +97,13 @@ class Renderer {
         tableHead.appendChild(tr);
     }
 
+    formatPrice(price, currency = 'USD') {
+        if (!price) return '-';
+        return currency === 'KRW'
+            ? Math.round(price).toLocaleString()
+            : price.toFixed(1);
+    }
+
     renderRows(tableBody, footnote, data, strategy = this.currentStrategy) {
         let prevCategory = '';
         data.forEach((row, idx) => {
@@ -139,7 +138,7 @@ class Renderer {
 
             const tdPrice = document.createElement('td');
             tdPrice.className = 'cell-price';
-            tdPrice.textContent = row.price ? row.price.toFixed(1) : '-';
+            tdPrice.textContent = row.price ? this.formatPrice(row.price, this.getCurrency(row.ticker)) : '-';
             tr.appendChild(tdPrice);
 
             const tdAlloc = document.createElement('td');
@@ -802,7 +801,7 @@ class Renderer {
                         continue;
                     }
 
-                    const price = parseFloat(priceText);
+                    const price = parseFloat(priceText.replace(/,/g, ''));
                     const alloc = parseFloat(allocText.replace('%', '')) / 100;
                     if (isNaN(price) || isNaN(alloc) || price <= 0 || budget <= 0) {
                         stocks[i].textContent = '-';
