@@ -184,18 +184,62 @@ class AllocationEngine {
         );
     }
 
-    calcKORETF() {
-        return this.rowsForUniverse(
-            ['363580.KS', '360750.KS', '411060.KS', '365780.KS', '284430.KS', '272580.KS'],
-            {
-                '363580.KS': 0.175,
+    getKoreaEtfRows(profile) {
+        const profiles = {
+            STABLE: {
+                '363580.KS': 0.205,
+                '360750.KS': 0.125,
+                '411060.KS': 0.05,
+                '365780.KS': 0.20,
+                '284430.KS': 0.12,
+                '272580.KS': 0.30
+            },
+            NEUTRAL: {
+                '363580.KS': 0.245,
+                '360750.KS': 0.175,
+                '411060.KS': 0.15,
+                '365780.KS': 0.175,
+                '284430.KS': 0.105,
+                '272580.KS': 0.15
+            },
+            GROWTH: {
+                '363580.KS': 0.29,
                 '360750.KS': 0.25,
                 '411060.KS': 0.20,
                 '365780.KS': 0.10,
-                '284430.KS': 0.175,
+                '284430.KS': 0.06,
                 '272580.KS': 0.10
             }
-        );
+        };
+        const rows = [
+            { ticker: '363580.KS', category: '위험자산', sector: '한국 주식', displayName: 'KIWOOM 200TR' },
+            { ticker: '360750.KS', category: '위험자산', sector: '미국 주식(UH)', displayName: 'TIGER 미국S&P 500' },
+            { ticker: '411060.KS', category: '위험자산', sector: '금(UH)', displayName: 'ACE KRX금현물' },
+            { ticker: '365780.KS', category: '안전자산', sector: '한국 국채', displayName: 'ACE 국고채10년' },
+            { ticker: '284430.KS', category: '안전자산', sector: '미국 국채(UH)', displayName: 'KODEX 200미국채혼합' },
+            { ticker: '272580.KS', category: '안전자산', sector: '현금성 자산', displayName: 'TIGER 단기채권액티브' }
+        ];
+        const allocations = profiles[profile] || profiles.NEUTRAL;
+        return rows.map(row => ({
+            ...this.makeRow(row.ticker, allocations[row.ticker] || 0, row.category, row.sector, null),
+            displayName: row.displayName
+        }));
+    }
+
+    calcKORETF_STABLE() {
+        return this.getKoreaEtfRows('STABLE');
+    }
+
+    calcKORETF_NEUTRAL() {
+        return this.getKoreaEtfRows('NEUTRAL');
+    }
+
+    calcKORETF_GROWTH() {
+        return this.getKoreaEtfRows('GROWTH');
+    }
+
+    calcKORETF() {
+        return this.calcKORETF_NEUTRAL();
     }
 
     calcLAA() {
@@ -585,12 +629,12 @@ class AllocationEngine {
             RWX: 'RWX : SPDR Dow Jones International Real Estate ETF',
             VTI: 'VTI : Vanguard Total Stock Market ETF',
             VEA: 'VEA : Vanguard FTSE Developed Markets ETF',
-            '363580.KS': '363580.KS : KIWOOM 200TR',
-            '360750.KS': '360750.KS : TIGER 미국S&P500',
-            '411060.KS': '411060.KS : ACE KRX금현물',
-            '365780.KS': '365780.KS : ACE 국고채10년',
-            '284430.KS': '284430.KS : KODEX 200미국채혼합',
-            '272580.KS': '272580.KS : TIGER 단기채권액티브',
+            '363580.KS': 'KIWOOM 200TR',
+            '360750.KS': 'TIGER 미국S&P 500',
+            '411060.KS': 'ACE KRX금현물',
+            '365780.KS': 'ACE 국고채10년',
+            '284430.KS': 'KODEX 200미국채혼합',
+            '272580.KS': 'TIGER 단기채권액티브',
             USD: 'USD : US Dollar'
         };
         return remarks[ticker] || ticker;
@@ -629,6 +673,9 @@ class AllocationEngine {
         const calculators = {
             PERM: this.calcPERM,
             KORETF: this.calcKORETF,
+            KORETF_STABLE: this.calcKORETF_STABLE,
+            KORETF_NEUTRAL: this.calcKORETF_NEUTRAL,
+            KORETF_GROWTH: this.calcKORETF_GROWTH,
             LAA: this.calcLAA,
             RAA: this.calcRAA,
             GTAA: this.calcGTAA,

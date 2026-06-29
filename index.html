@@ -25,6 +25,9 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">전략</a>
                     <div class="dropdown-menu dropdown-menu-right">
+                        <a class="dropdown-item" href="koretf-stable.html">한국 ETF 정적배분 - 안정형</a>
+                        <a class="dropdown-item" href="koretf.html">한국 ETF 정적배분 - 중립형</a>
+                        <a class="dropdown-item" href="koretf-growth.html">한국 ETF 정적배분 - 성장형</a>
                         <a class="dropdown-item" href="dual.html">전통듀얼모멘텀</a>
                         <a class="dropdown-item" href="cdm.html">종합듀얼모멘텀</a>
                         <a class="dropdown-item" href="adm.html">가속듀얼모멘텀</a>
@@ -49,6 +52,9 @@
     <aside id="sideStrategyMenu" class="side-strategy-menu">
         <div class="side-menu-title">전략 메뉴</div>
         <a href="index.html">Home</a>
+        <a href="koretf-stable.html">한국 ETF 정적배분 - 안정형</a>
+        <a href="koretf.html">한국 ETF 정적배분 - 중립형</a>
+        <a href="koretf-growth.html">한국 ETF 정적배분 - 성장형</a>
         <a href="dual.html">전통듀얼모멘텀</a>
         <a href="cdm.html">종합듀얼모멘텀</a>
         <a href="adm.html">가속듀얼모멘텀</a>
@@ -104,6 +110,9 @@
                 if (updated) document.getElementById('lastUpdated').textContent = 'Updated: ' + updated;
 
                 const strategies = [
+                    ['KORETF_STABLE', '한국 ETF 정적배분 - 안정형', 'koretf-stable.html'],
+                    ['KORETF_NEUTRAL', '한국 ETF 정적배분 - 중립형', 'koretf.html'],
+                    ['KORETF_GROWTH', '한국 ETF 정적배분 - 성장형', 'koretf-growth.html'],
                     ['DUAL', '전통듀얼모멘텀'],
                     ['CDM', '종합듀얼모멘텀'],
                     ['ADM', '가속듀얼모멘텀'],
@@ -122,15 +131,15 @@
                 ];
 
                 const tbody = document.getElementById('indexBody');
-                strategies.forEach(([sid, name]) => {
+                strategies.forEach(([sid, name, href]) => {
                     const result = engine.calculate(sid);
                     const assets = result
                         .filter(r => r.allocation > 0)
-                        .map(r => r.ticker + ' ' + Math.round(r.allocation*100) + '%')
+                        .map(r => (r.displayName || r.ticker) + ' ' + Math.round(r.allocation*100) + '%')
                         .join(', ');
 
                     const tr = document.createElement('tr');
-                    tr.innerHTML = '<td><a href="' + sid.toLowerCase() + '.html">' + name + '</a></td>' +
+                    tr.innerHTML = '<td><a href="' + (href || (sid.toLowerCase() + '.html')) + '">' + name + '</a></td>' +
                                    '<td>' + (assets || '현금 100%') + '</td>';
                     tbody.appendChild(tr);
                 });

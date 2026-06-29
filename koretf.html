@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" href="style.css">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8909533120303262" crossorigin="anonymous"></script>
-    <title>자산배분 계산기 - 한국 ETF 정적배분</title>
+    <title>자산배분 계산기 - 한국 ETF 정적배분 - 중립형</title>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
@@ -24,6 +24,9 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">전략</a>
                     <div class="dropdown-menu dropdown-menu-right">
+                        <a class="dropdown-item" href="koretf-stable.html">한국 ETF 정적배분 - 안정형</a>
+                        <a class="dropdown-item" href="koretf.html">한국 ETF 정적배분 - 중립형</a>
+                        <a class="dropdown-item" href="koretf-growth.html">한국 ETF 정적배분 - 성장형</a>
                         <a class="dropdown-item" href="dual.html">전통듀얼모멘텀</a>
                         <a class="dropdown-item" href="cdm.html">종합듀얼모멘텀</a>
                         <a class="dropdown-item" href="adm.html">가속듀얼모멘텀</a>
@@ -38,7 +41,6 @@
                         <a class="dropdown-item" href="daa.html">DAA</a>
                         <a class="dropdown-item" href="dga.html">DGA</a>
                         <a class="dropdown-item" href="dynbond.html">채권동적배분</a>
-                        <a class="dropdown-item" href="koretf.html">한국 ETF 정적배분</a>
                     </div>
                 </li>
             </ul>
@@ -48,6 +50,9 @@
     <aside id="sideStrategyMenu" class="side-strategy-menu">
         <div class="side-menu-title">전략 메뉴</div>
         <a href="index.html">Home</a>
+        <a href="koretf-stable.html">한국 ETF 정적배분 - 안정형</a>
+        <a href="koretf.html">한국 ETF 정적배분 - 중립형</a>
+        <a href="koretf-growth.html">한국 ETF 정적배분 - 성장형</a>
         <a href="dual.html">전통듀얼모멘텀</a>
         <a href="cdm.html">종합듀얼모멘텀</a>
         <a href="adm.html">가속듀얼모멘텀</a>
@@ -62,15 +67,14 @@
         <a href="daa.html">DAA</a>
         <a href="dga.html">DGA</a>
         <a href="dynbond.html">채권동적배분</a>
-        <a href="koretf.html">한국 ETF 정적배분</a>
     </aside>
     <div class="side-overlay"></div>
 
 
     <div class="page-header">
-        <h1>한국 ETF 정적배분</h1>
+        <h1>한국 ETF 정적배분 - 중립형</h1>
         <h2>Korea ETF Static Allocation</h2>
-        <div class="page-desc"><span class="desc-line">국내 상장 ETF로 구성한 정적 자산배분 전략입니다.</span><span class="desc-line">국내 주식, 미국 주식, 금, 국고채, 혼합형, 단기채 ETF를 정해진 비중으로 보유하고 주기적으로 리밸런싱합니다.</span><span class="desc-line"><u>자산군</u> : KIWOOM 200TR(17.5%), TIGER 미국S&amp;P500(25.0%), ACE KRX금현물(20.0%), ACE 국고채10년(10.0%), KODEX 200미국채혼합(17.5%), TIGER 단기채권액티브(10.0%)</span><span class="desc-line">Yahoo Finance에서는 국내 상장 종목 코드를 <strong>종목코드.KS</strong> 형식으로 조회합니다.</span></div>
+        <div class="page-desc"><span class="desc-line">국내 상장 ETF로 구성한 중립형 정적 자산배분 전략입니다.</span><span class="desc-line">위험자산과 안전자산을 투자성향별 목표 비중으로 보유하고 주기적으로 리밸런싱합니다.</span><span class="desc-line"><u>중립형 목표비중</u> : 한국 주식 24.5%, 미국 주식(UH) 17.5%, 금(UH) 15.0%, 한국 국채 17.5%, 미국 국채(UH) 10.5%, 현금성 자산 15.0%</span><span class="desc-line"><u>사용 ETF</u> : KIWOOM 200TR, TIGER 미국S&amp;P 500, ACE KRX금현물, ACE 국고채10년, KODEX 200미국채혼합, TIGER 단기채권액티브</span><span class="desc-line">Yahoo Finance에서는 국내 상장 종목 코드를 <strong>종목코드.KS</strong> 형식으로 조회합니다.</span></div>
     </div>
 
     <div class="input-section">
@@ -101,7 +105,7 @@
         <div>© Rolling Pig. All rights reserved.</div>
     </footer>
 
-    <div id="hidden-footer">KORETF</div>
+    <div id="hidden-footer">KORETF_NEUTRAL</div>
 
     <script>window.AAC_DATA_BASE_URL = window.AAC_DATA_BASE_URL || 'https://raw.githubusercontent.com/kwangwon83/asset-allocation-calculator/refs/heads/data/data';</script>
     <script src="js/data-loader.js"></script>
