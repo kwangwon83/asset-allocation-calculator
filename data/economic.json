@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-08-07",
+  "lastUpdated": "2026-08-11",
   "source": "BLS (LNS14000000), Yahoo Finance (SPY proxy), FRED (T10Y3M), US500.com",
   "unemployment": [
     {
@@ -261,18 +261,22 @@
     {
       "date": "2026-06-01",
       "value": 4.2
+    },
+    {
+      "date": "2026-07-01",
+      "value": 4.1
     }
   ],
-  "sp500_ma200": 697.6084,
-  "sp500_last": 768.56,
+  "sp500_ma200": 698.7065,
+  "sp500_last": 773.03,
   "sp500_dividend_yield": {
-    "date": "August 5, 2026",
+    "date": "August 7, 2026",
     "value": 1.04,
     "threshold": 1.6
   },
   "t10y3m_spread": {
-    "date": "2026-08-06",
-    "value": 0.94,
+    "date": "2026-08-10",
+    "value": 0.98,
     "source": "Yahoo Finance ^TNX - ^IRX proxy"
   },
   "notes": {
