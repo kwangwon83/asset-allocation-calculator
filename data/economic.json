@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-08-17",
+  "lastUpdated": "2026-08-18",
   "source": "BLS (LNS14000000), Yahoo Finance (SPY proxy), FRED (T10Y3M), US500.com",
   "unemployment": [
     {
@@ -275,8 +275,8 @@
     "threshold": 1.6
   },
   "t10y3m_spread": {
-    "date": "2026-08-14",
-    "value": 1.0,
+    "date": "2026-08-17",
+    "value": 1.02,
     "source": "Yahoo Finance ^TNX - ^IRX proxy"
   },
   "notes": {
